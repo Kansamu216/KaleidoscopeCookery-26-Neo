@@ -83,7 +83,6 @@ sourceSets.main.java {
     // runnable build and remain in source for a follow-up worldgen/loot pass.
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/event/ModTradesEvent.java'
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/event/AddVillageStructuresEvent.java'
-    exclude 'com/github/ysbbbbbb/kaleidoscopecookery/event/effect/FlatulenceEvent.java'
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/loot/**'
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/init/ModLootModifier.java'
 }
