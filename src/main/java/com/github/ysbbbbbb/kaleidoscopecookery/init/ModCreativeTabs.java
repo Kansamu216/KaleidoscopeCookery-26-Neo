@@ -100,6 +100,11 @@ public class ModCreativeTabs {
             output.accept((ItemLike)ModItems.TABLE_JUNGLE.get());
             output.accept((ItemLike)ModItems.TABLE_MANGROVE.get());
             output.accept((ItemLike)ModItems.TABLE_WARPED.get());
+            output.accept((ItemLike)ModItems.LONG_BENCH.get());
+            output.accept((ItemLike)ModItems.RED_LANTERN.get());
+            output.accept((ItemLike)ModItems.EIGHT_IMMORTALS_TABLE.get());
+            output.accept((ItemLike)ModItems.TEA_BANNER.get());
+            output.accept((ItemLike)ModItems.BAMBOO_TRAY.get());
          })
          .build()
    );
@@ -184,6 +189,16 @@ public class ModCreativeTabs {
                Item teacupItem = (Item)BuiltInRegistries.ITEM.getValue(teacupName);
                output.accept(teacupItem);
             });
+            output.accept((ItemLike)ModItems.TIEGUANYIN_TEA_BAG.get());
+            output.accept((ItemLike)ModItems.BILUOCHUN_TEA_BAG.get());
+            output.accept((ItemLike)ModItems.OOLONG_TEA_BAG.get());
+            output.accept((ItemLike)ModItems.SAKURA_FUBUKI_TEA_BAG.get());
+            output.accept((ItemLike)ModItems.BARLEY_TEA_BAG.get());
+            output.accept((ItemLike)ModItems.BUTTER_TEA_BAG.get());
+            output.accept((ItemLike)ModItems.FRESH_TEA_LEAVES.get());
+            output.accept((ItemLike)ModItems.DRIED_TEA_LEAVES.get());
+            output.accept((ItemLike)ModItems.TEA_SEED.get());
+            output.accept((ItemLike)ModItems.TEA_EGG.get());
          })
          .build()
    );

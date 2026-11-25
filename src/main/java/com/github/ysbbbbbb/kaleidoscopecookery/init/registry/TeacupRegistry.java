@@ -24,6 +24,8 @@ public class TeacupRegistry {
    public static Identifier OOLONG;
    public static Identifier SAKURA_FUBUKI;
    public static Identifier FLOWER_TEA;
+   public static Identifier BUTTER_TEA;
+   public static Identifier MYSTERY_TEA;
 
    public static void init() {
       TeacupRegistry registry = new TeacupRegistry();
@@ -47,6 +49,12 @@ public class TeacupRegistry {
       );
       FLOWER_TEA = registry.registerTeacupData(
          "flower_tea", TeacupRegistry.TeacupData.create(4).addEffect(() -> new MobEffectInstance(MobEffects.REGENERATION, 400))
+      );
+      BUTTER_TEA = registry.registerTeacupData(
+         "butter_tea", TeacupRegistry.TeacupData.create(4).addEffect(() -> new MobEffectInstance(ModEffects.PROJECTILE_DODGE, 900))
+      );
+      MYSTERY_TEA = registry.registerTeacupData(
+         "mystery_tea", TeacupRegistry.TeacupData.create(4).addEffect(() -> new MobEffectInstance(MobEffects.BLINDNESS, 300))
       );
    }
 

@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.init;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.BambooTrayRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.ChoppingBoardRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.FlexPotRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.FlexStockpotRecipe;
@@ -8,6 +9,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.PotRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.SteamerRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.StockpotRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.TeapotRecipe;
+import com.github.ysbbbbbb.kaleidoscopecookery.crafting.serializer.BambooTrayRecipeSerializer;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.serializer.ChoppingBoardRecipeSerializer;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.serializer.FlexPotRecipeSerializer;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.serializer.FlexStockpotRecipeSerializer;
@@ -85,6 +87,9 @@ public class ModRecipes {
    public static DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> RICE_BOWL_SERIALIZER = RECIPE_SERIALIZERS.register(
       "rice_bowl", () -> new RecipeSerializer<>(RiceBowlRecipeSerializer.CODEC, RiceBowlRecipeSerializer.STREAM_CODEC)
    );
+   public static DeferredHolder<RecipeSerializer<?>, RecipeSerializer<?>> BAMBOO_TRAY_SERIALIZER = RECIPE_SERIALIZERS.register(
+      "bamboo_tray", () -> new RecipeSerializer<>(BambooTrayRecipeSerializer.CODEC, BambooTrayRecipeSerializer.STREAM_CODEC)
+   );
    public static final RecipeType<PotRecipe> POT_RECIPE = recipeType("pot");
    public static final RecipeType<FlexPotRecipe> FLEX_POT_RECIPE = recipeType("flex_pot");
    public static final RecipeType<ChoppingBoardRecipe> CHOPPING_BOARD_RECIPE = recipeType("chopping_board");
@@ -93,6 +98,7 @@ public class ModRecipes {
    public static final RecipeType<MillstoneRecipe> MILLSTONE_RECIPE = recipeType("millstone");
    public static final RecipeType<SteamerRecipe> STEAMER_RECIPE = recipeType("steamer");
    public static final RecipeType<TeapotRecipe> TEAPOT_RECIPE = recipeType("teapot");
+   public static final RecipeType<BambooTrayRecipe> BAMBOO_TRAY_RECIPE = recipeType("bamboo_tray");
 
    private static <T extends net.minecraft.world.item.crafting.Recipe<?>> RecipeType<T> recipeType(String name) {
       RecipeType<T> type = RecipeType.simple(Identifier.fromNamespaceAndPath("kaleidoscope_cookery", name));

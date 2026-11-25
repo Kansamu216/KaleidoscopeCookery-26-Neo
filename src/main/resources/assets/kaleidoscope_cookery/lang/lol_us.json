@@ -546,5 +546,8 @@
   "item.kaleidoscope_cookery.oil_pot": "Grease Jar",
   "item.kaleidoscope_cookery.recipe_block": "Food Paper",
   "item.kaleidoscope_cookery.recipe_block.has_record": "Food Paper: %s, made wif %s",
-  "item.kaleidoscope_cookery.steamer": "Steamy Stacky Thing"
+  "item.kaleidoscope_cookery.steamer": "Steamy Stacky Thing",
+  "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line1": "Holds food n potions.",
+  "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line2": "Right-click to eat.",
+  "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line3": "Eats food till hunger is full."
 }
