@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.init.registry;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.compat.carryon.CarryOnBlackList;
 import com.github.ysbbbbbb.kaleidoscopecookery.compat.tetra.TetraCompat;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
@@ -14,6 +15,7 @@ public class CompatRegistry {
    public static void onEnqueue(InterModEnqueueEvent event) {
       event.enqueueWork(() -> SHOW_POTION_EFFECT_TOOLTIPS = !ModList.get().isLoaded("foodeffecttooltips"));
       event.enqueueWork(() -> checkModLoad("tetra", TetraCompat::init));
+      event.enqueueWork(() -> checkModLoad(CarryOnBlackList.CARRY_ON_ID, CarryOnBlackList::addBlackList));
    }
 
    private static void checkModLoad(String modId, Runnable runnable) {

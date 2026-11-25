@@ -1,6 +1,5 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.compat.rei.category;
 
-import com.github.ysbbbbbb.kaleidoscopecookery.compat.create.CreateCompat;
 import com.github.ysbbbbbb.kaleidoscopecookery.compat.rei.ReiUtil;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.MillstoneRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
@@ -88,10 +87,8 @@ public class ReiMillstoneRecipeCategory implements DisplayCategory<ReiMillstoneR
    public static void registerDisplays(DisplayRegistry registry) {
       List<RecipeHolder<MillstoneRecipe>> millstoneRecipes = Lists.newArrayList();
       millstoneRecipes.addAll(ReiUtil.recipesOf(ModRecipes.MILLSTONE_RECIPE));
-      ClientLevel level = Minecraft.getInstance().level;
-      if (level != null) {
-         CreateCompat.getTransformRecipeForSearch(level, millstoneRecipes);
-      }
+      // Create has no Minecraft 26 build, so the Create millstone recipe
+      // transform is dropped and only this mod's own recipes are displayed.
 
       millstoneRecipes.forEach(r -> {
          List<EntryIngredient> input = ReiUtil.ofIngredients(((MillstoneRecipe)r.value()).getIngredients());

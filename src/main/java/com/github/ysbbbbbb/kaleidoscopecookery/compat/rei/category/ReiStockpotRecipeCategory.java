@@ -64,8 +64,7 @@ public class ReiStockpotRecipeCategory implements DisplayCategory<ReiStockpotRec
                )
             ),
             startX,
-            startY,
-
+            startY
          )
       );
       if (!display.soupBase.isEmpty()) {

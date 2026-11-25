@@ -19,16 +19,22 @@ public class ReiUtil {
       );
    }
 
-   /** 26.3 exposes RecipeManager#getRecipes() instead of getAllRecipesFor(type). */
-   public static <T extends net.minecraft.world.item.crafting.Recipe<?>> java.util.List<net.minecraft.world.item.crafting.RecipeHolder<?>> recipesOf(
+   /**
+    * 26.3 exposes RecipeManager#getRecipes() instead of getAllRecipesFor(type), so the
+    * result has to be narrowed back to the requested recipe type with a cast.
+    */
+   @SuppressWarnings("unchecked")
+   public static <T extends net.minecraft.world.item.crafting.Recipe<?>> java.util.List<net.minecraft.world.item.crafting.RecipeHolder<T>> recipesOf(
          net.minecraft.world.item.crafting.RecipeType<T> type) {
       net.minecraft.client.multiplayer.ClientLevel level = net.minecraft.client.Minecraft.getInstance().level;
       if (level == null) {
          return java.util.List.of();
       }
-      return level.recipeAccess() instanceof net.minecraft.world.item.crafting.RecipeManager mgr
-         ? mgr.getRecipes().stream().filter(h -> h.value().getType() == type).toList()
-         : java.util.List.of();
+      if (level.recipeAccess() instanceof net.minecraft.world.item.crafting.RecipeManager mgr) {
+         java.util.List<?> filtered = mgr.getRecipes().stream().filter(h -> h.value().getType() == type).toList();
+         return (java.util.List<net.minecraft.world.item.crafting.RecipeHolder<T>>) filtered;
+      }
+      return java.util.List.of();
    }
 
    public static EntryIngredient ofIngredient(Ingredient ingredient) {
