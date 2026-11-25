@@ -57,7 +57,10 @@ sourceSets.main.java {
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/compat/jade/ModPlugin.java'
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/compat/jade/block/**'
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/compat/ponder/**'
-    exclude 'com/github/ysbbbbbb/kaleidoscopecookery/compat/rei/**'
+    // REI is available for 26.x; millstone/stockpot categories still depend on
+    // Create / Farmer's Delight which have no 26.x builds yet, so keep those two out.
+    exclude 'com/github/ysbbbbbb/kaleidoscopecookery/compat/rei/category/ReiMillstoneRecipeCategory.java'
+    exclude 'com/github/ysbbbbbb/kaleidoscopecookery/compat/rei/category/ReiStockpotRecipeCategory.java'
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/datagen/**'
 
     // Minecraft 26 replaced the complete client rendering pipeline with
@@ -92,6 +95,17 @@ repositories {
         url = uri('https://api.modrinth.com/maven')
         content {
             includeGroup 'maven.modrinth'
+        }
+    }
+    maven {
+        // Roughly Enough Items (26.x NeoForge builds)
+        name = 'Shedaniel'
+        url = uri('https://maven.shedaniel.me/')
+        content {
+            includeGroup 'me.shedaniel'
+            includeGroup 'me.shedaniel.rei'
+            includeGroup 'me.shedaniel.cloth'
+            includeGroup 'dev.architectury'
         }
     }
     maven {
@@ -217,6 +231,11 @@ dependencies {
     localRuntime files("libs/mezz_config-26.3-neoforge-0.7.1-standalone.jar")
     compileOnly jadeDependency
     localRuntime jadeDependency
+
+    // Roughly Enough Items: optional recipe-viewer integration (client side).
+    def reiDependency = "me.shedaniel:RoughlyEnoughItems-neoforge:${rei_version}"
+    compileOnly reiDependency
+    compileOnly "me.shedaniel.cloth:cloth-config-neoforge:${cloth_config_version}"
 
     // KubeJS has not published a Minecraft 26.2 artifact yet. Compile the
     // retained optional bridge against its latest KubeJS 8 API, but do not
