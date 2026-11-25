@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.tooltip;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.inventory.tooltip.ItemContainerTooltip;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +9,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
 
 /** Prevents the same unknown-component crash for item-backed containers. */
 public final class RuntimeItemContainerTooltip implements ClientTooltipComponent {
@@ -18,9 +19,9 @@ public final class RuntimeItemContainerTooltip implements ClientTooltipComponent
    private final Component emptyTip;
 
    public RuntimeItemContainerTooltip(ItemContainerTooltip tooltip) {
-      IItemHandler handler = tooltip.handler();
-      for (int slot = 0; slot < handler.getSlots(); slot++) {
-         ItemStack stack = handler.getStackInSlot(slot);
+      ResourceHandler<net.neoforged.neoforge.transfer.item.ItemResource> handler = tooltip.handler();
+      for (int slot = 0; slot < handler.size(); slot++) {
+         ItemStack stack = ResourceHandlerUtils.stackAt(handler, slot);
          if (!stack.isEmpty()) {
             this.items.add(stack.copy());
          }

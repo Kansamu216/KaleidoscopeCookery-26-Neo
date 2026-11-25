@@ -62,7 +62,7 @@ public class TeapotBlockEntityRender implements BlockEntityRenderer<TeapotBlockE
             Font font = this.context.getFont();
             poseStack.pushPose();
             poseStack.translate(0.5, 1.0, 0.5);
-            poseStack.mulPose(Axis.YN.rotationDegrees(180.0F + camera.getYRot()));
+            poseStack.mulPose(Axis.YN.rotationDegrees(180.0F + camera.getYRot()).get(new org.joml.Matrix4f()));
             poseStack.scale(0.015625F, -0.015625F, 0.015625F);
             Component statusText = teapot.getStatusText();
             float width = -font.width(statusText) / 2 + 0.5F;
@@ -105,8 +105,8 @@ public class TeapotBlockEntityRender implements BlockEntityRenderer<TeapotBlockE
             .ifStarted(state -> KeyframeAnimations.animate(this.model, TeapotAnimation.BOILING, state.getAccumulatedTime(), 1.0F, ANIMATION_VECTOR_CACHE));
          poseStack.pushPose();
          poseStack.translate(0.5, 1.5, 0.5);
-         poseStack.mulPose(Axis.ZN.rotationDegrees(180.0F));
-         poseStack.mulPose(Axis.YN.rotationDegrees(180 - facingDeg));
+         poseStack.mulPose(Axis.ZN.rotationDegrees(180.0F).get(new org.joml.Matrix4f()));
+         poseStack.mulPose(Axis.YN.rotationDegrees(180 - facingDeg).get(new org.joml.Matrix4f()));
          VertexConsumer checkerBoardBuff = buffer.getBuffer(RenderType.entityCutoutNoCull(TEXTURE));
          this.model.renderToBuffer(poseStack, checkerBoardBuff, packedLight, packedOverlay);
          poseStack.popPose();

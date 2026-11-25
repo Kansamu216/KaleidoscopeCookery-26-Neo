@@ -34,13 +34,13 @@ public class ScarecrowHandLayer extends ItemInHandLayer<ScarecrowEntity, Scarecr
       if (!stack.isEmpty()) {
          poseStack.pushPose();
          ((ScarecrowModel)this.getParentModel()).translateToHand(arm, poseStack);
-         poseStack.mulPose(Axis.XP.rotationDegrees(-90.0F));
-         poseStack.mulPose(Axis.YP.rotationDegrees(180.0F));
+         poseStack.mulPose(Axis.XP.rotationDegrees(-90.0F).get(new org.joml.Matrix4f()));
+         poseStack.mulPose(Axis.YP.rotationDegrees(180.0F).get(new org.joml.Matrix4f()));
          boolean isLeft = arm == HumanoidArm.LEFT;
          if (isLeft) {
             if (stack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof LanternBlock lanternBlock) {
                poseStack.translate(-0.375, 0.375, -2.0);
-               poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
+               poseStack.mulPose(Axis.XP.rotationDegrees(90.0F).get(new org.joml.Matrix4f()));
                BlockState blockState = lanternBlock.defaultBlockState();
                poseStack.scale(0.75F, 0.75F, 0.75F);
                this.blockRenderer.renderSingleBlock(blockState, poseStack, bufferSource, 15728880, OverlayTexture.NO_OVERLAY);
@@ -48,8 +48,8 @@ public class ScarecrowHandLayer extends ItemInHandLayer<ScarecrowEntity, Scarecr
             }
          } else {
             poseStack.translate(0.125, 0.0, -1.375);
-            poseStack.mulPose(Axis.ZP.rotationDegrees(-90.0F));
-            poseStack.mulPose(Axis.XP.rotationDegrees(85.0F));
+            poseStack.mulPose(Axis.ZP.rotationDegrees(-90.0F).get(new org.joml.Matrix4f()));
+            poseStack.mulPose(Axis.XP.rotationDegrees(85.0F).get(new org.joml.Matrix4f()));
             poseStack.scale(0.75F, 0.75F, 0.75F);
             this.itemRenderer.renderItem(entity, stack, context, isLeft, poseStack, bufferSource, packedLight);
             poseStack.popPose();

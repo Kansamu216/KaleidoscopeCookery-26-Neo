@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.client.render.block;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.RecipeBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModDataComponents;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.RecipeItem;
@@ -28,7 +29,7 @@ public class RecipeBlockEntityRender implements BlockEntityRenderer<RecipeBlockE
    public void render(RecipeBlockEntity recipeBlock, float pPartialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
       ClientLevel level = Minecraft.getInstance().level;
       if (level != null) {
-         ItemStack stack = recipeBlock.getItems().getStackInSlot(0);
+         ItemStack stack = ResourceHandlerUtils.stackAt(recipeBlock.getItems(), 0);
          if (!stack.isEmpty()) {
             RecipeItem.RecipeRecord record = (RecipeItem.RecipeRecord)stack.get(ModDataComponents.RECIPE_RECORD);
             if (record != null) {
@@ -40,8 +41,8 @@ public class RecipeBlockEntityRender implements BlockEntityRenderer<RecipeBlockE
                ItemRenderer itemRenderer = this.context.getItemRenderer();
                poseStack.pushPose();
                poseStack.translate(0.5, 0.5, 0.5);
-               poseStack.mulPose(Axis.YP.rotationDegrees(-rotationY * 90));
-               poseStack.mulPose(Axis.XP.rotationDegrees(90 - rotationX * 90));
+               poseStack.mulPose(Axis.YP.rotationDegrees(-rotationY * 90).get(new org.joml.Matrix4f()));
+               poseStack.mulPose(Axis.XP.rotationDegrees(90 - rotationX * 90).get(new org.joml.Matrix4f()));
                poseStack.translate(-0.5, -0.5, -0.5);
                poseStack.scale(0.5F, 0.5F, 0.5F);
                if (attachFace == AttachFace.WALL) {

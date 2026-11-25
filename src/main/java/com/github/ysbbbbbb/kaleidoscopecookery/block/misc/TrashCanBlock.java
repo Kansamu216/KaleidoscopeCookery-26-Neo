@@ -1,9 +1,9 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.block.misc;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRegistrationProperties;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.misc.TrashCanBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.entity.SitEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
-import com.mojang.serialization.MapCodec;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -44,7 +44,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class TrashCanBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock, EntityBlock {
-   public static final MapCodec<TrashCanBlock> CODEC = simpleCodec(p -> new TrashCanBlock());
    public static final VoxelShape SUCK_ZONE = Block.box(0.0, 15.0, 0.0, 16.0, 16.0, 16.0);
    public static final VoxelShape AABB = Shapes.or(Block.box(2.0, 0.0, 2.0, 14.0, 15.0, 14.0), Block.box(1.0, 12.0, 1.0, 15.0, 15.0, 15.0));
    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
@@ -56,10 +55,6 @@ public class TrashCanBlock extends HorizontalDirectionalBlock implements SimpleW
          (BlockState)((BlockState)((BlockState)((BlockState)this.stateDefinition.any()).setValue(FACING, Direction.NORTH)).setValue(POWERED, false))
             .setValue(WATERLOGGED, false)
       );
-   }
-
-   protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-      return CODEC;
    }
 
    @Nullable
@@ -209,8 +204,8 @@ public class TrashCanBlock extends HorizontalDirectionalBlock implements SimpleW
       List<ItemStack> drops = super.getDrops(state, params);
       BlockEntity parameter = (BlockEntity)params.getParameter(LootContextParams.BLOCK_ENTITY);
       if (parameter instanceof TrashCanBlockEntity trashCanBlock) {
-         for (int i = 0; i < trashCanBlock.getStorage().getSlots(); i++) {
-            ItemStack stack = trashCanBlock.getStorage().getStackInSlot(i);
+         for (int i = 0; i < trashCanBlock.getStorage().size(); i++) {
+            ItemStack stack = ResourceHandlerUtils.stackAt(trashCanBlock.getStorage(), i);
             if (!stack.isEmpty()) {
                drops.add(stack);
             }

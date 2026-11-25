@@ -156,7 +156,7 @@ public final class RuntimeStockpotRenderer implements BlockEntityRenderer<Stockp
          poseStack.pushPose();
          float bob = (float)Math.sin(state.age * 0.1F + state.mobYaw) * 0.035F;
          poseStack.translate(0.5F, 0.39F + bob, 0.5F);
-         poseStack.mulPose(Axis.YP.rotationDegrees(state.mobYaw));
+         poseStack.mulPose(Axis.YP.rotationDegrees(state.mobYaw).get(new org.joml.Matrix4f()));
          poseStack.scale(state.mobScale, state.mobScale, state.mobScale);
          this.entityRenderer.submit(state.mobEntity, camera, 0.0, 0.0, 0.0, poseStack, collector);
          poseStack.popPose();
@@ -169,11 +169,11 @@ public final class RuntimeStockpotRenderer implements BlockEntityRenderer<Stockp
          float wave = (float)Math.sin((hash + state.age * 50.0F) * 0.0005F) * 0.2F;
          float yaw = (Math.floorMod(hash, 2) == 0 ? -20.0F : 20.0F) + Math.floorMod(hash, 10);
          poseStack.pushPose();
-         poseStack.mulPose(Axis.XP.rotationDegrees(85.0F + Math.floorMod(hash, 10)));
+         poseStack.mulPose(Axis.XP.rotationDegrees(85.0F + Math.floorMod(hash, 10)).get(new org.joml.Matrix4f()));
          poseStack.scale(0.5F, 0.5F, 0.5F);
          poseStack.translate(0.9F + offsetX, 0.9F + offsetY, -0.5F + wave);
-         poseStack.mulPose(Axis.YP.rotationDegrees(yaw));
-         poseStack.mulPose(Axis.ZP.rotationDegrees(Math.floorMod(hash, 360)));
+         poseStack.mulPose(Axis.YP.rotationDegrees(yaw).get(new org.joml.Matrix4f()));
+         poseStack.mulPose(Axis.ZP.rotationDegrees(Math.floorMod(hash, 360)).get(new org.joml.Matrix4f()));
          item.model().submit(poseStack, collector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
          poseStack.popPose();
       }

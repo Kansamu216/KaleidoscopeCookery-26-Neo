@@ -55,7 +55,7 @@ public final class RuntimeScarecrowRenderer
    protected void setupRotations(State state, PoseStack poseStack, float bodyRot, float scale) {
       super.setupRotations(state, poseStack, bodyRot, scale);
       if (state.hitAnimationTime >= 0.0F && state.hitAnimationTime < 5.0F) {
-         poseStack.mulPose(Axis.YP.rotationDegrees(Mth.sin(state.hitAnimationTime / 1.5F * (float)Math.PI) * 3.0F));
+         poseStack.mulPose(Axis.YP.rotationDegrees(Mth.sin(state.hitAnimationTime / 1.5F * (float)Math.PI) * 3.0F).get(new org.joml.Matrix4f()));
       }
    }
 

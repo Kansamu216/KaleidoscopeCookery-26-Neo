@@ -4,7 +4,6 @@ import com.github.ysbbbbbb.kaleidoscopecookery.api.blockentity.ITeapot;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.TeapotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.FluidUtils;
-import com.mojang.serialization.MapCodec;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -39,12 +38,13 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.transfer.fluid.FluidUtil;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
 import org.jetbrains.annotations.Nullable;
 
 public class TeapotBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock, EntityBlock {
-   public static final MapCodec<TeapotBlock> CODEC = simpleCodec(p -> new TeapotBlock());
    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
    public static final IntegerProperty VARIANT = IntegerProperty.create("variant", 0, 2);
    public static final int COMMON = 0;
@@ -58,10 +58,6 @@ public class TeapotBlock extends HorizontalDirectionalBlock implements SimpleWat
          (BlockState)((BlockState)((BlockState)((BlockState)this.stateDefinition.any()).setValue(FACING, Direction.NORTH)).setValue(WATERLOGGED, false))
             .setValue(VARIANT, 0)
       );
-   }
-
-   protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-      return CODEC;
    }
 
    @Nullable
@@ -105,7 +101,7 @@ public class TeapotBlock extends HorizontalDirectionalBlock implements SimpleWat
          return InteractionResult.TRY_WITH_EMPTY_HAND;
       } else if (level.getBlockEntity(pos) instanceof ITeapot teapot) {
          ItemStack mainHandItem = player.getMainHandItem();
-         IFluidHandlerItem capability = FluidUtil.getFluidHandler(mainHandItem).orElse(null);
+         ResourceHandler<FluidResource> capability = com.github.ysbbbbbb.kaleidoscopecookery.util.FluidUtils.itemFluidHandler(mainHandItem);
          if (capability != null) {
             if (FluidUtils.hasFluid(mainHandItem)) {
                boolean result = teapot.addTeaFluid(level, player, mainHandItem);

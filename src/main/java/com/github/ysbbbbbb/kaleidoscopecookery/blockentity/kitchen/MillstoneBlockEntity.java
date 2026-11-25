@@ -1,4 +1,5 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 import net.minecraft.world.level.storage.ValueInput;
 
 import net.minecraft.world.level.storage.ValueOutput;
@@ -56,9 +57,9 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemUtil;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import org.jetbrains.annotations.Nullable;
@@ -74,7 +75,7 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
    private static final String OUTPUT_ITEM_KEY = "OutputItem";
    private static final String PROGRESS_KEY = "Progress";
    private final CachedCheck<SimpleInput, MillstoneRecipe> quickCheck = RecipeManager.createCheck(ModRecipes.MILLSTONE_RECIPE);
-   private final ItemStackHandler outputs = new ItemStackHandler(4) {
+   private final ItemStacksResourceHandler outputs = new ItemStacksResourceHandler(4) {
       protected void onContentsChanged(int slot) {
          MillstoneBlockEntity.this.refresh();
       }
@@ -107,8 +108,8 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
                Direction direction = (Direction)this.getBlockState().getValue(HorizontalDirectionalBlock.FACING);
                BlockPos outputPos = this.worldPosition.relative(direction);
 
-               for (int i = 0; i < this.outputs.getSlots(); i++) {
-                  ItemStack outputStack = this.outputs.getStackInSlot(i);
+               for (int i = 0; i < this.outputs.size(); i++) {
+                  ItemStack outputStack = ResourceHandlerUtils.stackAt(this.outputs, i);
                   if (!outputStack.isEmpty()) {
                      ItemEntity entity = new ItemEntity(
                         serverLevel, outputPos.getX() + 0.5, outputPos.getY(), outputPos.getZ() + 0.5, outputStack, 0.0, 0.0, 0.0
@@ -157,13 +158,13 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
             if (this.bindEntity.tickCount % 10 == 0 && this.isOutputEmpty() && this.input.isEmpty() && this.progress <= 0) {
                ResourceHandler<ItemResource> resourceHandler = this.bindEntity.getCapability(Capabilities.Item.ENTITY);
                if (resourceHandler != null) {
-                  IItemHandler handler = IItemHandler.of(resourceHandler);
-                  for (int ix = 0; ix < handler.getSlots(); ix++) {
-                     ItemStack stackInSlot = handler.getStackInSlot(ix);
+                  ResourceHandler<ItemResource> handler = resourceHandler;
+                  for (int ix = 0; ix < handler.size(); ix++) {
+                     ItemStack stackInSlot = ResourceHandlerUtils.stackAt(handler, ix);
                      if (!stackInSlot.isEmpty()) {
-                        ItemStack stack = handler.extractItem(ix, 8, true);
+                        ItemStack stack = ResourceHandlerUtils.extract(handler, ix, 8, true);
                         if (this.onPutItem(level, stack)) {
-                           handler.extractItem(ix, 8, false);
+                           ResourceHandlerUtils.extract(handler, ix, 8, false);
                            return;
                         }
                      }
@@ -194,7 +195,7 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
             }
 
             if (serverLevel.getGameTime() % 5L == 2L) {
-               Item item = !this.isOutputEmpty() ? this.outputs.getStackInSlot(0).getItem() : (!this.input.isEmpty() ? this.input.getItem() : Items.AIR);
+               Item item = !this.isOutputEmpty() ? this.outputs.getResource(0).getItem() : (!this.input.isEmpty() ? this.input.getItem() : Items.AIR);
                if (item != Items.AIR) {
                   Vec3 particlePos = new Vec3(0.0, 1.0, 1.0).yRot(rot * (float) (Math.PI / 180.0)).add(center);
                   if (item instanceof BlockItem blockItem) {
@@ -232,7 +233,7 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
                               .filter(output -> !output.isEmpty())
                               .filter(output -> Math.random() < output.chance())
                               .map(RandomOutput::stack)
-                              .forEach(stackx -> ItemHandlerHelper.insertItemStacked(this.outputs, stackx.copy(), false));
+                              .forEach(stackx -> ItemUtil.insertItemReturnRemaining(this.outputs, stackx.copy(), false, null));
                         }
 
                         this.input = ItemStack.EMPTY;
@@ -240,7 +241,7 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
                         this.refresh();
                      },
                      () -> {
-                        this.outputs.setStackInSlot(0, this.input.copyAndClear());
+                        ResourceHandlerUtils.setStack(this.outputs, 0, this.input.copyAndClear());
                         this.input = ItemStack.EMPTY;
                         this.previewOutput = ItemStack.EMPTY;
                         this.refresh();
@@ -283,9 +284,9 @@ public class MillstoneBlockEntity extends BaseBlockEntity implements IMillstone 
    }
 
    public void resetWhenTakeout() {
-      for (int i = 0; i < this.outputs.getSlots(); i++) {
-         if (!this.outputs.getStackInSlot(i).isEmpty()) {
-            this.outputs.setStackInSlot(i, ItemStack.EMPTY);
+      for (int i = 0; i < this.outputs.size(); i++) {
+         if (!this.outputs.getResource(i).isEmpty()) {
+            ResourceHandlerUtils.setStack(this.outputs, i, ItemStack.EMPTY);
          }
       }
 
@@ -432,13 +433,13 @@ tag.readChild("OutputItem",          this.outputs);
       return this.previewOutput;
    }
 
-   public IItemHandler getOutputs() {
+   public ResourceHandler getOutputs() {
       return this.outputs;
    }
 
    public boolean isOutputEmpty() {
-      for (int i = 0; i < this.outputs.getSlots(); i++) {
-         if (!this.outputs.getStackInSlot(i).isEmpty()) {
+      for (int i = 0; i < this.outputs.size(); i++) {
+         if (!this.outputs.getResource(i).isEmpty()) {
             return false;
          }
       }

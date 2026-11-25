@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.render;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.MillstoneBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.MillstoneBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.model.RuntimeMillstoneModel;
@@ -56,8 +57,8 @@ public final class RuntimeMillstoneRenderer implements BlockEntityRenderer<Mills
       state.rollRotation = blockEntity.hasEntity() ? rotation * DEGREES_TO_RADIANS : 0.0F;
       state.stickRotation = blockEntity.hasEntity() ? -blockEntity.getLiftAngle() * DEGREES_TO_RADIANS : 0.0F;
 
-      ItemStack stack = !blockEntity.getOutputs().getStackInSlot(0).isEmpty()
-         ? blockEntity.getOutputs().getStackInSlot(0)
+      ItemStack stack = !ResourceHandlerUtils.stackAt(blockEntity.getOutputs(), 0).isEmpty()
+         ? ResourceHandlerUtils.stackAt(blockEntity.getOutputs(), 0)
          : blockEntity.getInput();
       state.itemCount = Math.min(stack.getCount(), 8);
       state.seed = blockEntity.getBlockPos().asLong();
@@ -76,8 +77,8 @@ public final class RuntimeMillstoneRenderer implements BlockEntityRenderer<Mills
       int facingDegrees = state.facing.get2DDataValue() * 90;
       poseStack.pushPose();
       poseStack.translate(0.5F, 1.5F, 0.5F);
-      poseStack.mulPose(Axis.ZN.rotationDegrees(180.0F));
-      poseStack.mulPose(Axis.YN.rotationDegrees(180.0F - facingDegrees));
+      poseStack.mulPose(Axis.ZN.rotationDegrees(180.0F).get(new org.joml.Matrix4f()));
+      poseStack.mulPose(Axis.YN.rotationDegrees(180.0F - facingDegrees).get(new org.joml.Matrix4f()));
       collector.submitModel(
          this.model,
          new RuntimeMillstoneModel.State(state.wheelRotation, state.rollRotation, state.stickRotation),
@@ -85,8 +86,7 @@ public final class RuntimeMillstoneRenderer implements BlockEntityRenderer<Mills
          TEXTURE,
          state.lightCoords,
          OverlayTexture.NO_OVERLAY,
-         0,
-         state.breakProgress
+         state.breakProgress.progress()
       );
       poseStack.popPose();
 
@@ -96,8 +96,8 @@ public final class RuntimeMillstoneRenderer implements BlockEntityRenderer<Mills
             poseStack.pushPose();
             poseStack.translate(0.0F, 0.875F, 0.0F);
             poseStack.rotateAround(Axis.YP.rotationDegrees(i * 45.0F + random.nextInt(15)), 0.5F, 0.0F, 0.5F);
-            poseStack.mulPose(Axis.YP.rotationDegrees(random.nextInt(20)));
-            poseStack.mulPose(Axis.XN.rotationDegrees(80.0F + random.nextInt(20)));
+            poseStack.mulPose(Axis.YP.rotationDegrees(random.nextInt(20)).get(new org.joml.Matrix4f()));
+            poseStack.mulPose(Axis.XN.rotationDegrees(80.0F + random.nextInt(20)).get(new org.joml.Matrix4f()));
             poseStack.scale(0.65F, 0.65F, 0.65F);
             state.item.submit(poseStack, collector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
             poseStack.popPose();

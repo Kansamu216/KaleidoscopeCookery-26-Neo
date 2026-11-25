@@ -9,11 +9,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 
 public class RecipeBlockEntity extends BaseBlockEntity {
    private static final String SHOW_ITEMS = "ShowItems";
-   private ItemStackHandler items = new ItemStackHandler(1);
+   private ItemStacksResourceHandler items = new ItemStacksResourceHandler(1);
 
    public RecipeBlockEntity(BlockPos pos, BlockState blockState) {
       super(ModBlocks.RECIPE_BLOCK_BE.get(), pos, blockState);
@@ -31,7 +31,7 @@ tag.readChild("ShowItems",          this.items);
       }
    }
 
-   public ItemStackHandler getItems() {
+   public ItemStacksResourceHandler getItems() {
       return this.items;
    }
 }

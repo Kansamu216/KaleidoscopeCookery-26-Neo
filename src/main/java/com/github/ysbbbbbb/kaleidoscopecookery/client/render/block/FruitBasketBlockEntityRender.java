@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.client.render.block;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.FruitBasketBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -11,7 +12,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 
 public class FruitBasketBlockEntityRender implements BlockEntityRenderer<FruitBasketBlockEntity> {
    private final Context context;
@@ -21,12 +22,12 @@ public class FruitBasketBlockEntityRender implements BlockEntityRenderer<FruitBa
    }
 
    public void render(FruitBasketBlockEntity basket, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
-      ItemStackHandler items = basket.getItems();
+      ItemStacksResourceHandler items = basket.getItems();
       ItemRenderer itemRenderer = this.context.getItemRenderer();
       int rotation = ((Direction)basket.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING)).get2DDataValue() * 90;
       poseStack.pushPose();
       poseStack.translate(0.5, 0.0, 0.5);
-      poseStack.mulPose(Axis.YN.rotationDegrees(rotation));
+      poseStack.mulPose(Axis.YN.rotationDegrees(rotation).get(new org.joml.Matrix4f()));
       poseStack.translate(-0.5, 0.0, -0.5);
       poseStack.translate(0.1, 0.3, 0.35);
 
@@ -35,13 +36,13 @@ public class FruitBasketBlockEntityRender implements BlockEntityRenderer<FruitBa
 
          for (int j = 0; j < 4; j++) {
             int index = i * 4 + j;
-            ItemStack itemStack = items.getStackInSlot(index);
+            ItemStack itemStack = ResourceHandlerUtils.stackAt(items, index);
             if (!itemStack.isEmpty()) {
                poseStack.translate(0.15, 0.0, 0.0);
                poseStack.pushPose();
                poseStack.translate(0.0F, 0.0F, index % 2 == 0 ? -0.01F : 0.01F);
-               poseStack.mulPose(Axis.YN.rotationDegrees(90.0F));
-               poseStack.mulPose(Axis.XN.rotationDegrees(-30.0F));
+               poseStack.mulPose(Axis.YN.rotationDegrees(90.0F).get(new org.joml.Matrix4f()));
+               poseStack.mulPose(Axis.XN.rotationDegrees(-30.0F).get(new org.joml.Matrix4f()));
                poseStack.scale(0.375F, 0.375F, 0.375F);
                itemRenderer.renderStatic(itemStack, ItemDisplayContext.FIXED, packedLight, packedOverlay, poseStack, buffer, basket.getLevel(), 0);
                poseStack.popPose();

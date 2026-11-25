@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.client.tooltip;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.inventory.tooltip.ItemContainerTooltip;
 import javax.annotation.Nullable;
 import net.minecraft.ChatFormatting;
@@ -10,7 +11,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
 
 public class ClientItemContainerTooltip implements ClientTooltipComponent {
    private final NonNullList<ItemStack> items = NonNullList.create();
@@ -20,8 +21,8 @@ public class ClientItemContainerTooltip implements ClientTooltipComponent {
    public ClientItemContainerTooltip(ItemContainerTooltip containerTooltip) {
       IItemHandler handler = containerTooltip.handler();
 
-      for (int i = 0; i < handler.getSlots(); i++) {
-         ItemStack stack = handler.getStackInSlot(i);
+      for (int i = 0; i < handler.size(); i++) {
+         ItemStack stack = ResourceHandlerUtils.stackAt(handler, i);
          if (!stack.isEmpty()) {
             this.items.add(stack);
          }

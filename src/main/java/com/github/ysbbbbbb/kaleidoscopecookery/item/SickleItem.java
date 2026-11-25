@@ -108,7 +108,7 @@ public class SickleItem extends Item {
                }
 
                if (cropBlock.isMaxAge(blockState)) {
-                  cropBlock.playerDestroy(level, player, newPos, blockState, null, ItemStack.EMPTY);
+                  if (level instanceof ServerLevel sl && player instanceof ServerPlayer sp) { cropBlock.playerDestroy(sl, sp, newPos, blockState, null, ItemStack.EMPTY); }
                   BlockState stateForAge = cropBlock.getStateForAge(0);
                   BooleanProperty waterlogged = BlockStateProperties.WATERLOGGED;
                   if (stateForAge.hasProperty(waterlogged)) {

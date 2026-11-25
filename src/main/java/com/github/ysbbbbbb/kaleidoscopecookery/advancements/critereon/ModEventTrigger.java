@@ -4,8 +4,6 @@ import com.github.ysbbbbbb.kaleidoscopecookery.init.ModTrigger;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.Optional;
-import net.minecraft.advancements.predicates.ContextAwarePredicate;
-import net.minecraft.advancements.predicates.entity.EntityPredicate;
 import net.minecraft.advancements.triggers.Criterion;
 import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
 import net.minecraft.advancements.triggers.SimpleCriterionTrigger.SimpleInstance;
@@ -30,10 +28,10 @@ public class ModEventTrigger extends SimpleCriterionTrigger<ModEventTrigger.Inst
       return ModEventTrigger.Instance.CODEC;
    }
 
-   public record Instance(Optional<ContextAwarePredicate> player, String eventName) implements SimpleInstance {
+   public record Instance(Optional<net.minecraft.core.Holder<net.minecraft.world.level.storage.loot.predicates.LootItemCondition>> player, String eventName) implements SimpleInstance {
       public static final Codec<ModEventTrigger.Instance> CODEC = RecordCodecBuilder.create(
          instance -> instance.group(
-               EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(ModEventTrigger.Instance::player),
+               net.minecraft.world.level.storage.loot.predicates.LootItemCondition.CODEC.optionalFieldOf("player").forGetter(ModEventTrigger.Instance::player),
                Codec.STRING.fieldOf("event").forGetter(ModEventTrigger.Instance::eventName)
             )
             .apply(instance, ModEventTrigger.Instance::new)

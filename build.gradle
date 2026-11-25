@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '2.0.144'
+    id 'net.neoforged.moddev' version '2.0.148'
     id 'idea'
 }
 
@@ -186,11 +186,15 @@ neoForge {
     }
 }
 
-def java25Launcher = javaToolchains.launcherFor {
-    languageVersion = JavaLanguageVersion.of(25)
-}
+// Local workaround: run NFRT/NeoForm with JDK 26; the mod still targets Java 25.
+def minecraftArtifactJava = javaToolchains.launcherFor {
+    languageVersion = JavaLanguageVersion.of(26)
+}.map { launcher -> launcher.executablePath.asFile.absolutePath }
 tasks.withType(net.neoforged.nfrtgradle.NeoFormRuntimeTask).configureEach {
-    javaExecutable.set(java25Launcher.map { it.executablePath.asFile.absolutePath })
+    javaExecutable.set(minecraftArtifactJava)
+    if (plugins.hasPlugin('net.neoforged.moddev') && this.hasProperty('toolsJavaExecutable')) {
+        toolsJavaExecutable.set(minecraftArtifactJava)
+    }
 }
 
 // Sets up a dependency configuration called 'localRuntime'.
@@ -210,6 +214,7 @@ dependencies {
     def jadeDependency = "maven.modrinth:nvQzSEkH:${jade_modrinth_version}"
     compileOnly jeiDependency
     localRuntime jeiDependency
+    localRuntime files("libs/mezz_config-26.3-neoforge-0.7.1-standalone.jar")
     compileOnly jadeDependency
     localRuntime jadeDependency
 

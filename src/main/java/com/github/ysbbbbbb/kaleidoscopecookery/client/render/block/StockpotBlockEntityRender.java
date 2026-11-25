@@ -78,11 +78,11 @@ public class StockpotBlockEntityRender implements BlockEntityRenderer<StockpotBl
             }
 
             poseStack.pushPose();
-            poseStack.mulPose(Axis.XP.rotationDegrees(85 + random % 10));
+            poseStack.mulPose(Axis.XP.rotationDegrees(85 + random % 10).get(new org.joml.Matrix4f()));
             poseStack.scale(0.5F, 0.5F, 0.5F);
             poseStack.translate(0.9 + offsetX, 0.9 + offsetY, -0.5 + offsetZ);
-            poseStack.mulPose(Axis.YP.rotationDegrees(yRot));
-            poseStack.mulPose(Axis.ZP.rotationDegrees(random % 360));
+            poseStack.mulPose(Axis.YP.rotationDegrees(yRot).get(new org.joml.Matrix4f()));
+            poseStack.mulPose(Axis.ZP.rotationDegrees(random % 360).get(new org.joml.Matrix4f()));
             this.context.getItemRenderer().render(stack, ItemDisplayContext.FIXED, false, poseStack, buffer, packedLight, packedOverlay, model);
             poseStack.popPose();
          }

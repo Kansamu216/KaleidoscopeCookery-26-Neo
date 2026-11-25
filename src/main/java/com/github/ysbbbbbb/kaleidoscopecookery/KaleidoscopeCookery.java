@@ -23,8 +23,9 @@ import com.github.ysbbbbbb.kaleidoscopecookery.network.NetworkHandler;
 import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.config.ModConfig.Type;
+
 import org.slf4j.Logger;
 
 @Mod("kaleidoscope_cookery")
@@ -33,8 +34,8 @@ public class KaleidoscopeCookery {
    public static final Logger LOGGER = LogUtils.getLogger();
 
    public KaleidoscopeCookery(IEventBus modEventBus, ModContainer modContainer) {
-      modContainer.registerConfig(Type.COMMON, GeneralConfig.init());
-      modContainer.registerConfig(Type.CLIENT, ClientConfig.init());
+      modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.LOCAL, GeneralConfig.init());
+      modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.CLIENT, ClientConfig.init());
       modEventBus.addListener(NetworkHandler::registerPacket);
       FoodBiteRegistry.init();
       TeacupRegistry.init();

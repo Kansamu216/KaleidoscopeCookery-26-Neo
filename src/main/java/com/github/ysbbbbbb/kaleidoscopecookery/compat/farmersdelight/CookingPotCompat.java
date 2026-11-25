@@ -11,7 +11,7 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 import vectorwing.farmersdelight.common.crafting.CookingPotRecipe;
 import vectorwing.farmersdelight.common.registry.ModRecipeTypes;
@@ -40,7 +40,7 @@ public class CookingPotCompat {
       RecipeManager recipeManager = event.getLevel().getRecipeManager();
       if (event.getRawOutput().equals(StockpotRecipeSerializer.EMPTY_ID)) {
          List<ItemStack> items = event.getInput().getInputs();
-         RecipeWrapper wrapper = new RecipeWrapper(new ItemStackHandler(NonNullList.copyOf(items)));
+         RecipeWrapper wrapper = new RecipeWrapper(new ItemStacksResourceHandler(NonNullList.copyOf(items)));
          recipeManager.getRecipeFor((RecipeType)ModRecipeTypes.COOKING.get(), wrapper, event.getLevel())
             .ifPresent(recipe -> event.setOutput(transformRecipe((RecipeHolder<CookingPotRecipe>)recipe, event.getLevel())));
       }

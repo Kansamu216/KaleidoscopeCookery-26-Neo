@@ -27,11 +27,11 @@ public final class RuntimeScarecrowHandLayer
       if (!state.rightHandItemState.isEmpty()) {
          poseStack.pushPose();
          this.getParentModel().translateToHand(state, HumanoidArm.RIGHT, poseStack);
-         poseStack.mulPose(Axis.XP.rotationDegrees(-90.0F));
-         poseStack.mulPose(Axis.YP.rotationDegrees(180.0F));
+         poseStack.mulPose(Axis.XP.rotationDegrees(-90.0F).get(new org.joml.Matrix4f()));
+         poseStack.mulPose(Axis.YP.rotationDegrees(180.0F).get(new org.joml.Matrix4f()));
          poseStack.translate(0.125F, 0.0F, -1.375F);
-         poseStack.mulPose(Axis.ZP.rotationDegrees(-90.0F));
-         poseStack.mulPose(Axis.XP.rotationDegrees(85.0F));
+         poseStack.mulPose(Axis.ZP.rotationDegrees(-90.0F).get(new org.joml.Matrix4f()));
+         poseStack.mulPose(Axis.XP.rotationDegrees(85.0F).get(new org.joml.Matrix4f()));
          poseStack.scale(0.75F, 0.75F, 0.75F);
          state.rightHandItemState.submit(poseStack, collector, packedLight, OverlayTexture.NO_OVERLAY, 0);
          poseStack.popPose();
@@ -40,10 +40,10 @@ public final class RuntimeScarecrowHandLayer
       if (!state.lanternBlock.isEmpty()) {
          poseStack.pushPose();
          this.getParentModel().translateToHand(state, HumanoidArm.LEFT, poseStack);
-         poseStack.mulPose(Axis.XP.rotationDegrees(-90.0F));
-         poseStack.mulPose(Axis.YP.rotationDegrees(180.0F));
+         poseStack.mulPose(Axis.XP.rotationDegrees(-90.0F).get(new org.joml.Matrix4f()));
+         poseStack.mulPose(Axis.YP.rotationDegrees(180.0F).get(new org.joml.Matrix4f()));
          poseStack.translate(-0.375F, 0.375F, -2.0F);
-         poseStack.mulPose(Axis.XP.rotationDegrees(90.0F));
+         poseStack.mulPose(Axis.XP.rotationDegrees(90.0F).get(new org.joml.Matrix4f()));
          poseStack.scale(0.75F, 0.75F, 0.75F);
          state.lanternBlock.submit(poseStack, collector, 15728880, OverlayTexture.NO_OVERLAY, 0);
          poseStack.popPose();

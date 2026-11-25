@@ -1,4 +1,5 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.item;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRegistrationProperties;
 import com.github.ysbbbbbb.kaleidoscopecookery.api.event.RecipeItemEvent;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.PotBlock;
@@ -56,8 +57,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.wrapper.PlayerMainInvWrapper;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+
 import net.neoforged.neoforge.registries.DeferredItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -159,11 +160,11 @@ public class RecipeItem extends BlockItem {
          }
       }
 
-      IItemHandler inventory = new PlayerMainInvWrapper(player.getInventory());
+      ResourceHandler<net.neoforged.neoforge.transfer.item.ItemResource> inventory = net.neoforged.neoforge.transfer.access.ItemAccess.forStack(player.getMainHandItem()).getCapability(net.neoforged.neoforge.capabilities.Capabilities.Item.ITEM);
       Reference2IntMap<Item> supply = new Reference2IntOpenHashMap();
 
-      for (int slot = 0; slot < inventory.getSlots(); slot++) {
-         ItemStack sx = inventory.getStackInSlot(slot);
+      for (int slot = 0; slot < inventory.size(); slot++) {
+         ItemStack sx = ResourceHandlerUtils.stackAt(inventory, slot);
          if (!sx.isEmpty()) {
             RecipeItemEvent.CheckItem event = new RecipeItemEvent.CheckItem(sx, supply);
             NeoForge.EVENT_BUS.post(event);
@@ -209,8 +210,8 @@ public class RecipeItem extends BlockItem {
             Item item = (Item)var19.next();
             int needCount = need.getInt(item);
 
-            for (int i = 0; i < inventory.getSlots(); i++) {
-               ItemStack inSlot = inventory.getStackInSlot(i);
+            for (int i = 0; i < inventory.size(); i++) {
+               ItemStack inSlot = ResourceHandlerUtils.stackAt(inventory, i);
                if (!inSlot.isEmpty()) {
                   RecipeItemEvent.DeductItem event = new RecipeItemEvent.DeductItem(inSlot, item, new int[]{needCount});
                   NeoForge.EVENT_BUS.post(event);
@@ -221,7 +222,7 @@ public class RecipeItem extends BlockItem {
 
                   if (inSlot.is(item)) {
                      int extracted = Math.min(needCount, inSlot.getCount());
-                     inventory.extractItem(i, extracted, false);
+                     ResourceHandlerUtils.extract(inventory, i, extracted, false);
                      needCount -= extracted;
                      if (needCount <= 0) {
                         break;

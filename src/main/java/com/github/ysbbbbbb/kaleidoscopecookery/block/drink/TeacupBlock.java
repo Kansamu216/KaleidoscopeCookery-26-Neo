@@ -6,7 +6,6 @@ import com.github.ysbbbbbb.kaleidoscopecookery.item.TeacupItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.TeapotItem;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.ItemUtils;
 import com.google.common.collect.Lists;
-import com.mojang.serialization.MapCodec;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -42,7 +41,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class TeacupBlock extends HorizontalDirectionalBlock {
-   public static final MapCodec<TeacupBlock> CODEC = simpleCodec(p -> new TeacupBlock());
    public static final VoxelShape AABB = Block.box(1.0, 0.0, 1.0, 15.0, 2.0, 15.0);
    // All tea sets cap at four cups. Restricting the state domain prevents the
    // model baker from enumerating 960 impossible cup/tea combinations per tea.
@@ -54,7 +52,7 @@ public class TeacupBlock extends HorizontalDirectionalBlock {
    protected VoxelShape aabb = AABB;
 
    public TeacupBlock(int maxCount) {
-      super(ModRegistrationProperties.blockProperties().forceSolidOn().instabreak().mapColor(MapColor.WOOD).sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY).noOcclusion());
+      super(ModRegistrationProperties.blockProperties().forceSolidOn().instabreak().mapColor(MapColor.WOOD).sound(SoundType.WOOD).pushReaction(PushReaction.IGNORE_ENTITY).noOcclusion());
       this.maxCount = maxCount;
       this.cupCount = CUP_COUNT;
       this.teaCount = TEA_COUNT;
@@ -71,10 +69,6 @@ public class TeacupBlock extends HorizontalDirectionalBlock {
    public TeacupBlock setAABB(VoxelShape aabb) {
       this.aabb = aabb;
       return this;
-   }
-
-   protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-      return CODEC;
    }
 
    public int getMaxCount() {

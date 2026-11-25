@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.render;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.FruitBasketBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -44,8 +45,8 @@ public final class RuntimeFruitBasketRenderer
       BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
       state.facing = blockEntity.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
       state.items = new ArrayList<>();
-      for (int slot = 0; slot < blockEntity.getItems().getSlots(); slot++) {
-         ItemStack stack = blockEntity.getItems().getStackInSlot(slot);
+      for (int slot = 0; slot < blockEntity.getItems().size(); slot++) {
+         ItemStack stack = ResourceHandlerUtils.stackAt(blockEntity.getItems(), slot);
          if (!stack.isEmpty()) {
             ItemStackRenderState itemState = new ItemStackRenderState();
             this.itemModelResolver.updateForTopItem(
@@ -61,7 +62,7 @@ public final class RuntimeFruitBasketRenderer
    public void submit(State state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
       poseStack.pushPose();
       poseStack.translate(0.5F, 0.0F, 0.5F);
-      poseStack.mulPose(Axis.YN.rotationDegrees(state.facing.get2DDataValue() * 90.0F));
+      poseStack.mulPose(Axis.YN.rotationDegrees(state.facing.get2DDataValue() * 90.0F).get(new org.joml.Matrix4f()));
       poseStack.translate(-0.5F, 0.0F, -0.5F);
       for (BasketItem basketItem : state.items) {
          int slot = basketItem.slot();
@@ -69,8 +70,8 @@ public final class RuntimeFruitBasketRenderer
          int column = slot % 4;
          poseStack.pushPose();
          poseStack.translate(0.25F + column * 0.15F, 0.31F + (slot % 2) * 0.012F, 0.35F + row * 0.32F);
-         poseStack.mulPose(Axis.YN.rotationDegrees(90.0F));
-         poseStack.mulPose(Axis.XN.rotationDegrees(-30.0F));
+         poseStack.mulPose(Axis.YN.rotationDegrees(90.0F).get(new org.joml.Matrix4f()));
+         poseStack.mulPose(Axis.XN.rotationDegrees(-30.0F).get(new org.joml.Matrix4f()));
          poseStack.scale(0.375F, 0.375F, 0.375F);
          basketItem.item().submit(poseStack, collector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
          poseStack.popPose();

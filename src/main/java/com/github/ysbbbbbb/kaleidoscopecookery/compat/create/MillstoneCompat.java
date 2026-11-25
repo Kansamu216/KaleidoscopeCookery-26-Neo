@@ -21,7 +21,7 @@ import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import net.neoforged.neoforge.items.wrapper.RecipeWrapper;
 import org.jetbrains.annotations.NotNull;
 
@@ -61,7 +61,7 @@ public class MillstoneCompat {
       RecipeHolder<MillstoneRecipe> rawOutput = event.getRawOutput();
       if (rawOutput.id() == MillstoneRecipeSerializer.EMPTY_ID) {
          List<ItemStack> items = event.getInput().getInputs();
-         RecipeWrapper wrapper = new RecipeWrapper(new ItemStackHandler(NonNullList.copyOf(items)));
+         RecipeWrapper wrapper = new RecipeWrapper(new ItemStacksResourceHandler(NonNullList.copyOf(items)));
          Optional<RecipeHolder<MillingRecipe>> recipe = AllRecipeTypes.MILLING.find(wrapper, event.getLevel());
          recipe.ifPresent(millingRecipe -> event.setOutput(transformRecipe((RecipeHolder<MillingRecipe>)millingRecipe)));
       }

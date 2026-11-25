@@ -5,7 +5,6 @@ import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModTrigger;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.tag.TagMod;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.KitchenShovelItem;
-import com.mojang.serialization.MapCodec;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -47,7 +46,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 public class StoveBlock extends HorizontalDirectionalBlock {
-   public static final MapCodec<StoveBlock> CODEC = simpleCodec(p -> new StoveBlock());
    public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
    public StoveBlock() {
@@ -61,10 +59,6 @@ public class StoveBlock extends HorizontalDirectionalBlock {
             .strength(1.5F, 6.0F)
       );
       this.registerDefaultState((BlockState)((BlockState)((BlockState)this.stateDefinition.any()).setValue(FACING, Direction.SOUTH)).setValue(LIT, false));
-   }
-
-   protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-      return CODEC;
    }
 
    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {

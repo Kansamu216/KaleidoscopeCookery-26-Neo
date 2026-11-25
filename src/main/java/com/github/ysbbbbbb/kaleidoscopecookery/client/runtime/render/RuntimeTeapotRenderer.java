@@ -52,11 +52,11 @@ public final class RuntimeTeapotRenderer implements BlockEntityRenderer<TeapotBl
    public void submit(State state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
       poseStack.pushPose();
       poseStack.translate(0.5F, 1.5F, 0.5F);
-      poseStack.mulPose(Axis.ZN.rotationDegrees(180.0F));
-      poseStack.mulPose(Axis.YN.rotationDegrees(180.0F - state.facing.get2DDataValue() * 90.0F));
+      poseStack.mulPose(Axis.ZN.rotationDegrees(180.0F).get(new org.joml.Matrix4f()));
+      poseStack.mulPose(Axis.YN.rotationDegrees(180.0F - state.facing.get2DDataValue() * 90.0F).get(new org.joml.Matrix4f()));
       collector.submitModel(
          this.model, new RuntimeTeapotModel.State(state.variant, state.boiling, state.age),
-         poseStack, TEXTURE, state.lightCoords, OverlayTexture.NO_OVERLAY, 0, state.breakProgress
+         poseStack, TEXTURE, state.lightCoords, OverlayTexture.NO_OVERLAY, state.breakProgress.progress()
       );
       poseStack.popPose();
    }

@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.render;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.RecipeBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.RecipeItem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -48,7 +49,7 @@ public final class RuntimeRecipeBlockRenderer
       state.attachFace = blockEntity.getBlockState().getValue(BlockStateProperties.ATTACH_FACE);
       state.output.clear();
 
-      ItemStack recipeStack = blockEntity.getItems().getStackInSlot(0);
+      ItemStack recipeStack = ResourceHandlerUtils.stackAt(blockEntity.getItems(), 0);
       RecipeItem.RecipeRecord record = RecipeItem.getRecipe(recipeStack);
       if (record != null && !record.output().isEmpty()) {
          this.itemModelResolver.updateForTopItem(
@@ -72,8 +73,8 @@ public final class RuntimeRecipeBlockRenderer
       int rotationY = state.facing.get2DDataValue() + (state.attachFace == AttachFace.CEILING ? 2 : 0);
       poseStack.pushPose();
       poseStack.translate(0.5F, 0.5F, 0.5F);
-      poseStack.mulPose(Axis.YP.rotationDegrees(-rotationY * 90.0F));
-      poseStack.mulPose(Axis.XP.rotationDegrees(90.0F - rotationX * 90.0F));
+      poseStack.mulPose(Axis.YP.rotationDegrees(-rotationY * 90.0F).get(new org.joml.Matrix4f()));
+      poseStack.mulPose(Axis.XP.rotationDegrees(90.0F - rotationX * 90.0F).get(new org.joml.Matrix4f()));
       poseStack.translate(-0.5F, -0.5F, -0.5F);
       poseStack.scale(0.5F, 0.5F, 0.5F);
       if (state.attachFace == AttachFace.WALL) {

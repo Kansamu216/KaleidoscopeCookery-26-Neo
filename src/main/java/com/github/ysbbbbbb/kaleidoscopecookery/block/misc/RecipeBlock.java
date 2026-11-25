@@ -1,8 +1,8 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.block.misc;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRegistrationProperties;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.RecipeBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSoundType;
-import com.mojang.serialization.MapCodec;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -41,7 +41,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 public class RecipeBlock extends FaceAttachedHorizontalDirectionalBlock implements EntityBlock, SimpleWaterloggedBlock {
-   public static final MapCodec<RecipeBlock> CODEC = simpleCodec(p -> new RecipeBlock());
    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
    private static final VoxelShape CEILING_AABB_X = Block.box(1.5, 15.75, 3.0, 14.5, 16.0, 13.0);
    private static final VoxelShape CEILING_AABB_Z = Block.box(3.0, 15.75, 1.5, 13.0, 16.0, 14.5);
@@ -72,7 +71,7 @@ public class RecipeBlock extends FaceAttachedHorizontalDirectionalBlock implemen
          } else if (level.isClientSide()) {
             return InteractionResult.SUCCESS;
          } else if (level.getBlockEntity(pos) instanceof RecipeBlockEntity recipeBlockEntity) {
-            ItemStack itemStack = recipeBlockEntity.getItems().getStackInSlot(0);
+            ItemStack itemStack = ResourceHandlerUtils.stackAt(recipeBlockEntity.getItems(), 0);
             if (itemStack.isEmpty()) {
                return InteractionResult.TRY_WITH_EMPTY_HAND;
             } else {
@@ -122,10 +121,6 @@ public class RecipeBlock extends FaceAttachedHorizontalDirectionalBlock implemen
       };
    }
 
-   protected MapCodec<? extends FaceAttachedHorizontalDirectionalBlock> codec() {
-      return CODEC;
-   }
-
    @Nullable
    public BlockState getStateForPlacement(BlockPlaceContext context) {
       FluidState fluidState = context.getLevel().getFluidState(context.getClickedPos());
@@ -135,14 +130,14 @@ public class RecipeBlock extends FaceAttachedHorizontalDirectionalBlock implemen
 
    public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity livingEntity, ItemStack stack) {
       if (!pLevel.isClientSide() && pLevel.getBlockEntity(pPos) instanceof RecipeBlockEntity recipeBlockEntity) {
-         recipeBlockEntity.getItems().setStackInSlot(0, stack.copyWithCount(1));
+         ResourceHandlerUtils.setStack(recipeBlockEntity.getItems(), 0, stack.copyWithCount(1));
          recipeBlockEntity.refresh();
       }
    }
 
    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player) {
       if (level.getBlockEntity(pos) instanceof RecipeBlockEntity recipeBlockEntity) {
-         ItemStack itemStack = recipeBlockEntity.getItems().getStackInSlot(0);
+         ItemStack itemStack = ResourceHandlerUtils.stackAt(recipeBlockEntity.getItems(), 0);
          if (!itemStack.isEmpty()) {
             return itemStack.copy();
          }
@@ -163,7 +158,7 @@ public class RecipeBlock extends FaceAttachedHorizontalDirectionalBlock implemen
       List<ItemStack> drops = super.getDrops(state, lootParamsBuilder);
       BlockEntity parameter = (BlockEntity)lootParamsBuilder.getParameter(LootContextParams.BLOCK_ENTITY);
       if (parameter instanceof RecipeBlockEntity recipeBlock) {
-         drops.add(recipeBlock.getItems().getStackInSlot(0).copyWithCount(1));
+         drops.add(ResourceHandlerUtils.stackAt(recipeBlock.getItems(), 0).copyWithCount(1));
       }
 
       return drops;

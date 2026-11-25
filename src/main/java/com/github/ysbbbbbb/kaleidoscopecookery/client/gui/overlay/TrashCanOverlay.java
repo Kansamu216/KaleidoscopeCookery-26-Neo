@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.client.gui.overlay;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.misc.TrashCanBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.entity.SitEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
@@ -18,7 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 
 public class TrashCanOverlay implements Layer {
    private static final Identifier TRASH_CAN_OVERLAY = Identifier.fromNamespaceAndPath("kaleidoscope_cookery", "textures/gui/trash_can_overlay.png");
@@ -47,10 +48,10 @@ public class TrashCanOverlay implements Layer {
                Font font = Minecraft.getInstance().font;
                int x = screenWidth / 2 - 28;
                int y = screenHeight / 2 + 4;
-               ItemStackHandler storage = trashCan.getStorage();
+               ItemStacksResourceHandler storage = trashCan.getStorage();
 
-               for (int i = 0; i < storage.getSlots(); i++) {
-                  ItemStack stack = storage.getStackInSlot(i);
+               for (int i = 0; i < storage.size(); i++) {
+                  ItemStack stack = ResourceHandlerUtils.stackAt(storage, i);
                   if (!stack.isEmpty()) {
                      guiGraphics.renderFakeItem(stack, x, y);
                      guiGraphics.renderItemDecorations(font, stack, x, y);

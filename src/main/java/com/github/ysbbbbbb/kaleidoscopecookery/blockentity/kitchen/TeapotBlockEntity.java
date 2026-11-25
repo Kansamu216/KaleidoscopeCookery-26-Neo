@@ -52,9 +52,11 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
+import net.neoforged.neoforge.transfer.fluid.FluidUtil;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
 
 public class TeapotBlockEntity extends BaseBlockEntity implements ITeapot {
    public static final int INGREDIENT_TIME = 200;
@@ -170,14 +172,14 @@ public class TeapotBlockEntity extends BaseBlockEntity implements ITeapot {
          this.sendActionBarMessage(user, "tooltip.kaleidoscope_cookery.teapot.add_tea_fluid.state_incorrect", this.getStatusText());
          return false;
       } else {
-         IFluidHandlerItem cap = FluidUtil.getFluidHandler(itemStack).orElse(null);
+         ResourceHandler<FluidResource> cap = com.github.ysbbbbbb.kaleidoscopecookery.util.FluidUtils.itemFluidHandler(itemStack);
          if (cap == null) {
             return false;
          } else if (!this.teaFluidId.equals(TeapotRecipeSerializer.EMPTY_TEA_FLUID)) {
             this.sendActionBarMessage(user, "tooltip.kaleidoscope_cookery.teapot.add_tea_fluid.has_fluid");
             return false;
          } else {
-            FluidStack fluidInTank = cap.getFluidInTank(0);
+            FluidStack fluidInTank = com.github.ysbbbbbb.kaleidoscopecookery.util.FluidUtils.firstStack(cap);
             Fluid fluid = fluidInTank.getFluid();
             Identifier id = BuiltInRegistries.FLUID.getKey(fluid);
             int amount = fluidInTank.getAmount();
@@ -185,7 +187,7 @@ public class TeapotBlockEntity extends BaseBlockEntity implements ITeapot {
                this.sendActionBarMessage(user, "tooltip.kaleidoscope_cookery.teapot.add_tea_fluid.fluid_not_enough");
                return false;
             } else {
-               FluidTank needFluidHandler = new FluidTank(1000, stack -> FluidStack.isSameFluidSameComponents(stack, fluidInTank));
+               FluidStacksResourceHandler needFluidHandler = new FluidStacksResourceHandler(1, 1000);
                if (!FluidUtils.emptyItem(user, itemStack, needFluidHandler, 1000)) {
                   return false;
                } else {
@@ -201,7 +203,7 @@ public class TeapotBlockEntity extends BaseBlockEntity implements ITeapot {
    @Override
    public boolean removeTeaFluid(Level level, LivingEntity user, ItemStack itemStack) {
       if (this.status == 0 && !this.teaFluidId.equals(TeapotRecipeSerializer.EMPTY_TEA_FLUID) && this.input.isEmpty()) {
-         IFluidHandlerItem cap = FluidUtil.getFluidHandler(itemStack).orElse(null);
+         ResourceHandler<FluidResource> cap = com.github.ysbbbbbb.kaleidoscopecookery.util.FluidUtils.itemFluidHandler(itemStack);
          if (cap == null) {
             return false;
          } else {
@@ -209,8 +211,8 @@ public class TeapotBlockEntity extends BaseBlockEntity implements ITeapot {
             if (fluid == Fluids.EMPTY) {
                return false;
             } else {
-               FluidTank sourceFluidHandler = new FluidTank(1000);
-               sourceFluidHandler.setFluid(new FluidStack(fluid, 1000));
+               FluidStacksResourceHandler sourceFluidHandler = new FluidStacksResourceHandler(1, 1000);
+               sourceFluidHandler.set(0, FluidResource.of(new FluidStack(fluid, 1000)), 1000);
                if (!FluidUtils.fillItem(user, itemStack, sourceFluidHandler, 1000)) {
                   return false;
                } else {

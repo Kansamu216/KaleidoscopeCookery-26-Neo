@@ -48,7 +48,7 @@ import net.minecraft.world.level.storage.loot.LootParams.Builder;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.transfer.item.ItemUtil;
 
 public class BowlFoodBlockItem extends BlockItem implements IHasContainer {
    private final List<MobEffectInstance> effectInstances = Lists.newArrayList();
@@ -89,7 +89,7 @@ public class BowlFoodBlockItem extends BlockItem implements IHasContainer {
             if (!itemStack.isEmpty()) {
                 if (!this.usingConvertsTo.isPresent() || itemStack.getItem() != this.usingConvertsTo.get()) {
                   if (entity instanceof Player player) {
-                     ItemHandlerHelper.giveItemToPlayer(player, itemStack);
+                     player.getInventory().add(itemStack);
                   } else {
                      ItemEntity itemEntity = new ItemEntity(level, entity.getX(), entity.getY(), entity.getZ(), itemStack);
                      level.addFreshEntity(itemEntity);

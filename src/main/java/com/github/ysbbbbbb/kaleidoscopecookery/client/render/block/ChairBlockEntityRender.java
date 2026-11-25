@@ -37,7 +37,7 @@ public class ChairBlockEntityRender implements BlockEntityRenderer<ChairBlockEnt
       poseStack.pushPose();
       int rotation = ((Direction)chair.getBlockState().getValue(HorizontalDirectionalBlock.FACING)).getOpposite().get2DDataValue();
       poseStack.translate(0.5, 0.0, 0.5);
-      poseStack.mulPose(Axis.YP.rotationDegrees(-rotation * 90));
+      poseStack.mulPose(Axis.YP.rotationDegrees(-rotation * 90).get(new org.joml.Matrix4f()));
       poseStack.translate(-0.5, 0.0, -0.5);
       BakedModel model = itemRenderer.getItemModelShaper().getModelManager().getModel(cacheModel);
       RenderType renderType = RenderType.entityCutoutNoCull(InventoryMenu.BLOCK_ATLAS);

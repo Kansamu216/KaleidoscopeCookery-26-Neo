@@ -28,7 +28,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.transfer.item.ItemUtil;
 
 public class ChoppingBoardBlockEntity extends BaseBlockEntity implements IChoppingBoard {
    private static final String MODEL_ID = "ModelId";
@@ -110,7 +110,7 @@ public class ChoppingBoardBlockEntity extends BaseBlockEntity implements IChoppi
    public boolean onTakeOut(Level level, LivingEntity user) {
       if (this.currentCutCount == 0 && !this.currentCutStack.isEmpty()) {
          if (user instanceof Player player) {
-            ItemHandlerHelper.giveItemToPlayer(player, this.currentCutStack);
+            player.getInventory().add(this.currentCutStack);
          } else {
             popResource(level, this.worldPosition, this.currentCutStack);
          }

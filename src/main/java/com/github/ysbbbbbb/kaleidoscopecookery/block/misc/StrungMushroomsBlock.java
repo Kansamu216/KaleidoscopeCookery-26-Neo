@@ -30,7 +30,7 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.transfer.item.ItemUtil;
 
 public class StrungMushroomsBlock extends Block {
    public static final BooleanProperty IS_HEAD = BooleanProperty.create("is_head");
@@ -39,7 +39,7 @@ public class StrungMushroomsBlock extends Block {
    private static final VoxelShape AABB_BODY = Block.box(3.5, 0.0, 3.5, 12.5, 16.0, 12.5);
 
    public StrungMushroomsBlock() {
-      super(ModRegistrationProperties.blockProperties().mapColor(MapColor.COLOR_BROWN).noCollision().instabreak().sound(SoundType.GRASS).pushReaction(PushReaction.DESTROY));
+      super(ModRegistrationProperties.blockProperties().mapColor(MapColor.COLOR_BROWN).noCollision().instabreak().sound(SoundType.GRASS).pushReaction(PushReaction.IGNORE_ENTITY));
       this.registerDefaultState((BlockState)((BlockState)((BlockState)this.stateDefinition.any()).setValue(IS_HEAD, true)).setValue(SHEARED, false));
    }
 
@@ -63,7 +63,7 @@ public class StrungMushroomsBlock extends Block {
             if (mainHandItem.isEmpty()) {
                player.setItemInHand(InteractionHand.MAIN_HAND, redChili);
             } else {
-               ItemHandlerHelper.giveItemToPlayer(player, redChili);
+               player.getInventory().add(redChili);
             }
 
             level.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundSource.BLOCKS, 1.0F, 0.8F + level.getRandom().nextFloat() * 0.4F);

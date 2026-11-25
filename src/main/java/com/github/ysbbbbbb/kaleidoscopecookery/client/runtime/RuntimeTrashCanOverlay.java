@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.client.runtime;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.misc.TrashCanBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.entity.SitEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
@@ -57,8 +58,8 @@ public final class RuntimeTrashCanOverlay implements GuiLayer {
 
       int x = gui.guiWidth() / 2 - 28;
       int y = gui.guiHeight() / 2 + 4;
-      for (int slot = 0; slot < trashCan.getStorage().getSlots(); slot++) {
-         ItemStack stack = trashCan.getStorage().getStackInSlot(slot);
+      for (int slot = 0; slot < trashCan.getStorage().size(); slot++) {
+         ItemStack stack = ResourceHandlerUtils.stackAt(trashCan.getStorage(), slot);
          if (!stack.isEmpty()) {
             gui.fakeItem(stack, x, y);
             gui.itemDecorations(minecraft.font, stack, x, y);

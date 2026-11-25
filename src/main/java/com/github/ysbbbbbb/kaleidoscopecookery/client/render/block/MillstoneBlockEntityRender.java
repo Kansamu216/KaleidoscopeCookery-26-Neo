@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.client.render.block;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.MillstoneBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.MillstoneBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.model.MillstoneModel;
@@ -38,8 +39,8 @@ public class MillstoneBlockEntityRender implements BlockEntityRenderer<Millstone
       if (level != null) {
          Direction facing = (Direction)millstone.getBlockState().getValue(MillstoneBlock.FACING);
          this.renderBody(poseStack, buffer, packedLight, packedOverlay, partialTick, facing, millstone, level);
-         if (!millstone.getOutputs().getStackInSlot(0).isEmpty()) {
-            this.renderItems(millstone, poseStack, buffer, packedLight, packedOverlay, millstone.getOutputs().getStackInSlot(0), this.context.getItemRenderer());
+         if (!ResourceHandlerUtils.stackAt(millstone.getOutputs(), 0).isEmpty()) {
+            this.renderItems(millstone, poseStack, buffer, packedLight, packedOverlay, ResourceHandlerUtils.stackAt(millstone.getOutputs(), 0), this.context.getItemRenderer());
          } else if (!millstone.getInput().isEmpty()) {
             this.renderItems(millstone, poseStack, buffer, packedLight, packedOverlay, millstone.getInput(), this.context.getItemRenderer());
          }
@@ -69,8 +70,8 @@ public class MillstoneBlockEntityRender implements BlockEntityRenderer<Millstone
 
       poseStack.pushPose();
       poseStack.translate(0.5, 1.5, 0.5);
-      poseStack.mulPose(Axis.ZN.rotationDegrees(180.0F));
-      poseStack.mulPose(Axis.YN.rotationDegrees(180 - facingDeg));
+      poseStack.mulPose(Axis.ZN.rotationDegrees(180.0F).get(new org.joml.Matrix4f()));
+      poseStack.mulPose(Axis.YN.rotationDegrees(180 - facingDeg).get(new org.joml.Matrix4f()));
       VertexConsumer checkerBoardBuff = bufferIn.getBuffer(RenderType.entityCutoutNoCull(TEXTURE));
       this.bodyModel.renderToBuffer(poseStack, checkerBoardBuff, combinedLightIn, combinedOverlayIn);
       poseStack.popPose();
@@ -96,8 +97,8 @@ public class MillstoneBlockEntityRender implements BlockEntityRenderer<Millstone
          poseStack.pushPose();
          poseStack.translate(0.0, 0.875, 0.0);
          poseStack.rotateAround(Axis.YP.rotationDegrees(i * 45 + source.nextInt(15)), 0.5F, 0.0F, 0.5F);
-         poseStack.mulPose(Axis.YP.rotationDegrees(source.nextInt(20)));
-         poseStack.mulPose(Axis.XN.rotationDegrees(80 + source.nextInt(20)));
+         poseStack.mulPose(Axis.YP.rotationDegrees(source.nextInt(20)).get(new org.joml.Matrix4f()));
+         poseStack.mulPose(Axis.XN.rotationDegrees(80 + source.nextInt(20)).get(new org.joml.Matrix4f()));
          poseStack.scale(0.65F, 0.65F, 0.65F);
          itemRenderer.render(renderItem, ItemDisplayContext.FIXED, false, poseStack, buffer, packedLight, packedOverlay, model);
          poseStack.popPose();

@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.render;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.decoration.TableBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.TableBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.CarpetColor;
@@ -68,8 +69,8 @@ public final class RuntimeTableRenderer implements BlockEntityRenderer<TableBloc
 
       state.items = new ArrayList<>();
       state.blockItems = new ArrayList<>();
-      for (int slot = 0; slot < blockEntity.getItems().getSlots(); slot++) {
-         ItemStack stack = blockEntity.getItems().getStackInSlot(slot);
+      for (int slot = 0; slot < blockEntity.getItems().size(); slot++) {
+         ItemStack stack = ResourceHandlerUtils.stackAt(blockEntity.getItems(), slot);
          if (!stack.isEmpty()) {
             ItemStackRenderState itemState = new ItemStackRenderState();
             this.itemModelResolver.updateForTopItem(
@@ -86,7 +87,7 @@ public final class RuntimeTableRenderer implements BlockEntityRenderer<TableBloc
       if (!state.carpet.isEmpty()) {
          poseStack.pushPose();
          poseStack.translate(0.5F, 0.5F, 0.5F);
-         poseStack.mulPose(Axis.YP.rotationDegrees(state.axis == Direction.Axis.X ? -180.0F : -270.0F));
+         poseStack.mulPose(Axis.YP.rotationDegrees(state.axis == Direction.Axis.X ? -180.0F : -270.0F).get(new org.joml.Matrix4f()));
          state.carpet.submit(poseStack, collector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
          poseStack.popPose();
       }
@@ -97,7 +98,7 @@ public final class RuntimeTableRenderer implements BlockEntityRenderer<TableBloc
          poseStack.pushPose();
          poseStack.translate(0.5F, 1.3125F, 0.5F);
          poseStack.scale(0.65F, 0.65F, 0.65F);
-         poseStack.mulPose(Axis.YP.rotationDegrees(state.axis == Direction.Axis.X ? 180.0F : 90.0F));
+         poseStack.mulPose(Axis.YP.rotationDegrees(state.axis == Direction.Axis.X ? 180.0F : 90.0F).get(new org.joml.Matrix4f()));
          poseStack.translate(offset[0], offset[1] - (state.blockItems.get(i) ? 0.25F : 0.0F), offset[2]);
          state.items.get(i).submit(poseStack, collector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
          poseStack.popPose();

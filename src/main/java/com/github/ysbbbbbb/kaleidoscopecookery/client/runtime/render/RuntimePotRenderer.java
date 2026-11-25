@@ -96,17 +96,17 @@ public final class RuntimePotRenderer implements BlockEntityRenderer<PotBlockEnt
       RandomSource random = RandomSource.create(state.seed);
       poseStack.pushPose();
       poseStack.translate(0.5F, 0.13F, 0.5F);
-      poseStack.mulPose(Axis.YN.rotationDegrees(state.facing.get2DDataValue() * 90.0F));
-      poseStack.mulPose(Axis.XN.rotationDegrees(90.0F));
+      poseStack.mulPose(Axis.YN.rotationDegrees(state.facing.get2DDataValue() * 90.0F).get(new org.joml.Matrix4f()));
+      poseStack.mulPose(Axis.XN.rotationDegrees(90.0F).get(new org.joml.Matrix4f()));
       poseStack.scale(0.5F, 0.5F, 0.5F);
       for (int i = 0; i < state.items.size(); i++) {
          poseStack.pushPose();
          int slot = state.slots.get(i);
-         poseStack.mulPose(Axis.ZN.rotationDegrees(slot * (90.0F + random.nextInt(90))));
+         poseStack.mulPose(Axis.ZN.rotationDegrees(slot * (90.0F + random.nextInt(90))).get(new org.joml.Matrix4f()));
          if (state.animationTime >= 0L && state.animationTime < 1000L && slot < state.randomHeights.length) {
             float progress = (float)state.animationTime / 1000.0F;
             poseStack.translate(0.0F, 0.0F, state.randomHeights[slot] * Mth.sin((float)Math.PI * progress));
-            poseStack.mulPose(Axis.XN.rotationDegrees(0.72F * (float)state.animationTime));
+            poseStack.mulPose(Axis.XN.rotationDegrees(0.72F * (float)state.animationTime).get(new org.joml.Matrix4f()));
          }
          state.items.get(i).submit(poseStack, collector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
          poseStack.popPose();

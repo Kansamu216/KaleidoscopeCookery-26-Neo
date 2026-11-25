@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.compat.jade.block;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.RecipeBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.compat.jade.ModPlugin;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.RecipeItem;
@@ -16,7 +17,7 @@ public enum RecipeBlockComponentProvider implements IBlockComponentProvider {
 
    public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig pluginConfig) {
       if (accessor.getBlockEntity() instanceof RecipeBlockEntity recipeBlock) {
-         ItemStack stackInSlot = recipeBlock.getItems().getStackInSlot(0);
+         ItemStack stackInSlot = ResourceHandlerUtils.stackAt(recipeBlock.getItems(), 0);
          if (!stackInSlot.isEmpty()) {
             RecipeItem.RecipeRecord recipe = RecipeItem.getRecipe(stackInSlot);
             if (recipe != null) {
