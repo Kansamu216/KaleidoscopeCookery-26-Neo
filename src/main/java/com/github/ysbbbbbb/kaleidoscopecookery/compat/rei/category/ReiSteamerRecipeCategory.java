@@ -19,7 +19,6 @@ import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryStacks;
-import me.shedaniel.rei.plugin.common.displays.crafting.DefaultCustomDisplay;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
@@ -28,18 +27,18 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.ItemLike;
 
-public class ReiSteamerRecipeCategory implements DisplayCategory<DefaultCustomDisplay> {
-   public static final CategoryIdentifier<DefaultCustomDisplay> ID = CategoryIdentifier.of("kaleidoscope_cookery", "plugin/steamer");
+public class ReiSteamerRecipeCategory implements DisplayCategory<ReiSteamerRecipeCategory.SteamerDisplay> {
+   public static final CategoryIdentifier<ReiSteamerRecipeCategory.SteamerDisplay> ID = CategoryIdentifier.of("kaleidoscope_cookery", "plugin/steamer");
    private static final MutableComponent TITLE = Component.translatable("block.kaleidoscope_cookery.steamer");
    private static final Identifier BG = Identifier.fromNamespaceAndPath("kaleidoscope_cookery", "textures/gui/jei/steamer.png");
    public static final int WIDTH = 176;
    public static final int HEIGHT = 78;
 
-   public CategoryIdentifier<? extends DefaultCustomDisplay> getCategoryIdentifier() {
+   public CategoryIdentifier<? extends ReiSteamerRecipeCategory.SteamerDisplay> getCategoryIdentifier() {
       return ID;
    }
 
-   public List<Widget> setupDisplay(DefaultCustomDisplay display, Rectangle bounds) {
+   public List<Widget> setupDisplay(ReiSteamerRecipeCategory.SteamerDisplay display, Rectangle bounds) {
       List<Widget> widgets = new ArrayList<>();
       int startX = bounds.x;
       int startY = bounds.y;
@@ -52,7 +51,7 @@ public class ReiSteamerRecipeCategory implements DisplayCategory<DefaultCustomDi
       return widgets;
    }
 
-   public int getDisplayWidth(DefaultCustomDisplay display) {
+   public int getDisplayWidth(SteamerDisplay display) {
       return 176;
    }
 
@@ -71,19 +70,31 @@ public class ReiSteamerRecipeCategory implements DisplayCategory<DefaultCustomDi
    public static void registerCategories(CategoryRegistry registry) {
       registry.add(new ReiSteamerRecipeCategory());
       registry.addWorkstations(
-         ID, new EntryIngredient[]{ReiUtil.ofItem((Item)ModItems.STEAMER.get()), ReiUtil.ofIngredient(Ingredient.of(TagMod.KITCHEN_KNIFE))}
+         ID, new EntryIngredient[]{ReiUtil.ofItem((Item)ModItems.STEAMER.get()), ReiUtil.ofTag(TagMod.KITCHEN_KNIFE)}
       );
    }
 
    public static void registerDisplays(DisplayRegistry registry) {
-      registry.getRecipeManager().getAllRecipesFor(ModRecipes.STEAMER_RECIPE).forEach(r -> {
-         List<EntryIngredient> input = ReiUtil.ofIngredients(((SteamerRecipe)r.value()).getIngredients());
+      ReiUtil.recipesOf(ModRecipes.STEAMER_RECIPE).forEach(r -> {
+         List<EntryIngredient> input = ReiUtil.ofIngredients(java.util.List.of(((SteamerRecipe)r.value()).getIngredient()));
          List<EntryIngredient> output = ReiUtil.ofItemStacks(((SteamerRecipe)r.value()).getResult());
-         registry.add(new DefaultCustomDisplay(r, input, output) {
-            public CategoryIdentifier<?> getCategoryIdentifier() {
-               return ReiSteamerRecipeCategory.ID;
-            }
-         });
+         registry.add(new SteamerDisplay(input, output, r.id().identifier()));
       });
+   }
+
+   public static class SteamerDisplay extends me.shedaniel.rei.api.common.display.basic.BasicDisplay {
+      public SteamerDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Identifier location) {
+         super(inputs, outputs, java.util.Optional.ofNullable(location));
+      }
+
+      @Override
+      public CategoryIdentifier<?> getCategoryIdentifier() {
+         return ReiSteamerRecipeCategory.ID;
+      }
+
+      @Override
+      public me.shedaniel.rei.api.common.display.DisplaySerializer<? extends me.shedaniel.rei.api.common.display.Display> getSerializer() {
+         return ReiUtil.nonPersistentSerializer(getClass());
+      }
    }
 }

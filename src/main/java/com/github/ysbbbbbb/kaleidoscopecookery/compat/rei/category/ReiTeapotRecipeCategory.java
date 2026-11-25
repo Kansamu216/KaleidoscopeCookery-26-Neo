@@ -23,7 +23,7 @@ import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import me.shedaniel.rei.api.client.gui.compat.GuiGraphics;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -52,7 +52,7 @@ public class ReiTeapotRecipeCategory implements DisplayCategory<ReiTeapotRecipeC
       widgets.add(Widgets.createTexturedWidget(BG, startX, startY, 0.0F, 0.0F, 176, 88));
       widgets.add(
          Widgets.withTranslate(
-            Widgets.createDrawableWidget((guiGraphics, mouseX, mouseY, v) -> this.drawCenteredString(guiGraphics, brewTime, 88, 70)), startX, startY, 0.0
+            Widgets.createDrawableWidget((guiGraphics, mouseX, mouseY, v) -> this.drawCenteredString(guiGraphics, brewTime, 88, 70)), startX, startY
          )
       );
       widgets.add(Widgets.createSlot(new Point(startX + 65, startY + 3)).entries((Collection)display.getInputEntries().get(0)).markInput());
@@ -90,8 +90,7 @@ public class ReiTeapotRecipeCategory implements DisplayCategory<ReiTeapotRecipeC
    }
 
    public static void registerDisplays(DisplayRegistry registry) {
-      registry.getRecipeManager()
-         .getAllRecipesFor(ModRecipes.TEAPOT_RECIPE)
+      ReiUtil.recipesOf(ModRecipes.TEAPOT_RECIPE)
          .forEach(
             r -> {
                Fluid fluid = (Fluid)BuiltInRegistries.FLUID.getValue(((TeapotRecipe)r.value()).teaFluid());
@@ -99,13 +98,13 @@ public class ReiTeapotRecipeCategory implements DisplayCategory<ReiTeapotRecipeC
                List<EntryIngredient> fluidInput = ReiUtil.ofItems(bucket);
                List<EntryIngredient> inputs = List.of(
                   EntryIngredient.of(
-                     Arrays.stream(((TeapotRecipe)r.value()).ingredient().getItems())
-                        .map(stack -> EntryStacks.of(stack.copyWithCount(((TeapotRecipe)r.value()).ingredientCount())))
+                     ((TeapotRecipe)r.value()).ingredient().items()
+                        .map(holder -> EntryStacks.of(new net.minecraft.world.item.ItemStack(holder.value(), ((TeapotRecipe)r.value()).ingredientCount())))
                         .toList()
                   )
                );
                List<EntryIngredient> output = ReiUtil.ofItemStacks(((TeapotRecipe)r.value()).result().create().copyWithCount(12));
-               registry.add(new ReiTeapotRecipeCategory.TeapotRecipeDisplay(r.id(), fluidInput, inputs, output, ((TeapotRecipe)r.value()).time()));
+               registry.add(new ReiTeapotRecipeCategory.TeapotRecipeDisplay(r.id().identifier(), fluidInput, inputs, output, ((TeapotRecipe)r.value()).time()));
             }
          );
    }
@@ -122,6 +121,11 @@ public class ReiTeapotRecipeCategory implements DisplayCategory<ReiTeapotRecipeC
 
       public CategoryIdentifier<?> getCategoryIdentifier() {
          return ReiTeapotRecipeCategory.ID;
+      }
+
+      @Override
+      public me.shedaniel.rei.api.common.display.DisplaySerializer<? extends me.shedaniel.rei.api.common.display.Display> getSerializer() {
+         return ReiUtil.nonPersistentSerializer(getClass());
       }
    }
 }

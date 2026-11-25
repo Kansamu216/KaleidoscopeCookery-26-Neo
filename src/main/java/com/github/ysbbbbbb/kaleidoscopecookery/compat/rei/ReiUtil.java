@@ -9,8 +9,40 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
 public class ReiUtil {
+   /** Non-persistent serializer used by the in-memory recipe displays. */
+   @SuppressWarnings("unchecked")
+   public static <D extends me.shedaniel.rei.api.common.display.Display> me.shedaniel.rei.api.common.display.DisplaySerializer<D> nonPersistentSerializer(Class<D> type) {
+      return me.shedaniel.rei.api.common.display.DisplaySerializer.of(
+         com.mojang.serialization.MapCodec.unit((D) null),
+         net.minecraft.network.codec.StreamCodec.unit((D) null),
+         false
+      );
+   }
+
+   /** 26.3 exposes RecipeManager#getRecipes() instead of getAllRecipesFor(type). */
+   public static <T extends net.minecraft.world.item.crafting.Recipe<?>> java.util.List<net.minecraft.world.item.crafting.RecipeHolder<?>> recipesOf(
+         net.minecraft.world.item.crafting.RecipeType<T> type) {
+      net.minecraft.client.multiplayer.ClientLevel level = net.minecraft.client.Minecraft.getInstance().level;
+      if (level == null) {
+         return java.util.List.of();
+      }
+      return level.recipeAccess() instanceof net.minecraft.world.item.crafting.RecipeManager mgr
+         ? mgr.getRecipes().stream().filter(h -> h.value().getType() == type).toList()
+         : java.util.List.of();
+   }
+
    public static EntryIngredient ofIngredient(Ingredient ingredient) {
-      return EntryIngredient.of(Arrays.stream(ingredient.getItems()).map(EntryStacks::of).toList());
+      return EntryIngredient.of(ingredient.items().map(holder -> EntryStacks.of(holder.value())).toList());
+   }
+
+   /** Builds an entry ingredient from an item tag (26.3 no longer accepts TagKey in Ingredient.of). */
+   public static EntryIngredient ofTag(net.minecraft.tags.TagKey<Item> tag) {
+      return EntryIngredient.of(
+         net.minecraft.core.registries.BuiltInRegistries.ITEM.getTagOrEmpty(tag).spliterator().getExactSizeIfKnown() >= 0
+            ? java.util.stream.StreamSupport.stream(
+                 net.minecraft.core.registries.BuiltInRegistries.ITEM.getTagOrEmpty(tag).spliterator(), false)
+                 .map(h -> EntryStacks.of(h.value())).toList()
+            : java.util.List.<me.shedaniel.rei.api.common.entry.EntryStack<?>>of());
    }
 
    public static EntryIngredient ofItem(Item item) {
