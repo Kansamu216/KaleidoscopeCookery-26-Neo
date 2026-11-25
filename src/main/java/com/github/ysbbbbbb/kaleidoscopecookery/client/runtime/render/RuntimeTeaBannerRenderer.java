@@ -40,11 +40,13 @@ public final class RuntimeTeaBannerRenderer
    private static final String DEFAULT_PATTERN = "tea";
 
    private final BannerModel bannerModel;
+   private final PatternModel patternModel;
    private final ModelPart rod;
 
    public RuntimeTeaBannerRenderer(BlockEntityRendererProvider.Context context) {
       ModelPart root = createBodyLayer().bakeRoot();
       this.bannerModel = new BannerModel(root);
+      this.patternModel = new PatternModel(createPatternLayer().bakeRoot());
       this.rod = root.getChild("rod");
    }
 
@@ -105,6 +107,18 @@ public final class RuntimeTeaBannerRenderer
          0,
          state.breakProgress
       );
+      // Second pass: the pattern overlay is a slightly larger cloth plane drawn on top of the
+      // base cloth with its own texture, exactly like the upstream 1.7.0 renderer.
+      collector.submitModel(
+         this.patternModel,
+         state,
+         poseStack,
+         state.patternTexture,
+         state.lightCoords,
+         OverlayTexture.NO_OVERLAY,
+         0,
+         state.breakProgress
+      );
       poseStack.popPose();
    }
 
@@ -125,6 +139,8 @@ public final class RuntimeTeaBannerRenderer
       PartDefinition rod = root.addOrReplaceChild(
          "rod",
          CubeListBuilder.create()
+            // Hanging rod: the vertical rope plus the horizontal bar (upstream NormalBannerModel).
+            .texOffs(64, 0).addBox(-1.0F, -60.0F, -1.0F, 2.0F, 60.0F, 2.0F, new CubeDeformation(0.0F))
             .texOffs(0, 64).addBox(-2.0F, -64.0F, -14.0F, 4.0F, 4.0F, 28.0F, new CubeDeformation(0.0F)),
          PartPose.offsetAndRotation(0.0F, 24.0F, 0.0F, 0.0F, -1.5708F, 0.0F)
       );
@@ -145,10 +161,67 @@ public final class RuntimeTeaBannerRenderer
       return LayerDefinition.create(mesh, 128, 128);
    }
 
+   /**
+    * Pattern overlay geometry (upstream {@code PatternModel}): two plane strips placed 2.25px in
+    * front of / behind the base cloth, 32x48px inside the 64x96 pattern texture.
+    */
+   private static LayerDefinition createPatternLayer() {
+      MeshDefinition mesh = new MeshDefinition();
+      PartDefinition root = mesh.getRoot();
+      PartDefinition bone = root.addOrReplaceChild(
+         "bone", CubeListBuilder.create(),
+         PartPose.offsetAndRotation(0.0F, 24.0F, 0.0F, 0.0F, -1.5708F, 0.0F)
+      );
+      bone.addOrReplaceChild(
+         "back",
+         CubeListBuilder.create().texOffs(0, 16).addBox(0.0F, 0.0F, -16.0F, 0.0F, 48.0F, 32.0F, new CubeDeformation(0.0F)),
+         PartPose.offset(2.25F, -65.0F, 0.0F)
+      );
+      bone.addOrReplaceChild(
+         "front",
+         CubeListBuilder.create().texOffs(0, -32).addBox(0.0F, 0.0F, -16.0F, 0.0F, 48.0F, 32.0F, new CubeDeformation(0.0F)),
+         PartPose.offset(-2.25F, -65.0F, 0.0F)
+      );
+      return LayerDefinition.create(mesh, 64, 96);
+   }
+
    /** Minimal box model: only needs the generic render type family, no per-frame state. */
    private static final class BannerModel extends Model<State> {
+      private final ModelPart front;
+      private final ModelPart back;
+
       private BannerModel(ModelPart root) {
          super(root, RenderTypes::entityCutout);
+         ModelPart rod = root.getChild("rod");
+         this.front = rod.getChild("front");
+         this.back = rod.getChild("back");
+      }
+
+      @Override
+      public void setupAnim(State state) {
+         super.setupAnim(state);
+         this.front.zRot = state.waveAngle;
+         this.back.zRot = state.waveAngle;
+      }
+   }
+
+   /** The pattern overlay model; the wave angle is applied by the same state as the base cloth. */
+   private static final class PatternModel extends Model<State> {
+      private final ModelPart front;
+      private final ModelPart back;
+
+      private PatternModel(ModelPart root) {
+         super(root, RenderTypes::entityCutout);
+         ModelPart bone = root.getChild("bone");
+         this.front = bone.getChild("front");
+         this.back = bone.getChild("back");
+      }
+
+      @Override
+      public void setupAnim(State state) {
+         super.setupAnim(state);
+         this.front.zRot = state.waveAngle;
+         this.back.zRot = state.waveAngle;
       }
    }
 
