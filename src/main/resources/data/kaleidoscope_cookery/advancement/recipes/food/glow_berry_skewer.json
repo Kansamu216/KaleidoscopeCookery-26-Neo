@@ -6,7 +6,7 @@
         "items": [
           {
             "items": [
-              "minecraft:apple"
+              "minecraft:glow_berries"
             ]
           }
         ]
@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "kaleidoscope_cookery:apple_skewer"
+        "recipe": "kaleidoscope_cookery:glow_berry_skewer"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -27,8 +27,8 @@
     ]
   ],
   "rewards": {
-    "recipes": [
-      "kaleidoscope_cookery:apple_skewer"
+    "recipe": [
+      "kaleidoscope_cookery:glow_berry_skewer"
     ]
   },
   "sends_telemetry_event": false

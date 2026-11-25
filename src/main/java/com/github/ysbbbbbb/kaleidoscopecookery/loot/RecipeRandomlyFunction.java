@@ -22,7 +22,6 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemConditionalFunction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
-import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 
 public class RecipeRandomlyFunction extends LootItemConditionalFunction {
@@ -39,8 +38,9 @@ public class RecipeRandomlyFunction extends LootItemConditionalFunction {
       this.possibleRecipes = ImmutableList.copyOf(possibleRecipes);
    }
 
-   public LootItemFunctionType<RecipeRandomlyFunction> getType() {
-      return ModLootModifier.RECIPE_RANDOMLY;
+   @Override
+   public MapCodec<? extends LootItemConditionalFunction> codec() {
+      return CODEC;
    }
 
    protected ItemStack run(ItemStack stack, LootContext context) {
@@ -58,22 +58,26 @@ public class RecipeRandomlyFunction extends LootItemConditionalFunction {
             Item result = FoodBiteRegistry.getItem(randomKey);
             RegistryAccess registryAccess = context.getLevel().registryAccess();
 
-            for (RecipeHolder<PotRecipe> recipeHolder : context.getLevel().recipeAccess().getAllRecipesFor(ModRecipes.POT_RECIPE)) {
-               PotRecipe recipe = (PotRecipe)recipeHolder.value();
+            for (RecipeHolder<?> recipeHolder : ((net.minecraft.world.item.crafting.RecipeManager) context.getLevel().recipeAccess()).getRecipes()) {
+               if (!(recipeHolder.value() instanceof PotRecipe recipe)) {
+                  continue;
+               }
                ItemStack resultItem = recipe.getResultItem(registryAccess);
                if (resultItem.is(result)) {
-                  List<ItemStack> inputs = recipe.getIngredients().stream().filter(i -> !i.isEmpty()).map(i -> i.getItems()[0]).toList();
+                  List<ItemStack> inputs = recipe.getIngredients().stream().filter(i -> !i.isEmpty()).map(i -> new ItemStack(i.items().findFirst().orElseThrow().value())).toList();
                   RecipeItem.RecipeRecord record = new RecipeItem.RecipeRecord(inputs, resultItem, RecipeItem.POT, false);
                   RecipeItem.setRecipe(stack, record);
                   return stack;
                }
             }
 
-            for (RecipeHolder<StockpotRecipe> recipeHolderx : context.getLevel().recipeAccess().getAllRecipesFor(ModRecipes.STOCKPOT_RECIPE)) {
-               StockpotRecipe recipe = (StockpotRecipe)recipeHolderx.value();
+            for (RecipeHolder<?> recipeHolderx : ((net.minecraft.world.item.crafting.RecipeManager) context.getLevel().recipeAccess()).getRecipes()) {
+               if (!(recipeHolderx.value() instanceof StockpotRecipe recipe)) {
+                  continue;
+               }
                ItemStack resultItem = recipe.getResultItem(registryAccess);
                if (resultItem.is(result)) {
-                  List<ItemStack> inputs = recipe.getIngredients().stream().filter(i -> !i.isEmpty()).map(i -> i.getItems()[0]).toList();
+                  List<ItemStack> inputs = recipe.getIngredients().stream().filter(i -> !i.isEmpty()).map(i -> new ItemStack(i.items().findFirst().orElseThrow().value())).toList();
                   RecipeItem.RecipeRecord record = new RecipeItem.RecipeRecord(inputs, resultItem, RecipeItem.STOCKPOT, false);
                   RecipeItem.setRecipe(stack, record);
                   return stack;

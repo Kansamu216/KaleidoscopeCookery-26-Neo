@@ -32,14 +32,8 @@ sourceSets.main.resources {
     // Leaving them in the runtime jar makes every integrated-server datapack
     // reload report invalid data. Preserve the source files for the later loot
     // migration, but do not ship broken definitions in this build.
-    exclude 'data/kaleidoscope_cookery/loot_table/hoglin.json'
-    exclude 'data/kaleidoscope_cookery/loot_table/pig.json'
-    exclude 'data/kaleidoscope_cookery/loot_table/piglin.json'
-    exclude 'data/kaleidoscope_cookery/loot_table/piglin_brute.json'
-    exclude 'data/kaleidoscope_cookery/loot_table/straw_hat_seed_drop.json'
-    exclude 'data/kaleidoscope_cookery/loot_table/zoglin.json'
-    exclude 'data/kaleidoscope_cookery/loot_table/zombified_piglin.json'
     exclude 'data/kaleidoscope_cookery/loot_table/chest/village_chest.json'
+    // Minecraft 26 replaced the global loot-modifier index with per-modifier files that carry a 'type' field.
     exclude 'data/neoforge/loot_modifiers/global_loot_modifiers.json'
 }
 
@@ -84,8 +78,6 @@ sourceSets.main.java {
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/event/ModTradesEvent.java'
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/event/AddVillageStructuresEvent.java'
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/event/effect/FlatulenceEvent.java'
-    exclude 'com/github/ysbbbbbb/kaleidoscopecookery/loot/**'
-    exclude 'com/github/ysbbbbbb/kaleidoscopecookery/init/ModLootModifier.java'
 }
 
 repositories {

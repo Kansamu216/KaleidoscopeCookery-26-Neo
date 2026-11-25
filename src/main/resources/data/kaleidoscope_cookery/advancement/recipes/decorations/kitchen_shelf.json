@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "kaleidoscope_cookery:kitchen_shelf"
+        "recipe": "kaleidoscope_cookery:kitchen_shelf"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -27,7 +27,7 @@
     ]
   ],
   "rewards": {
-    "recipes": [
+    "recipe": [
       "kaleidoscope_cookery:kitchen_shelf"
     ]
   },

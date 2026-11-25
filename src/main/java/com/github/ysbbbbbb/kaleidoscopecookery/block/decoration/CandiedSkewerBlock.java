@@ -44,6 +44,22 @@ public class CandiedSkewerBlock extends HorizontalDirectionalBlock {
         return COUNT_PROPERTIES.computeIfAbsent(maxCount, m -> IntegerProperty.create("count", 1, m));
     }
 
+    /**
+     * Carries the per-block {@code maxCount} into {@link #createBlockStateDefinition},
+     * which runs inside {@code super()} before instance fields are assigned.
+     */
+    private static final ThreadLocal<Integer> PENDING_MAX_COUNT = new ThreadLocal<>();
+
+    /** Factory that makes the pending max count visible to the state definition. */
+    public static CandiedSkewerBlock create(int maxCount, Supplier<Item> item, int lightLevel, boolean upright) {
+        PENDING_MAX_COUNT.set(maxCount);
+        try {
+            return new CandiedSkewerBlock(maxCount, item, lightLevel, upright);
+        } finally {
+            PENDING_MAX_COUNT.remove();
+        }
+    }
+
     private final IntegerProperty countProperty;
     private final boolean upright;
 
@@ -59,7 +75,7 @@ public class CandiedSkewerBlock extends HorizontalDirectionalBlock {
 
         this.maxCount = maxCount;
         this.item = item;
-        this.countProperty = countProperty(12);
+        this.countProperty = countProperty(maxCount);
         this.upright = upright;
 
         this.registerDefaultState(this.stateDefinition.any()
@@ -147,6 +163,7 @@ public class CandiedSkewerBlock extends HorizontalDirectionalBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, countProperty(12));
+        Integer pending = PENDING_MAX_COUNT.get();
+        builder.add(FACING, countProperty(pending != null ? pending : 12));
     }
 }
