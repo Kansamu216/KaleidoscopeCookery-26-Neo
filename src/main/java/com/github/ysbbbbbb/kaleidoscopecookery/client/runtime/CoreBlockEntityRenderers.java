@@ -9,6 +9,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.render.RuntimeBamb
 import com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.render.RuntimeChoppingBoardRenderer;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.render.RuntimeChairRenderer;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.render.RuntimeFruitBasketRenderer;
+import com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.render.RuntimeKitchenShelfRenderer;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.render.RuntimeKitchenwareRacksRenderer;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.render.RuntimeMillstoneRenderer;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.render.RuntimePotRenderer;
@@ -56,6 +57,7 @@ public final class CoreBlockEntityRenderers {
       event.registerBlockEntityRenderer(ModBlocks.STEAMER_BE.get(), RuntimeSteamerRenderer::new);
       event.registerBlockEntityRenderer(ModBlocks.TEAPOT_BE.get(), RuntimeTeapotRenderer::new);
       event.registerBlockEntityRenderer(ModBlocks.KITCHENWARE_RACKS_BE.get(), RuntimeKitchenwareRacksRenderer::new);
+      event.registerBlockEntityRenderer(ModBlocks.KITCHEN_SHELF_BE.get(), RuntimeKitchenShelfRenderer::new);
       event.registerBlockEntityRenderer(ModBlocks.FRUIT_BASKET_BE.get(), RuntimeFruitBasketRenderer::new);
       event.registerBlockEntityRenderer(ModBlocks.RECIPE_BLOCK_BE.get(), RuntimeRecipeBlockRenderer::new);
       event.registerBlockEntityRenderer(ModBlocks.TABLE_BE.get(), RuntimeTableRenderer::new);
