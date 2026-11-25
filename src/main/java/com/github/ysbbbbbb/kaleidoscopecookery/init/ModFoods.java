@@ -88,6 +88,7 @@ public interface ModFoods {
    }
 
    FoodProperties TOMATO = new LegacyBuilder().nutrition(2).saturationModifier(0.5F).alwaysEdible().build();
+   FoodProperties FRUIT_SKEWER = new LegacyBuilder().nutrition(8).saturationModifier(0.3F).alwaysEdible().build();
    FoodProperties CHILI = new LegacyBuilder().nutrition(1).saturationModifier(0.0F).alwaysEdible().build();
    FoodProperties LETTUCE = new LegacyBuilder().nutrition(2).saturationModifier(0.0F).alwaysEdible().build();
    FoodProperties CATERPILLAR = new LegacyBuilder()

@@ -9,6 +9,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public class ModSounds {
    public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(BuiltInRegistries.SOUND_EVENT, "kaleidoscope_cookery");
    public static final DeferredHolder<SoundEvent, SoundEvent> BLOCK_STOCKPOT = registerSound("block.stockpot");
+   public static final DeferredHolder<SoundEvent, SoundEvent> BLOCK_KITCHEN_SHELF = registerSound("block.kitchen_shelf");
    public static final DeferredHolder<SoundEvent, SoundEvent> BLOCK_PADDY = registerSound("block.paddy");
    public static final DeferredHolder<SoundEvent, SoundEvent> BLOCK_MILLSTONE = registerSound("block.millstone");
    public static final DeferredHolder<SoundEvent, SoundEvent> BLOCK_RECIPE_BLOCK = registerSound("block.recipe_block");

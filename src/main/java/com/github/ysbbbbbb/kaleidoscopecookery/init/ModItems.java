@@ -271,4 +271,7 @@ public final class ModItems {
          )
       );
    }
+
+   public static DeferredItem<Item> KITCHEN_SHELF = registerItem("kitchen_shelf", () -> new net.minecraft.world.item.BlockItem((Block)ModBlocks.KITCHEN_SHELF.get(), ModRegistrationProperties.itemProperties()));
+   public static DeferredItem<Item> CHORUS_FRUIT_SKEWER = registerItem("chorus_fruit_skewer", () -> new com.github.ysbbbbbb.kaleidoscopecookery.item.FruitSkewerItem(ModFoods.FRUIT_SKEWER));
 }

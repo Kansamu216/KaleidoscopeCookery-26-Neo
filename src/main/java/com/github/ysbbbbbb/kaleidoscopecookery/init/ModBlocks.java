@@ -14,6 +14,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBiteThreeByThreeBl
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.ChoppingBoardBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.EnamelBasinBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.KitchenwareRacksBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.KitchenShelfBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.MillstoneBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.OilPotBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.PotBlock;
@@ -36,6 +37,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.TableBlock
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.food.FoodBiteThreeByThreeBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.ChoppingBoardBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.KitchenwareRacksBlockEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.KitchenShelfBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.MillstoneBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.PotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.ShawarmaSpitBlockEntity;
@@ -66,6 +68,7 @@ public class ModBlocks {
    public static DeferredBlock<Block> OIL_BLOCK = registerBlock("oil_block", OilBlock::new);
    public static DeferredBlock<Block> ENAMEL_BASIN = registerBlock("enamel_basin", EnamelBasinBlock::new);
    public static DeferredBlock<Block> KITCHENWARE_RACKS = registerBlock("kitchenware_racks", KitchenwareRacksBlock::new);
+   public static DeferredBlock<Block> KITCHEN_SHELF = registerBlock("kitchen_shelf", KitchenShelfBlock::new);
    public static DeferredBlock<Block> CHILI_RISTRA = registerBlock("chili_ristra", ChiliRistraBlock::new);
    public static DeferredBlock<Block> STRUNG_MUSHROOMS = registerBlock("strung_mushrooms", StrungMushroomsBlock::new);
    public static DeferredBlock<Block> STRAW_BLOCK = registerBlock("straw_block", StrawBlocks::new);
@@ -145,6 +148,9 @@ public class ModBlocks {
    );
    public static Supplier<BlockEntityType<KitchenwareRacksBlockEntity>> KITCHENWARE_RACKS_BE = BLOCK_ENTITIES.register(
       "kitchenware_racks", () -> new BlockEntityType<>(KitchenwareRacksBlockEntity::new, (Block)KITCHENWARE_RACKS.get())
+   );
+   public static Supplier<BlockEntityType<KitchenShelfBlockEntity>> KITCHEN_SHELF_BE = BLOCK_ENTITIES.register(
+      "kitchen_shelf", () -> new BlockEntityType<>(KitchenShelfBlockEntity::new, (Block)KITCHEN_SHELF.get())
    );
    public static Supplier<BlockEntityType<ShawarmaSpitBlockEntity>> SHAWARMA_SPIT_BE = BLOCK_ENTITIES.register(
       "shawarma_spit", () -> new BlockEntityType<>(ShawarmaSpitBlockEntity::new, (Block)SHAWARMA_SPIT.get())
