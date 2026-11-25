@@ -32,7 +32,6 @@ sourceSets.main.resources {
     // Leaving them in the runtime jar makes every integrated-server datapack
     // reload report invalid data. Preserve the source files for the later loot
     // migration, but do not ship broken definitions in this build.
-    exclude 'data/kaleidoscope_cookery/loot_table/chest/village_chest.json'
     // Minecraft 26 replaced the global loot-modifier index with per-modifier files that carry a 'type' field.
     exclude 'data/neoforge/loot_modifiers/global_loot_modifiers.json'
 }
@@ -79,7 +78,6 @@ sourceSets.main.java {
     //   StructureTemplatePool.templates/rawTemplates are private final with no public API.
     // The Java sources are kept for reference but excluded from compilation.
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/event/ModTradesEvent.java'
-    exclude 'com/github/ysbbbbbb/kaleidoscopecookery/event/AddVillageStructuresEvent.java'
 }
 
 repositories {
@@ -142,14 +140,18 @@ neoForge {
     runs {
         client {
             client()
-            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
-            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+            // NOTE: gametests are intentionally NOT enabled here. This mod registers a
+            // custom GameTestInstance whose codec cannot be dispatched through the
+            // test_instance_type registry, so it cannot be serialised for registry sync:
+            // a client that registers them hangs for ever on "Loading terrain" while
+            // joining a world. ModGameTests additionally ignores the registration event
+            // unless a run config explicitly sets neoforge.enabledGameTestNamespaces.
         }
 
         server {
             server()
             programArgument '--nogui'
-            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+            // Same reason as above: a joining client would fail registry sync.
         }
         // This run config launches GameTestServer and runs all registered gametests, then exits.
         // By default, the server will crash when no gametests are provided.
