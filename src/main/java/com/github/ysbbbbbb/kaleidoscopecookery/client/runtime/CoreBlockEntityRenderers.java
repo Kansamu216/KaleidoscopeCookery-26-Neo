@@ -5,6 +5,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.model.RuntimeScare
 import com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.model.RuntimeTeapotModel;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.model.RuntimeTrashCanModel;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.model.RuntimeStrawHatModel;
+import com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.render.RuntimeBambooTrayRenderer;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.render.RuntimeChoppingBoardRenderer;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.render.RuntimeChairRenderer;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.render.RuntimeFruitBasketRenderer;
@@ -18,6 +19,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.render.RuntimeSitR
 import com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.render.RuntimeStockpotRenderer;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.render.RuntimeSteamerRenderer;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.render.RuntimeTableRenderer;
+import com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.render.RuntimeTeaBannerRenderer;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.render.RuntimeTeapotRenderer;
 import com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.render.RuntimeTrashCanRenderer;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
@@ -45,6 +47,8 @@ public final class CoreBlockEntityRenderers {
    @SubscribeEvent
    public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
       event.registerBlockEntityRenderer(ModBlocks.CHOPPING_BOARD_BE.get(), RuntimeChoppingBoardRenderer::new);
+      event.registerBlockEntityRenderer(ModBlocks.BAMBOO_TRAY_BE.get(), RuntimeBambooTrayRenderer::new);
+      event.registerBlockEntityRenderer(ModBlocks.TEA_BANNER_BE.get(), RuntimeTeaBannerRenderer::new);
       event.registerBlockEntityRenderer(ModBlocks.MILLSTONE_BE.get(), RuntimeMillstoneRenderer::new);
       event.registerBlockEntityRenderer(ModBlocks.SHAWARMA_SPIT_BE.get(), RuntimeShawarmaSpitRenderer::new);
       event.registerBlockEntityRenderer(ModBlocks.POT_BE.get(), RuntimePotRenderer::new);
