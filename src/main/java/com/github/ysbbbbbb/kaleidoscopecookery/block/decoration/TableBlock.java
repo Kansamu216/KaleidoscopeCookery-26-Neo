@@ -58,9 +58,17 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
    private static final VoxelShape FACE = Block.box(0.0, 13.0, 0.0, 16.0, 16.0, 16.0);
 
    public TableBlock() {
-      super(
+      this(
          ModRegistrationProperties.blockProperties().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(2.0F, 3.0F).sound(SoundType.WOOD).noOcclusion().ignitedByLava()
       );
+   }
+
+   /**
+    * Used by optional integrations (Every Compat) that own the block properties
+    * and therefore already carry the final registry id.
+    */
+   public TableBlock(net.minecraft.world.level.block.state.BlockBehaviour.Properties properties) {
+      super(properties);
       this.registerDefaultState(
          (BlockState)((BlockState)((BlockState)((BlockState)((BlockState)this.stateDefinition.any()).setValue(AXIS, Axis.Z)).setValue(POSITION, 0))
                .setValue(HAS_CARPET, false))

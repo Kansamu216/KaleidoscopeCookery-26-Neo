@@ -40,7 +40,15 @@ public class CookStoolBlock extends HorizontalDirectionalBlock implements Simple
    private static final VoxelShape EAST_WEST = Block.box(3.0, 0.0, 2.0, 13.0, 7.0, 14.0);
 
    public CookStoolBlock() {
-      super(ModRegistrationProperties.blockProperties().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(2.0F, 3.0F).sound(SoundType.WOOD).ignitedByLava());
+      this(ModRegistrationProperties.blockProperties().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(2.0F, 3.0F).sound(SoundType.WOOD).ignitedByLava());
+   }
+
+   /**
+    * Used by optional integrations (Every Compat) that own the block properties
+    * and therefore already carry the final registry id.
+    */
+   public CookStoolBlock(net.minecraft.world.level.block.state.BlockBehaviour.Properties properties) {
+      super(properties);
       this.registerDefaultState(
          (BlockState)((BlockState)((BlockState)this.stateDefinition.any()).setValue(FACING, Direction.SOUTH)).setValue(WATERLOGGED, false)
       );

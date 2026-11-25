@@ -55,9 +55,17 @@ public class ChairBlock extends HorizontalDirectionalBlock implements SimpleWate
    private static final VoxelShape EAST = Shapes.or(BASE, Block.box(2.0, 0.0, 2.0, 4.0, 19.0, 14.0));
 
    public ChairBlock() {
-      super(
+      this(
          ModRegistrationProperties.blockProperties().mapColor(MapColor.WOOD).instrument(NoteBlockInstrument.BASS).strength(2.0F, 3.0F).sound(SoundType.WOOD).noOcclusion().ignitedByLava()
       );
+   }
+
+   /**
+    * Used by optional integrations (Every Compat) that own the block properties
+    * and therefore already carry the final registry id.
+    */
+   public ChairBlock(net.minecraft.world.level.block.state.BlockBehaviour.Properties properties) {
+      super(properties);
       this.registerDefaultState(
          (BlockState)((BlockState)((BlockState)((BlockState)this.stateDefinition.any()).setValue(FACING, Direction.SOUTH)).setValue(HAS_CARPET, false))
             .setValue(WATERLOGGED, false)

@@ -43,18 +43,16 @@ sourceSets.main.resources {
 sourceSets.main.java {
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/compat/create/**'
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/compat/emi/**'
-    exclude 'com/github/ysbbbbbb/kaleidoscopecookery/compat/farmersdelight/**'
-    exclude 'com/github/ysbbbbbb/kaleidoscopecookery/compat/harvest/**'
     // The Minecraft 26 Jade bridge lives in compat/jade/runtime. Keep the
     // original 1.21 providers as reference sources, but compile the migrated
     // providers against the optional local Jade API below.
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/compat/jade/ModPlugin.java'
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/compat/jade/block/**'
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/compat/ponder/**'
-    // REI is available for 26.x; millstone/stockpot categories still depend on
-    // Create / Farmer's Delight which have no 26.x builds yet, so keep those two out.
-    exclude 'com/github/ysbbbbbb/kaleidoscopecookery/compat/rei/category/ReiMillstoneRecipeCategory.java'
-    exclude 'com/github/ysbbbbbb/kaleidoscopecookery/compat/rei/category/ReiStockpotRecipeCategory.java'
+    // Both REI categories are enabled now: the stockpot one only needed
+    // Farmer's Delight (available via the 26.3 NeoForge port above), and the
+    // millstone one had its optional Create transform contribution dropped in
+    // favour of the mod's own recipes (Create has no Minecraft 26 build).
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/datagen/**'
 
     // Minecraft 26 replaced the complete client rendering pipeline with
@@ -250,6 +248,19 @@ dependencies {
             transitive = false
         }
     }
+
+    // Optional gameplay integrations that DO have a Minecraft 26.3 build.
+    // Farmer's Delight 26.3 is the third-party NeoForge port published by
+    // BuaichiZY (upstream Farmer's Delight stops at 1.21.1).
+    compileOnly files('libs/farmersdelight-26.1.2.jar')
+    // Carry On 2.12.2 for NeoForge 26.3 (Modrinth), read through InterModComms.
+    compileOnly files('libs/carryon-26.1.2.jar')
+    // Harvest with ease 9.4.0 for NeoForge 26.3 (Modrinth).
+    compileOnly files('libs/harvest-with-ease-26.1.2.jar')
+    // Every Compat 3.0.2 (NeoForge 26.1.2) generates wooden variants of our
+    // decoration blocks; Moonlight Lib is its required companion library.
+    compileOnly files('libs/everycomp-26.1.2.jar')
+    compileOnly files('libs/moonlight-26.1.2.jar')
 
     // Example optional mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
