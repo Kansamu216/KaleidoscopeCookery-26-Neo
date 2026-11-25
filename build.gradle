@@ -27,18 +27,17 @@ sourceSets.main.resources {
 
     exclude("src/generated/**/.cache") // datagen cache files
 
-    // These legacy loot resources reference custom loot codecs whose Java
-    // registrations are intentionally not part of the Minecraft 26 build yet.
-    // Leaving them in the runtime jar makes every integrated-server datapack
-    // reload report invalid data. Preserve the source files for the later loot
-    // migration, but do not ship broken definitions in this build.
-    // Minecraft 26 replaced the global loot-modifier index with per-modifier files that carry a 'type' field.
+    // Minecraft 26 loads global loot modifiers one file per modifier (each JSON carries
+    // its own 'type') and no longer reads a central index. The obsolete index would be
+    // parsed as a modifier file and fail, so it stays out of the jar while every modifier
+    // in data/kaleidoscope_cookery/loot_modifiers/ ships unchanged.
     exclude 'data/neoforge/loot_modifiers/global_loot_modifiers.json'
 }
 
-// Optional integrations from the 1.21.1 reference target third-party APIs
-// that are not present on the Minecraft 26.1.2 compile classpath. Keep their
-// sources in the project, but build the standalone core mod first.
+// Sources for optional integrations whose third-party APIs have no Minecraft 26.x build
+// (Create, EMI, Ponder) or whose 1.20.1-era shape was replaced by a 26.x runtime bridge
+// (Jade providers, legacy client rendering, datagen, datapack-replaced Java hooks).
+// They are kept for reference and are never compiled on this branch.
 sourceSets.main.java {
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/compat/create/**'
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/compat/emi/**'
@@ -48,15 +47,16 @@ sourceSets.main.java {
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/compat/jade/ModPlugin.java'
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/compat/jade/block/**'
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/compat/ponder/**'
-    // Both REI categories are enabled now: the stockpot one only needed
-    // Farmer's Delight (available via the 26.3 NeoForge port above), and the
-    // millstone one had its optional Create transform contribution dropped in
-    // favour of the mod's own recipes (Create has no Minecraft 26 build).
+    // datagen/** was written against the pre-26 data generator API, which Minecraft 26
+    // replaced; all generated JSON is committed instead. Both REI categories are enabled:
+    // the stockpot one only needed Farmer's Delight, the millstone one had its optional
+    // Create transform contribution dropped (Create has no Minecraft 26 build).
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/datagen/**'
 
-    // Minecraft 26 replaced the complete client rendering pipeline with
-    // render-state based APIs. Keep the sources for the later visual pass,
-    // while compiling the standalone gameplay/core layer first.
+    // Minecraft 26 replaced the complete client rendering pipeline with render-state
+    // based APIs. These 1.20.1-era sources are reference material only; the ported
+    // renderers, HUD overlays, tooltips and screens live in client/runtime/**, which
+    // compiles normally.
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/api/client/**'
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/client/animation/**'
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/client/event/**'
@@ -69,9 +69,13 @@ sourceSets.main.java {
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/client/particle/CookingParticle.java'
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/client/particle/StockpotParticle.java'
 
-    // These Java hooks are superseded by pure datapack data (26.x architecture):
-    // chef trades come from data/kaleidoscope_cookery/{villager_trade,trade_set,tags/villager_trade}/chef/*
-    // and village kitchen houses from overriding vanilla template pools.
+    // These two Java hooks are superseded by pure datapack data (26.x architecture):
+    // - Chef trades are defined by datapack registries
+    //   (data/kaleidoscope_cookery/{villager_trade,tags/villager_trade,trade_set}/chef/*)
+    //   and bound to the profession via VillagerProfession.tradeSetsByLevel in ModVillager.
+    // - Village kitchen houses are injected at runtime by AddVillageStructuresEvent through
+    //   the StructureTemplatePoolAccessor mixin. The old whole-pool JSON overrides removed
+    //   vanilla houses and lost to other village mods, so they are gone.
     // The Java sources are kept for reference but excluded from compilation.
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/event/ModTradesEvent.java'
 }
