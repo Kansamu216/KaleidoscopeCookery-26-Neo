@@ -55,7 +55,7 @@ public class CandiedSkewerItem extends BlockItem implements IHasContainer {
 
     public CandiedSkewerItem(Supplier<Block> uprightBlock, Supplier<Block> sideBlock, FoodProperties foodProperties,
                              @Nullable MobEffect attackEffect, int attackEffectDuration) {
-        super(uprightBlock.get(), new Properties().food(foodProperties).component(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS, ATTRIBUTE_MODIFIERS));
+        super(uprightBlock.get(), com.github.ysbbbbbb.kaleidoscopecookery.init.ModRegistrationProperties.itemProperties().food(foodProperties).component(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS, ATTRIBUTE_MODIFIERS));
         this.sideBlock = sideBlock;
         this.attackEffect = attackEffect;
         this.attackEffectDuration = attackEffectDuration;
