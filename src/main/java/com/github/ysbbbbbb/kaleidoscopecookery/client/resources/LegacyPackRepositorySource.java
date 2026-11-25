@@ -26,8 +26,8 @@ public class LegacyPackRepositorySource implements RepositorySource {
 
    public LegacyPackRepositorySource() {
       ResourcesSupplier supplier = this.getLegacyPack();
-      MutableComponent title = Component.translatable("pack.touhou_little_maid.legacy_resources_pack.title");
-      MutableComponent desc = Component.translatable("pack.touhou_little_maid.legacy_resources_pack.desc");
+      MutableComponent title = Component.translatable("pack.kaleidoscope_cookery.legacy_resources_pack.title");
+      MutableComponent desc = Component.translatable("pack.kaleidoscope_cookery.legacy_resources_pack.desc");
       PackLocationInfo info = new PackLocationInfo("kaleidoscope_cookery_legacy_resources_pack", title, PackSource.BUILT_IN, Optional.empty());
       Metadata metadata = new Metadata(desc, PackCompatibility.COMPATIBLE, FeatureFlagSet.of(), Collections.emptyList(), false);
       PackSelectionConfig config = new PackSelectionConfig(false, Position.TOP, false);
