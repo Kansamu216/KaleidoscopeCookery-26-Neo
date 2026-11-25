@@ -21,7 +21,7 @@ public final class ResourceHandlerUtils {
       if (stack.isEmpty()) {
          handler.set(index, ItemResource.EMPTY, 0);
       } else {
-         handler.set(index, ItemResource.of(stack.getItem()), stack.getCount());
+         handler.set(index, ItemResource.of(stack), stack.getCount());
       }
    }
 
@@ -35,7 +35,7 @@ public final class ResourceHandlerUtils {
          if (!simulate) {
             tx.commit();
          }
-         return resource.toStack(moved);
+         return moved <= 0 ? ItemStack.EMPTY : resource.toStack(moved);
       }
    }
 

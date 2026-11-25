@@ -2,6 +2,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.blockentity.misc;
 import net.minecraft.world.level.storage.ValueInput;
 
 import net.minecraft.world.level.storage.ValueOutput;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.block.misc.TrashCanBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.BaseBlockEntity;
@@ -27,14 +28,14 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.item.ItemUtil;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 
 public class TrashCanBlockEntity extends BaseBlockEntity {
    public static final int EVENT_PUT = 1;
    public static final int EVENT_WITHDRAW = 2;
    public static final int EVENT_ENTER = 3;
-   private final ItemStackHandler storage = new ItemStackHandler(3);
+   private final ItemStacksResourceHandler storage = new ItemStacksResourceHandler(3);
    public AnimationState putState = new AnimationState();
    public AnimationState withdrawState = new AnimationState();
    public AnimationState player1State = new AnimationState();
@@ -103,11 +104,11 @@ public class TrashCanBlockEntity extends BaseBlockEntity {
    }
 
    public void putItem(ItemStack stack) {
-      ItemStack result = ItemHandlerHelper.insertItemStacked(this.storage, stack.copy(), false);
+      ItemStack result = ItemUtil.insertItemReturnRemaining(this.storage, stack.copy(), false, null);
       if (result.getCount() == stack.getCount()) {
-         this.storage.setStackInSlot(0, this.storage.getStackInSlot(1).copy());
-         this.storage.setStackInSlot(1, this.storage.getStackInSlot(2).copy());
-         this.storage.setStackInSlot(2, stack.copy());
+         ResourceHandlerUtils.setStack(this.storage, 0, ResourceHandlerUtils.stackAt(this.storage, 1));
+         ResourceHandlerUtils.setStack(this.storage, 1, ResourceHandlerUtils.stackAt(this.storage, 2));
+         ResourceHandlerUtils.setStack(this.storage, 2, stack.copy());
          stack.shrink(stack.getCount());
       }
 
@@ -130,11 +131,11 @@ public class TrashCanBlockEntity extends BaseBlockEntity {
    }
 
    public void withdrawItem(LivingEntity user) {
-      for (int i = this.storage.getSlots() - 1; i >= 0; i--) {
-         ItemStack stack = this.storage.getStackInSlot(i);
+      for (int i = this.storage.size() - 1; i >= 0; i--) {
+         ItemStack stack = ResourceHandlerUtils.stackAt(this.storage, i);
          if (!stack.isEmpty()) {
             user.setItemInHand(InteractionHand.MAIN_HAND, stack.copy());
-            this.storage.setStackInSlot(i, ItemStack.EMPTY);
+            ResourceHandlerUtils.setStack(this.storage, i, ItemStack.EMPTY);
             if (this.level instanceof ServerLevel serverLevel) {
                BlockPos pos = this.getBlockPos();
                serverLevel.sendParticles(ParticleTypes.SMOKE, pos.getX() + 0.5, pos.getY() + 1.25, pos.getZ() + 0.5, 3, 0.25, 0.05, 0.25, 0.01);
@@ -163,9 +164,9 @@ tag.readChild("Storage",       this.storage);
    }
 
    private boolean hasItem(ItemStack itemStack) {
-      for (int i = 0; i < this.storage.getSlots(); i++) {
-         if (this.storage.getStackInSlot(i).is(itemStack.getItem())) {
-            ItemStack result = this.storage.insertItem(i, itemStack.copy(), false);
+      for (int i = 0; i < this.storage.size(); i++) {
+         if (this.storage.getResource(i).is(itemStack.getItem())) {
+            ItemStack result = net.neoforged.neoforge.transfer.item.ItemUtil.insertItemReturnRemaining(this.storage, i, itemStack.copy(), false, null);
             if (result.getCount() < itemStack.getCount()) {
                this.refresh();
             }
@@ -177,7 +178,7 @@ tag.readChild("Storage",       this.storage);
       return false;
    }
 
-   public ItemStackHandler getStorage() {
+   public ItemStacksResourceHandler getStorage() {
       return this.storage;
    }
 

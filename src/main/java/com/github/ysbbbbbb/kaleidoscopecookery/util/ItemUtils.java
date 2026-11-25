@@ -15,8 +15,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.UseRemainder;
-import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.minecraft.world.entity.player.Inventory;
 import org.apache.commons.lang3.tuple.Pair;
 
 public class ItemUtils {
@@ -31,7 +32,24 @@ public class ItemUtils {
             entity.setItemInHand(InteractionHand.MAIN_HAND, stack);
             entity.playSound(SoundEvents.ITEM_PICKUP, 0.2F, ((random.nextFloat() - random.nextFloat()) * 0.7F + 1.0F) * 2.0F);
          } else if (entity instanceof Player player) {
-            ItemHandlerHelper.giveItemToPlayer(player, stack, preferredSlot);
+            if (preferredSlot >= 0 && preferredSlot < Inventory.INVENTORY_SIZE) {
+               ItemStack existing = player.getInventory().getItem(preferredSlot);
+               if (existing.isEmpty()) {
+                  player.getInventory().setItem(preferredSlot, stack);
+                  return;
+               }
+               if (ItemStack.isSameItemSameComponents(existing, stack) && existing.getCount() < existing.getMaxStackSize()) {
+                  int moved = Math.min(stack.getCount(), existing.getMaxStackSize() - existing.getCount());
+                  existing.grow(moved);
+                  stack.shrink(moved);
+                  if (stack.isEmpty()) {
+                     return;
+                  }
+               }
+            }
+            if (!player.getInventory().add(stack)) {
+               player.drop(stack, false);
+            }
          } else if (entity.level() instanceof ServerLevel serverLevel) {
             ItemEntity dropItem = entity.spawnAtLocation(serverLevel, stack);
             if (dropItem != null) {
@@ -41,10 +59,10 @@ public class ItemUtils {
       }
    }
 
-   public static Pair<Integer, ItemStack> getLastStack(IItemHandler itemHandler) {
-      for (int i = itemHandler.getSlots(); i > 0; i--) {
+   public static Pair<Integer, ItemStack> getLastStack(ResourceHandler<ItemResource> itemHandler) {
+      for (int i = itemHandler.size(); i > 0; i--) {
          int index = i - 1;
-         ItemStack stack = itemHandler.getStackInSlot(index);
+         ItemStack stack = itemHandler.getResource(index).toStack(itemHandler.getAmountAsInt(index));
          if (!stack.isEmpty()) {
             return Pair.of(index, stack);
          }

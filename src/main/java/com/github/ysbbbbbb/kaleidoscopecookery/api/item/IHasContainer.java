@@ -6,7 +6,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.transfer.item.ItemUtil;
 
 public interface IHasContainer {
    Item getContainerItem();
@@ -17,7 +17,7 @@ public interface IHasContainer {
          return carried;
       } else {
          if (entity instanceof Player player) {
-            ItemHandlerHelper.giveItemToPlayer(player, carried);
+            player.getInventory().add(carried);
          } else {
             ItemEntity itemEntity = new ItemEntity(level, entity.getX(), entity.getY(), entity.getZ(), carried);
             level.addFreshEntity(itemEntity);

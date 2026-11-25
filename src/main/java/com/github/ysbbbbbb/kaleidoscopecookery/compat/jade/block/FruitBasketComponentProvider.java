@@ -1,4 +1,5 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.compat.jade.block;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.FruitBasketBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.compat.jade.ModPlugin;
@@ -6,7 +7,7 @@ import com.google.common.collect.Lists;
 import java.util.List;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import org.jetbrains.annotations.Nullable;
 import snownee.jade.api.Accessor;
 import snownee.jade.api.view.ClientViewGroup;
@@ -25,11 +26,11 @@ public enum FruitBasketComponentProvider implements IServerExtensionProvider<Ite
    @Nullable
    public List<ViewGroup<ItemStack>> getGroups(Accessor<?> accessor) {
       if (accessor.getTarget() instanceof FruitBasketBlockEntity fruitBasket) {
-         ItemStackHandler handler = fruitBasket.getItems();
+         ItemStacksResourceHandler handler = fruitBasket.getItems();
          List<ItemStack> list = Lists.newArrayList();
 
-         for (int i = 0; i < handler.getSlots(); i++) {
-            ItemStack stack = handler.getStackInSlot(i);
+         for (int i = 0; i < handler.size(); i++) {
+            ItemStack stack = ResourceHandlerUtils.stackAt(handler, i);
             if (!stack.isEmpty()) {
                list.add(stack.copy());
             }

@@ -1,4 +1,5 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.render;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.FruitBasketBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -44,8 +45,8 @@ public final class RuntimeFruitBasketRenderer
       BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
       state.facing = blockEntity.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
       state.items = new ArrayList<>();
-      for (int slot = 0; slot < blockEntity.getItems().getSlots(); slot++) {
-         ItemStack stack = blockEntity.getItems().getStackInSlot(slot);
+      for (int slot = 0; slot < blockEntity.getItems().size(); slot++) {
+         ItemStack stack = ResourceHandlerUtils.stackAt(blockEntity.getItems(), slot);
          if (!stack.isEmpty()) {
             ItemStackRenderState itemState = new ItemStackRenderState();
             this.itemModelResolver.updateForTopItem(

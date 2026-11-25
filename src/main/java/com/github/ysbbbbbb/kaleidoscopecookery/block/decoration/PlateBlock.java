@@ -30,7 +30,7 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.transfer.item.ItemUtil;
 import org.jetbrains.annotations.Nullable;
 
 public class PlateBlock extends HorizontalDirectionalBlock {
@@ -82,7 +82,7 @@ public class PlateBlock extends HorizontalDirectionalBlock {
             if (count > 0) {
                List<ItemStack> stacks = this.items.stream().map(s -> s.get().getDefaultInstance()).toList();
                if (itemInHand.isEmpty()) {
-                  stacks.forEach(s -> ItemHandlerHelper.giveItemToPlayer(player, s));
+                  stacks.forEach(s -> player.getInventory().add(s));
                } else {
                   stacks.forEach(s -> Block.popResourceFromFace(level, pos, Direction.UP, s));
                }

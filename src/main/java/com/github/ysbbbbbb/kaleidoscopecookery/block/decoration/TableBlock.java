@@ -1,4 +1,5 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.block.decoration;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRegistrationProperties;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.TableBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.util.BlockDrop;
@@ -41,7 +42,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -93,7 +94,7 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
 
    @NotNull
    private InteractionResult useWithOther(Level level, BlockPos pos, Player player, InteractionHand hand, TableBlockEntity table, ItemStack itemInHand) {
-      ItemStackHandler tableItems = table.getItems();
+      ItemStacksResourceHandler tableItems = table.getItems();
       Pair<Integer, ItemStack> lastStack = ItemUtils.getLastStack(tableItems);
       Integer tableIndex = (Integer)lastStack.getLeft();
       ItemStack tableItem = (ItemStack)lastStack.getRight();
@@ -101,15 +102,15 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
       if (handEmpty && !tableItem.isEmpty()) {
          level.playSound(player, pos, SoundEvents.ITEM_FRAME_REMOVE_ITEM, player.getSoundSource(), 1.0F, 1.0F);
          BlockDrop.popResource(level, pos, 0.75, tableItem.copy());
-         tableItems.setStackInSlot(tableIndex, ItemStack.EMPTY);
+         ResourceHandlerUtils.setStack(tableItems, tableIndex, ItemStack.EMPTY);
          table.refresh();
          return InteractionResult.SUCCESS;
-      } else if (!handEmpty && tableIndex < tableItems.getSlots() - 1) {
+      } else if (!handEmpty && tableIndex < tableItems.size() - 1) {
          ItemStack split = itemInHand.split(1);
          if (tableItem.isEmpty()) {
-            tableItems.setStackInSlot(tableIndex, split);
+            ResourceHandlerUtils.setStack(tableItems, tableIndex, split);
          } else {
-            tableItems.setStackInSlot(tableIndex + 1, split);
+            ResourceHandlerUtils.setStack(tableItems, tableIndex + 1, split);
          }
 
          table.refresh();
@@ -158,13 +159,13 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
 
    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
       if (!level.isClientSide() && player.isCreative() && level.getBlockEntity(pos) instanceof TableBlockEntity tableBlockEntity) {
-         ItemStackHandler items = tableBlockEntity.getItems();
+         ItemStacksResourceHandler items = tableBlockEntity.getItems();
 
-         for (int i = 0; i < items.getSlots(); i++) {
-            ItemStack stack = items.getStackInSlot(i);
+         for (int i = 0; i < items.size(); i++) {
+            ItemStack stack = ResourceHandlerUtils.stackAt(items, i);
             if (!stack.isEmpty()) {
                popResource(level, pos, stack);
-               items.setStackInSlot(i, ItemStack.EMPTY);
+               ResourceHandlerUtils.setStack(items, i, ItemStack.EMPTY);
             }
          }
       }
@@ -181,10 +182,10 @@ public class TableBlock extends Block implements SimpleWaterloggedBlock, EntityB
             drops.add(new ItemStack(carpet));
          }
 
-         ItemStackHandler items = tableBlockEntity.getItems();
+         ItemStacksResourceHandler items = tableBlockEntity.getItems();
 
-         for (int i = 0; i < items.getSlots(); i++) {
-            drops.add(items.getStackInSlot(i).copy());
+         for (int i = 0; i < items.size(); i++) {
+            drops.add(ResourceHandlerUtils.stackAt(items, i).copy());
          }
       }
 

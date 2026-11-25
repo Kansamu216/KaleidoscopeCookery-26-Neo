@@ -1,4 +1,5 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.compat.jade.block;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.MillstoneBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.NinePart;
@@ -27,8 +28,8 @@ public enum MillstoneComponentProvider implements IBlockComponentProvider {
             tooltip.add(helper.item(millstone.getInput()));
             tooltip.append(helper.progress(millstone.getProgressPercent()));
 
-            for (int i = 0; i < millstone.getOutputs().getSlots(); i++) {
-               ItemStack outputStack = millstone.getOutputs().getStackInSlot(i);
+            for (int i = 0; i < millstone.getOutputs().size(); i++) {
+               ItemStack outputStack = ResourceHandlerUtils.stackAt(millstone.getOutputs(), i);
                if (!outputStack.isEmpty()) {
                   tooltip.append(helper.item(outputStack));
                }

@@ -1,4 +1,5 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.entity;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.advancements.critereon.ModEventTrigger;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
@@ -52,8 +53,8 @@ import net.minecraft.world.level.block.LanternBlock;
 import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.item.ItemUtil;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 
 public class ScarecrowEntity extends LivingEntity {
    public static final EntityType<ScarecrowEntity> TYPE = Builder.<ScarecrowEntity>of(ScarecrowEntity::new, MobCategory.MISC)
@@ -123,7 +124,7 @@ public class ScarecrowEntity extends LivingEntity {
       ItemStack headItem = this.getItemBySlot(EquipmentSlot.HEAD);
       if (itemInHand.isEmpty() && !headItem.isEmpty()) {
          this.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
-         ItemHandlerHelper.giveItemToPlayer(player, headItem);
+         player.getInventory().add(headItem);
          return InteractionResult.SUCCESS;
       } else if (!(itemInHand.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof SkullBlock)) {
          return InteractionResult.PASS;
@@ -155,11 +156,11 @@ public class ScarecrowEntity extends LivingEntity {
          ItemStack offhand = this.getItemInHand(InteractionHand.OFF_HAND);
          if (!mainhand.isEmpty()) {
             this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
-            ItemHandlerHelper.giveItemToPlayer(player, mainhand);
+            player.getInventory().add(mainhand);
             return InteractionResult.SUCCESS;
          } else if (!offhand.isEmpty()) {
             this.setItemSlot(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
-            ItemHandlerHelper.giveItemToPlayer(player, offhand);
+            player.getInventory().add(offhand);
             return InteractionResult.SUCCESS;
          } else {
             return InteractionResult.PASS;
@@ -332,8 +333,8 @@ public class ScarecrowEntity extends LivingEntity {
 
    public void addAdditionalSaveData(ValueOutput tag) {
       super.addAdditionalSaveData(tag);
-      tag.putChild("HandItems", new ItemStackHandler(this.handItems));
-      tag.putChild("ArmorItems", new ItemStackHandler(this.armorItems));
+      tag.putChild("HandItems", new ItemStacksResourceHandler(this.handItems));
+      tag.putChild("ArmorItems", new ItemStacksResourceHandler(this.armorItems));
       if (!this.getShoulderEntity().isEmpty()) {
          tag.store("ShoulderEntity", CompoundTag.CODEC, this.getShoulderEntity());
       }
@@ -342,11 +343,11 @@ public class ScarecrowEntity extends LivingEntity {
    public void readAdditionalSaveData(ValueInput tag) {
       super.readAdditionalSaveData(tag);
       if (tag.keySet().contains("HandItems")) {
-         ItemStackHandler handler = new ItemStackHandler(this.handItems);
+         ItemStacksResourceHandler handler = new ItemStacksResourceHandler(this.handItems);
          tag.readChild("HandItems", handler);
 
          for (int i = 0; i < this.handItems.size(); i++) {
-            ItemStack stack = handler.getStackInSlot(i);
+            ItemStack stack = ResourceHandlerUtils.stackAt(handler, i);
             if (!stack.isEmpty()) {
                this.handItems.set(i, stack);
             }
@@ -354,11 +355,11 @@ public class ScarecrowEntity extends LivingEntity {
       }
 
       if (tag.keySet().contains("ArmorItems")) {
-         ItemStackHandler handler = new ItemStackHandler(this.armorItems);
+         ItemStacksResourceHandler handler = new ItemStacksResourceHandler(this.armorItems);
          tag.readChild("ArmorItems", handler);
 
          for (int ix = 0; ix < this.armorItems.size(); ix++) {
-            ItemStack stack = handler.getStackInSlot(ix);
+            ItemStack stack = ResourceHandlerUtils.stackAt(handler, ix);
             if (!stack.isEmpty()) {
                this.armorItems.set(ix, stack);
             }

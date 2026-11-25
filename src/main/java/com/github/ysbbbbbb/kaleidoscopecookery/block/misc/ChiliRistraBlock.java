@@ -38,7 +38,7 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.transfer.item.ItemUtil;
 
 public class ChiliRistraBlock extends Block {
    private static final int DAMAGE_COOLDOWN_TICKS = 10;
@@ -74,7 +74,7 @@ public class ChiliRistraBlock extends Block {
             if (mainHandItem.isEmpty()) {
                player.setItemInHand(InteractionHand.MAIN_HAND, redChili);
             } else {
-               ItemHandlerHelper.giveItemToPlayer(player, redChili);
+               player.getInventory().add(redChili);
             }
 
             level.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundSource.BLOCKS, 1.0F, 0.8F + level.getRandom().nextFloat() * 0.4F);

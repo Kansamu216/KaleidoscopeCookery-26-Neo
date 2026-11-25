@@ -1,4 +1,5 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.compat.jade.runtime;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.MillstoneBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.NinePart;
@@ -38,8 +39,8 @@ public enum RuntimeMillstoneComponentProvider implements IBlockComponentProvider
          }
       }
 
-      for (int i = 0; i < millstone.getOutputs().getSlots(); i++) {
-         ItemStack output = millstone.getOutputs().getStackInSlot(i);
+      for (int i = 0; i < millstone.getOutputs().size(); i++) {
+         ItemStack output = ResourceHandlerUtils.stackAt(millstone.getOutputs(), i);
          if (!output.isEmpty()) {
             tooltip.append(JadeUI.item(output));
          }

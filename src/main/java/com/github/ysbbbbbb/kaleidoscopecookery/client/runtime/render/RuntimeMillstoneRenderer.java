@@ -1,4 +1,5 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.render;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.MillstoneBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.MillstoneBlockEntity;
@@ -56,8 +57,8 @@ public final class RuntimeMillstoneRenderer implements BlockEntityRenderer<Mills
       state.rollRotation = blockEntity.hasEntity() ? rotation * DEGREES_TO_RADIANS : 0.0F;
       state.stickRotation = blockEntity.hasEntity() ? -blockEntity.getLiftAngle() * DEGREES_TO_RADIANS : 0.0F;
 
-      ItemStack stack = !blockEntity.getOutputs().getStackInSlot(0).isEmpty()
-         ? blockEntity.getOutputs().getStackInSlot(0)
+      ItemStack stack = !ResourceHandlerUtils.stackAt(blockEntity.getOutputs(), 0).isEmpty()
+         ? ResourceHandlerUtils.stackAt(blockEntity.getOutputs(), 0)
          : blockEntity.getInput();
       state.itemCount = Math.min(stack.getCount(), 8);
       state.seed = blockEntity.getBlockPos().asLong();

@@ -1,4 +1,5 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.compat.jade.runtime;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.RecipeBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.item.RecipeItem;
@@ -20,7 +21,7 @@ public enum RuntimeRecipeBlockComponentProvider implements IBlockComponentProvid
          return;
       }
 
-      ItemStack recipeStack = recipeBlock.getItems().getStackInSlot(0);
+      ItemStack recipeStack = ResourceHandlerUtils.stackAt(recipeBlock.getItems(), 0);
       RecipeItem.RecipeRecord record = RecipeItem.getRecipe(recipeStack);
       if (record == null || record.output().isEmpty()) {
          return;
