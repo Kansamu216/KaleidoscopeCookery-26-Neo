@@ -546,5 +546,8 @@
   "item.kaleidoscope_cookery.oil_pot": "Маслёнка",
   "item.kaleidoscope_cookery.recipe_block": "Рецепт",
   "item.kaleidoscope_cookery.recipe_block.has_record": "Рецепт: %s, приготовленный из %s",
-  "item.kaleidoscope_cookery.steamer": "Пароварка"
+  "item.kaleidoscope_cookery.steamer": "Пароварка",
+  "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line1": "Хранит еду и зелья.",
+  "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line2": "ПКМ — использовать.",
+  "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line3": "Еда расходуется до полного насыщения."
 }

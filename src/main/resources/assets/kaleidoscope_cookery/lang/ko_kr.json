@@ -376,5 +376,8 @@
   "item.kaleidoscope_cookery.oil_pot": "기름 주전자",
   "item.kaleidoscope_cookery.recipe_block": "레시피",
   "item.kaleidoscope_cookery.recipe_block.has_record": "레시피：%s，%s에 사용",
-  "item.kaleidoscope_cookery.steamer": "찜기"
+  "item.kaleidoscope_cookery.steamer": "찜기",
+  "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line1": "음식과 물약을 보관합니다.",
+  "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line2": "우클릭하여 먹습니다.",
+  "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line3": "허기가 가득 찰 때까지 음식을 먹습니다."
 }

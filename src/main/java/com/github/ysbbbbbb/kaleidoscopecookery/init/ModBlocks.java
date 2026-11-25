@@ -2,15 +2,22 @@ package com.github.ysbbbbbb.kaleidoscopecookery.init;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.BaseCropBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.ChiliCropBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.TeaTreeBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.LettuceCropBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.crop.RiceCropBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.decoration.ChairBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.decoration.EightImmortalsTableBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.decoration.LongBenchBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.decoration.RedLanternBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.decoration.TeaBannerBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.decoration.CookStoolBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.decoration.FruitBasketBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.decoration.StackableFoodBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.decoration.TableBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.drink.ClayPotMilkTeaBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.drink.EmptyCupBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBiteThreeByThreeBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.BambooTrayBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.ChoppingBoardBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.EnamelBasinBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.KitchenwareRacksBlock;
@@ -35,7 +42,9 @@ import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.FruitBaske
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.OilPotBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.RecipeBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.TableBlockEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.TeaBannerBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.food.FoodBiteThreeByThreeBlockEntity;
+import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.BambooTrayBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.ChoppingBoardBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.KitchenwareRacksBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.KitchenShelfBlockEntity;
@@ -92,6 +101,13 @@ public class ModBlocks {
    public static DeferredBlock<Block> TRASH_CAN = registerBlock("trash_can", TrashCanBlock::new);
    public static DeferredBlock<Block> OIL_POT = registerBlock("oil_pot", OilPotBlock::new);
    public static DeferredBlock<Block> RECIPE_BLOCK = registerBlock("recipe_block", RecipeBlock::new);
+   public static DeferredBlock<Block> LONG_BENCH = registerBlock("long_bench", LongBenchBlock::new);
+   public static DeferredBlock<Block> RED_LANTERN = registerBlock("red_lantern", RedLanternBlock::new);
+   public static DeferredBlock<Block> EIGHT_IMMORTALS_TABLE = registerBlock("eight_immortals_table", EightImmortalsTableBlock::new);
+   public static DeferredBlock<Block> TEA_BANNER = registerBlock("tea_banner", TeaBannerBlock::new);
+   public static DeferredBlock<Block> BAMBOO_TRAY = registerBlock("bamboo_tray", BambooTrayBlock::new);
+   public static DeferredBlock<Block> TEA_TREE = registerBlock("tea_tree", TeaTreeBlock::new);
+   public static DeferredBlock<Block> CLAY_POT_MILK_TEA = registerBlock("clay_pot_milk_tea", ClayPotMilkTeaBlock::new);
    public static DeferredBlock<Block> TOMATO_CROP = registerBlock("tomato_crop", () -> new BaseCropBlock(ModItems.TOMATO, ModItems.TOMATO_SEED));
    public static DeferredBlock<Block> CHILI_CROP = registerBlock("chili_crop", ChiliCropBlock::new);
    public static DeferredBlock<Block> LETTUCE_CROP = registerBlock("lettuce_crop", LettuceCropBlock::new);
@@ -187,6 +203,12 @@ public class ModBlocks {
    );
    public static Supplier<BlockEntityType<FoodBiteThreeByThreeBlockEntity>> FOOD_BITE_THREE_BY_THREE_BE = BLOCK_ENTITIES.register(
       "food_bite_three_by_three", () -> new BlockEntityType<>(FoodBiteThreeByThreeBlockEntity::new, (Block)COLD_CUT_HAM_SLICES.get())
+   );
+   public static Supplier<BlockEntityType<BambooTrayBlockEntity>> BAMBOO_TRAY_BE = BLOCK_ENTITIES.register(
+      "bamboo_tray", () -> new BlockEntityType<>(BambooTrayBlockEntity::new, (Block)BAMBOO_TRAY.get())
+   );
+   public static Supplier<BlockEntityType<TeaBannerBlockEntity>> TEA_BANNER_BE = BLOCK_ENTITIES.register(
+      "tea_banner", () -> new BlockEntityType<>(TeaBannerBlockEntity::new, (Block)TEA_BANNER.get())
    );
    public static Supplier<BlockEntityType<ChairBlockEntity>> CHAIR_BE = BLOCK_ENTITIES.register(
       "chair",

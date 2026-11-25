@@ -97,6 +97,13 @@ public interface ModFoods {
    FoodProperties CANDIED_SWEET_BERRY_SKEWER = new LegacyBuilder().nutrition(10).saturationModifier(0.08F).alwaysEdible().build();
    FoodProperties CANDIED_FRUIT_SKEWER = new LegacyBuilder().nutrition(16).saturationModifier(0.3F).alwaysEdible().build();
    FoodProperties CANDIED_CATERPILLAR_SKEWER = new LegacyBuilder().nutrition(36).saturationModifier(7.0F / 36.0F).alwaysEdible().build();
+   /** Tea egg: springy egg steeped in savory tea, always edible. */
+   FoodProperties TEA_EGG = new LegacyBuilder()
+      .nutrition(4)
+      .saturationModifier(0.5F)
+      .alwaysEdible()
+      .effect(() -> new MobEffectInstance(ModEffects.SULFUR, 60 * 20), 1.0F)
+      .build();
    FoodProperties CHILI = new LegacyBuilder().nutrition(1).saturationModifier(0.0F).alwaysEdible().build();
    FoodProperties LETTUCE = new LegacyBuilder().nutrition(2).saturationModifier(0.0F).alwaysEdible().build();
    FoodProperties CATERPILLAR = new LegacyBuilder()
