@@ -1,8 +1,8 @@
 {
   "item_group.kaleidoscope_cookery.cookery_main.name": "Kaleidoscope: Cookery",
   "item_group.kaleidoscope_cookery.cookery_food.name": "Kaleidoscope: Food",
-  "pack.kaleidoscope_cookery.legacy_resources_pack.title": "Kaleidoscope Cookery's Legacy Resources Pack",
-  "pack.kaleidoscope_cookery.legacy_resources_pack.desc": "Provides textures and models for items and blocks added in older versions of the mod.",
+  "pack.kaleidoscope_cookery.legacy_resources_pack.title": "Kaleidoscope Cookery Legacy Resources",
+  "pack.kaleidoscope_cookery.legacy_resources_pack.desc": "Legacy 1.20.1-style entity, effect and GUI textures bundled for compatibility.",
   "block.kaleidoscope_cookery.stove": "Stove",
   "block.kaleidoscope_cookery.pot": "Wok",
   "block.kaleidoscope_cookery.stockpot": "Stockpot",
