@@ -39,14 +39,21 @@ sourceSets.main.resources {
     exclude 'data/kaleidoscope_cookery/loot_table/straw_hat_seed_drop.json'
     exclude 'data/kaleidoscope_cookery/loot_table/zoglin.json'
     exclude 'data/kaleidoscope_cookery/loot_table/zombified_piglin.json'
-    exclude 'data/kaleidoscope_cookery/loot_table/chest/village_chest.json'
+    // Minecraft 26 replaced the global loot-modifier index with per-modifier files that carry a 'type' field.
     exclude 'data/neoforge/loot_modifiers/global_loot_modifiers.json'
+    // The Minecraft 26.3 loot API changed LootItemFunction to a BiFunction with Holder
+    // based conditions; the retained loot codecs are still written against the 26.1.2
+    // shape, so they stay out of this branch's build and the village chest loot table
+    // (which references them) stays out too. Tracked as a follow-up migration.
+    exclude 'data/kaleidoscope_cookery/loot_table/chest/village_chest.json'
 }
 
 // Optional integrations from the 1.21.1 reference target third-party APIs
 // that are not present on the Minecraft 26.1.2 compile classpath. Keep their
 // sources in the project, but build the standalone core mod first.
 sourceSets.main.java {
+    exclude 'com/github/ysbbbbbb/kaleidoscopecookery/loot/**'
+    exclude 'com/github/ysbbbbbb/kaleidoscopecookery/init/ModLootModifier.java'
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/compat/create/**'
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/compat/emi/**'
     // The Minecraft 26 Jade bridge lives in compat/jade/runtime. Keep the
@@ -81,9 +88,6 @@ sourceSets.main.java {
     // and village kitchen houses from overriding vanilla template pools.
     // The Java sources are kept for reference but excluded from compilation.
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/event/ModTradesEvent.java'
-    exclude 'com/github/ysbbbbbb/kaleidoscopecookery/event/AddVillageStructuresEvent.java'
-    exclude 'com/github/ysbbbbbb/kaleidoscopecookery/loot/**'
-    exclude 'com/github/ysbbbbbb/kaleidoscopecookery/init/ModLootModifier.java'
 }
 
 repositories {
@@ -141,8 +145,12 @@ neoForge {
     runs {
         client {
             client()
-            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
-            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+            // NOTE: gametests are intentionally NOT enabled here. This mod registers a
+            // custom GameTestInstance whose codec cannot be dispatched through the
+            // test_instance_type registry, so it cannot be serialised for registry sync:
+            // a client that registers them hangs for ever on "Loading terrain" while
+            // joining a world. ModGameTests additionally ignores the registration event
+            // unless a run config explicitly sets neoforge.enabledGameTestNamespaces.
             // Optional unattended compatibility smoke test:
             // gradle runClient -PquickPlayWorld=<save-folder>
             if (project.hasProperty('quickPlayWorld')) {
@@ -153,7 +161,7 @@ neoForge {
         server {
             server()
             programArgument '--nogui'
-            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+            // Same reason as above: a joining client would fail registry sync.
         }
         // This run config launches GameTestServer and runs all registered gametests, then exits.
         // By default, the server will crash when no gametests are provided.
