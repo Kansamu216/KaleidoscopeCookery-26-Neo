@@ -72,14 +72,14 @@ sourceSets.main.java {
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/client/particle/CookingParticle.java'
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/client/particle/StockpotParticle.java'
 
-    // These two hooks cannot be adapted to 26.1.2 without private-field reflection:
-    // - ModTradesEvent relied on NeoForge's VillagerTradesEvent + BasicItemListing,
-    //   which no longer exist; 26.x moved villager trades to a datapack registry
-    //   (TradeSet/VillagerTrade) with no event and replaced ItemListing with the
-    //   loot-context based VillagerTrade.getOffer(LootContext).
-    // - AddVillageStructuresEvent mutated StructureTemplatePool.templates/rawTemplates,
-    //   which are now private final and only built/snapshotted at load time.
-    // Keep the sources for the follow-up datapack (worldgen/loot) pass.
+    // These two Java hooks are superseded by pure datapack data (26.x architecture):
+    // - Chef trades are now defined by datapack registries
+    //   (data/kaleidoscope_cookery/{villager_trade,tags/villager_trade,trade_set}/chef/*)
+    //   and bound to the profession via VillagerProfession.tradeSetsByLevel in ModVillager.
+    // - Village kitchen houses are injected by overriding the vanilla template pools
+    //   (data/minecraft/worldgen/template_pool/village/*/houses.json) since
+    //   StructureTemplatePool.templates/rawTemplates are private final with no public API.
+    // The Java sources are kept for reference but excluded from compilation.
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/event/ModTradesEvent.java'
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/event/AddVillageStructuresEvent.java'
 }
