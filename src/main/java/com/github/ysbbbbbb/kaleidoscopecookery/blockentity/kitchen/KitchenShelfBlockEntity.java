@@ -34,7 +34,7 @@ import java.util.Set;
 
 import static com.github.ysbbbbbb.kaleidoscopecookery.inventory.itemhandler.KitchenShelfItemHandler.CAPACITY;
 
-public class KitchenShelfBlockEntity extends BaseBlockEntity {
+public class KitchenShelfBlockEntity extends BaseBlockEntity implements net.minecraft.world.Container {
     private static final int RESTOCK_INTERVAL = 83;
     private final KitchenShelfItemHandler inventory = new KitchenShelfItemHandler(this);
     private boolean wasPowered;
@@ -43,8 +43,71 @@ public class KitchenShelfBlockEntity extends BaseBlockEntity {
         super(ModBlocks.KITCHEN_SHELF_BE.get(), pos, state);
     }
 
+    /** Automation view of the single storage slot, registered as {@code Capabilities.Item.BLOCK}. */
     public KitchenShelfItemHandler getItemHandler() {
         return inventory;
+    }
+
+    // ---- vanilla Container: makes /item replace and vanilla-style automation work ----
+
+    @Override
+    public int getContainerSize() {
+        return 1;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils.stackAt(this.inventory, 0).isEmpty();
+    }
+
+    @Override
+    public ItemStack getItem(int slot) {
+        return slot == 0 ? com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils.stackAt(this.inventory, 0) : ItemStack.EMPTY;
+    }
+
+    @Override
+    public ItemStack removeItem(int slot, int amount) {
+        if (slot != 0) {
+            return ItemStack.EMPTY;
+        }
+        ItemStack stored = getItem(0);
+        if (stored.isEmpty()) {
+            return ItemStack.EMPTY;
+        }
+        ItemStack taken = stored.split(amount);
+        com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils.setStack(this.inventory, 0, stored);
+        this.refresh();
+        return taken;
+    }
+
+    @Override
+    public ItemStack removeItemNoUpdate(int slot) {
+        ItemStack stored = getItem(slot);
+        com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils.setStack(this.inventory, 0, ItemStack.EMPTY);
+        this.refresh();
+        return stored;
+    }
+
+    @Override
+    public void setItem(int slot, ItemStack stack) {
+        if (slot != 0) {
+            return;
+        }
+        com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils.setStack(this.inventory, 0, stack);
+        this.refresh();
+    }
+
+    @Override
+    public boolean stillValid(net.minecraft.world.entity.player.Player player) {
+        return this.level != null
+            && this.level.getBlockEntity(this.worldPosition) == this
+            && player.distanceToSqr(this.worldPosition.getX() + 0.5, this.worldPosition.getY() + 0.5, this.worldPosition.getZ() + 0.5) <= 64.0;
+    }
+
+    @Override
+    public void clearContent() {
+        com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils.setStack(this.inventory, 0, ItemStack.EMPTY);
+        this.refresh();
     }
 
     public ItemStack getStoredStack() {

@@ -50,7 +50,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.TagValueOutput;
 
-public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
+public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer, net.minecraft.world.Container {
    public static final int MAX_LIT_LEVEL = 4;
    public static final String COOKING_PROGRESS_TAG = "CookingProgress";
    public static final String COOKING_TIME_TAG = "CookingTime";
@@ -394,8 +394,70 @@ public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
       return this.items;
    }
 
+   /** Automation view of the eight slots, registered as {@code Capabilities.Item.BLOCK}. */
    public SteamerItemHandler getItemHandler() {
       return this.itemHandler;
+   }
+
+   // ---- vanilla Container: makes /item replace and vanilla-style automation work ----
+
+   @Override
+   public int getContainerSize() {
+      return this.items.size();
+   }
+
+   @Override
+   public boolean isEmpty() {
+      for (ItemStack stack : this.items) {
+         if (!stack.isEmpty()) {
+            return false;
+         }
+      }
+      return true;
+   }
+
+   @Override
+   public ItemStack getItem(int slot) {
+      return slot >= 0 && slot < this.items.size() ? this.items.get(slot) : ItemStack.EMPTY;
+   }
+
+   @Override
+   public ItemStack removeItem(int slot, int amount) {
+      ItemStack stack = net.minecraft.world.ContainerHelper.removeItem(this.items, slot, amount);
+      if (!stack.isEmpty()) {
+         this.setChanged();
+      }
+      return stack;
+   }
+
+   @Override
+   public ItemStack removeItemNoUpdate(int slot) {
+      return net.minecraft.world.ContainerHelper.takeItem(this.items, slot);
+   }
+
+   @Override
+   public void setItem(int slot, ItemStack stack) {
+      if (slot < 0 || slot >= this.items.size()) {
+         return;
+      }
+      this.items.set(slot, stack);
+      if (stack.getCount() > this.getMaxStackSize()) {
+         stack.setCount(this.getMaxStackSize());
+      }
+      this.setChanged();
+   }
+
+   @Override
+   public boolean stillValid(net.minecraft.world.entity.player.Player player) {
+      return this.level != null
+         && this.level.getBlockEntity(this.worldPosition) == this
+         && player.distanceToSqr(this.worldPosition.getX() + 0.5, this.worldPosition.getY() + 0.5, this.worldPosition.getZ() + 0.5) <= 64.0;
+   }
+
+   @Override
+   public void clearContent() {
+      this.items.clear();
+      this.setChanged();
    }
 
    public void loadAdditional(ValueInput tag) {
