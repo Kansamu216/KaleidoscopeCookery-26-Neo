@@ -19,8 +19,25 @@ public final class ModGameTests {
    private ModGameTests() {
    }
 
+   /**
+    * NeoForge fires this event in every development run because
+    * {@code GameTestHooks.isGametestEnabled()} is true whenever the game runs from an IDE,
+    * regardless of {@code neoforge.enabledGameTestNamespaces}.
+    * <p>
+    * Our instances are {@link FunctionInstance}s, a custom {@code GameTestInstance} whose
+    * codec cannot be dispatched through the {@code test_instance_type} registry, so they
+    * cannot be serialised for registry synchronisation: if they are registered in an
+    * ordinary client run, joining a world throws "Unregistered holder ... Direct{Unit[...]}"
+    * inside {@code RegistrySynchronization} and the client hangs on "Loading terrain"
+    * for ever. Registering only when a run config explicitly asks for gametest namespaces
+    * (the {@code gameTestServer} run does) keeps normal client/server runs healthy.
+    */
    @SubscribeEvent
    public static void register(RegisterGameTestsEvent event) {
+      String namespaces = System.getProperty("neoforge.enabledGameTestNamespaces", "");
+      if (namespaces.isBlank()) {
+         return;
+      }
       Holder<TestEnvironmentDefinition<?>> environment = event.registerEnvironment(
          Identifier.fromNamespaceAndPath("kaleidoscope_cookery", "cooking_recipe_empty"),
          new TestEnvironmentDefinition.Functions(java.util.Optional.empty(), java.util.Optional.empty())

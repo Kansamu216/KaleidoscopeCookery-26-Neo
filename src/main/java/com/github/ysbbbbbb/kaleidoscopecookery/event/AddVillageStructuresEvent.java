@@ -1,5 +1,7 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.event;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
+import com.github.ysbbbbbb.kaleidoscopecookery.mixin.StructureTemplatePoolAccessor;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import java.util.List;
@@ -42,23 +44,38 @@ public class AddVillageStructuresEvent {
    }
 
    public static void addBuildingToPool(RegistryAccess registryAccess, Identifier poolId, String structId, int weight) {
-      Optional<Registry<StructureTemplatePool>> templatePools = registryAccess.registry(Registries.TEMPLATE_POOL);
+      // Minecraft 26 exposes RegistryAccess#lookup(...) and Registry#get(Identifier) now
+      // returns Optional<Holder.Reference<T>>.
+      Optional<Registry<StructureTemplatePool>> templatePools = registryAccess.lookup(Registries.TEMPLATE_POOL);
       if (!templatePools.isEmpty()) {
-         Optional<Registry<StructureProcessorList>> processorLists = registryAccess.registry(Registries.PROCESSOR_LIST);
+         Optional<Registry<StructureProcessorList>> processorLists = registryAccess.lookup(Registries.PROCESSOR_LIST);
          if (!processorLists.isEmpty()) {
-            StructureTemplatePool pool = (StructureTemplatePool)templatePools.get().get(poolId);
+            StructureTemplatePool pool = templatePools.get().get(poolId).map(Holder::value).orElse(null);
             if (pool != null) {
-               Holder<StructureProcessorList> holder = processorLists.get().getHolderOrThrow(CROP_REPLACE_PROCESSOR_LIST_KEY);
+               Holder<StructureProcessorList> holder = processorLists.get().getOrThrow(CROP_REPLACE_PROCESSOR_LIST_KEY);
                Identifier structLocation = Identifier.fromNamespaceAndPath("kaleidoscope_cookery", structId);
-               SinglePoolElement piece = (SinglePoolElement)SinglePoolElement.legacy(structLocation.toString(), holder).apply(Projection.RIGID);
+               // StructurePoolElement.single(location, processors) replaces the removed
+               // SinglePoolElement.legacy(...) factory.
+               SinglePoolElement piece = StructurePoolElement.single(structLocation.toString(), holder).apply(Projection.RIGID);
 
+               StructureTemplatePoolAccessor accessor = (StructureTemplatePoolAccessor) (Object) pool;
+               int before = accessor.kaleidoscope_cookery$getTemplates().size();
+
+               // `templates` holds one entry per weight, `rawTemplates` keeps the weighted form.
                for (int i = 0; i < weight; i++) {
-                  pool.templates.add(piece);
+                  accessor.kaleidoscope_cookery$getTemplates().add(piece);
                }
 
-               List<Pair<StructurePoolElement, Integer>> newRawTemplates = Lists.newArrayList(pool.rawTemplates);
+               List<Pair<StructurePoolElement, Integer>> newRawTemplates = Lists.newArrayList(accessor.kaleidoscope_cookery$getRawTemplates());
                newRawTemplates.add(Pair.of(piece, weight));
-               pool.rawTemplates = newRawTemplates;
+               accessor.kaleidoscope_cookery$setRawTemplates(newRawTemplates);
+               // Invalidate the lazily cached maxSize so villages account for the new piece.
+               accessor.kaleidoscope_cookery$setMaxSize(Integer.MIN_VALUE);
+
+               KaleidoscopeCookery.LOGGER.info(
+                  "Injected {} into template pool {} (weight {}, elements {} -> {})",
+                  structId, poolId, weight, before, accessor.kaleidoscope_cookery$getTemplates().size()
+               );
             }
          }
       }
