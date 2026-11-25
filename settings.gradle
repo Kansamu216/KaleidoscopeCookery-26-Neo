@@ -2,7 +2,15 @@ pluginManagement {
     repositories {
         maven { url = uri('../local-maven') }
         maven { url = uri('https://maven.neoforged.net/releases') }
+        // A Maven Central mirror is listed before the plugin portal because the portal
+        // redirects its transitive dependencies to Maven Central, which rate-limits
+        // hosted CI runners with HTTP 429.
+        maven {
+            name = 'GoogleMavenCentralMirror'
+            url = uri('https://maven-central.storage-download.googleapis.com/maven2/')
+        }
         gradlePluginPortal()
+        mavenCentral()
     }
     resolutionStrategy {
         eachPlugin {
