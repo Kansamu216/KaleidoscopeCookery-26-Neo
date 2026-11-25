@@ -20,6 +20,17 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 
+/**
+ * Kitchen shelf renderer.
+ *
+ * <p>26.x render-state pipeline (extract / submit) ported from the 1.20.1
+ * {@code KitchenShelfBlockEntityRender}. The per-slot layout (two columns at ±0.25, layers at
+ * {@code 0.7 - 0.5 * layer}, rows at {@code 0.3 - 0.2 * odd}, 45° X tilt, 0.5 scale) is a
+ * one-to-one port of the official values. The yaw uses the official
+ * {@code facing.toYRot() + 180} expression wrapped in {@code Axis.YN}; since {@code -x} equals
+ * {@code 360 - x}, the sign difference against the old {@code get2DDataValue() * 90} is exactly
+ * the official +180 offset.</p>
+ */
 public final class RuntimeKitchenShelfRenderer
    implements BlockEntityRenderer<KitchenShelfBlockEntity, RuntimeKitchenShelfRenderer.State> {
    // Show at most this many items on the shelf, matching the official renderer.
@@ -56,8 +67,7 @@ public final class RuntimeKitchenShelfRenderer
       for (int index = 0; index < displayCount; index++) {
          ItemStackRenderState itemState = new ItemStackRenderState();
          this.itemModelResolver.updateForTopItem(
-            itemState, display, ItemDisplayContext.FIXED, blockEntity.getLevel(), null,
-            (int)(blockEntity.getBlockPos().asLong() + index)
+            itemState, display, ItemDisplayContext.FIXED, blockEntity.getLevel(), null, 0
          );
          state.items.add(new ShelfItem(itemState, index));
       }
@@ -70,18 +80,19 @@ public final class RuntimeKitchenShelfRenderer
       }
       poseStack.pushPose();
       poseStack.translate(0.5F, 0.0F, 0.5F);
-      poseStack.mulPose(Axis.YN.rotationDegrees(state.facing.get2DDataValue() * 90.0F).get(new org.joml.Matrix4f()));
+      // Official: mulPose(Axis.YN.rotationDegrees(facing.toYRot() + 180)).
+      poseStack.mulPose(Axis.YN.rotationDegrees(state.facing.toYRot() + 180.0F).get(new org.joml.Matrix4f()));
       // Layout relative to a north-facing shelf: rows of two, from back to front, stacked upward.
       for (ShelfItem shelfItem : state.items) {
          int index = shelfItem.index();
          int layer = index / 8;
          int slot = index % 8;
-         int row = slot / 2;
+         int odd = slot / 2;
          poseStack.pushPose();
          poseStack.translate(
             slot % 2 == 0 ? -0.25F : 0.25F,
-            0.7F - layer * 0.5F,
-            0.3F - row * 0.2F
+            0.7F + layer * -0.5F,
+            0.3F - odd * 0.20F
          );
          poseStack.mulPose(Axis.XP.rotationDegrees(45.0F).get(new org.joml.Matrix4f()));
          poseStack.scale(0.5F, 0.5F, 0.5F);
