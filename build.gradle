@@ -72,12 +72,16 @@ sourceSets.main.java {
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/client/particle/CookingParticle.java'
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/client/particle/StockpotParticle.java'
 
-    // These hooks depend on registries/events that were removed or redesigned
-    // in 26.1.2. They are isolated from core cooking gameplay for the first
-    // runnable build and remain in source for a follow-up worldgen/loot pass.
+    // These two hooks cannot be adapted to 26.1.2 without private-field reflection:
+    // - ModTradesEvent relied on NeoForge's VillagerTradesEvent + BasicItemListing,
+    //   which no longer exist; 26.x moved villager trades to a datapack registry
+    //   (TradeSet/VillagerTrade) with no event and replaced ItemListing with the
+    //   loot-context based VillagerTrade.getOffer(LootContext).
+    // - AddVillageStructuresEvent mutated StructureTemplatePool.templates/rawTemplates,
+    //   which are now private final and only built/snapshotted at load time.
+    // Keep the sources for the follow-up datapack (worldgen/loot) pass.
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/event/ModTradesEvent.java'
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/event/AddVillageStructuresEvent.java'
-    exclude 'com/github/ysbbbbbb/kaleidoscopecookery/event/effect/FlatulenceEvent.java'
 }
 
 repositories {

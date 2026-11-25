@@ -66,5 +66,11 @@
       "kaleidoscope_cookery:item/dough_transform"
     ],
     "subtitle": "subtitles.kaleidoscope_cookery.item.dough_transform"
+  },
+  "block.kitchen_shelf": {
+    "sounds": [
+      "kaleidoscope_cookery:block/kitchen_shelf"
+    ],
+    "subtitle": "subtitles.kaleidoscope_cookery.block.kitchen_shelf"
   }
 }
