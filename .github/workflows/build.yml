@@ -43,8 +43,19 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      # Maven Central occasionally answers 429 to cold dependency resolution on
+      # hosted runners; retry a few times before failing the job for real.
       - name: Build with Gradle
-        run: ./gradlew build --no-daemon
+        run: |
+          for attempt in 1 2 3; do
+            if ./gradlew build --no-daemon; then
+              exit 0
+            fi
+            echo "::warning::Gradle build attempt ${attempt} failed, retrying in 30s"
+            sleep 30
+          done
+          echo "::error::Gradle build failed after 3 attempts"
+          exit 1
         env:
           GRADLE_OPTS: >-
             -Dorg.gradle.java.installations.paths=${{ env.JAVA_HOME_25_X64 }},${{ env.JAVA_HOME_26_X64 }}
