@@ -22,6 +22,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import com.github.ysbbbbbb.kaleidoscopecookery.compat.farmersdelight.FarmersDelightCompat;
+import com.github.ysbbbbbb.kaleidoscopecookery.compat.harvest.HarvestCompat;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
 @EventBusSubscriber(modid = "kaleidoscope_cookery")
@@ -30,6 +32,16 @@ public class CommonRegistry {
    public static void onSetupEvent(FMLCommonSetupEvent event) {
       event.enqueueWork(ModSoupBases::registerAll);
       event.enqueueWork(CommonRegistry::addDispenserBehavior);
+      event.enqueueWork(CommonRegistry::modCompat);
+   }
+
+   /**
+    * Optional gameplay integrations. Each one checks the target mod id itself,
+    * so calling them unconditionally is safe when the other mod is absent.
+    */
+   private static void modCompat() {
+      FarmersDelightCompat.init();
+      HarvestCompat.init();
    }
 
    @SubscribeEvent

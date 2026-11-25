@@ -1,5 +1,6 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.compat.farmersdelight;
 
+import com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.StockpotRecipe;
 import java.util.List;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -15,6 +16,10 @@ public class FarmersDelightCompat {
       ModList.get().getModContainerById("farmersdelight").ifPresent(modContainer -> {
          IS_LOADED = true;
          NeoForge.EVENT_BUS.addListener(CookingPotCompat::afterStockpotRecipeMatch);
+         KaleidoscopeCookery.LOGGER.info(
+            "Farmer's Delight {} detected: cooking pot recipes are now usable in the stockpot",
+            modContainer.getModInfo().getVersion()
+         );
       });
    }
 
