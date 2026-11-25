@@ -1,0 +1,22 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.github.ysbbbbbb.kaleidoscopecookery.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "refmap": "kaleidoscope_cookery.refmap.json",
+  "mixins": [
+    "BlockMixin",
+    "FallingBlockEntityMixin",
+    "LivingEntityMixin",
+    "MobBucketItemMixin",
+    "PowderSnowBlockMixin",
+    "VillagerMixin"
+  ],
+  "client": [
+    "GuiAccessor",
+    "PunchyRawDoughCompatMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

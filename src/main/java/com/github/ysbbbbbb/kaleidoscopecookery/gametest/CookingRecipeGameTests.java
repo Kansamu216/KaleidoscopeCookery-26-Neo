@@ -65,6 +65,24 @@ public final class CookingRecipeGameTests {
       helper.succeed();
    }
 
+
+   /** Logs total and mod recipe counts so recipe loading can be verified from the test log. */
+   public static void recipeCountIsReported(GameTestHelper helper) {
+      ServerLevel level = helper.getLevel();
+      RecipeManager manager = level.recipeAccess();
+      long total = manager.getRecipes().size();
+      long modRecipes = manager.getRecipes().stream()
+         .filter(holder -> holder.id().identifier().getNamespace().equals("kaleidoscope_cookery"))
+         .count();
+      org.slf4j.LoggerFactory.getLogger("kaleidoscope_cookery-gametest")
+         .info("Recipe counts: total={}, kaleidoscope_cookery={}", total, modRecipes);
+      if (modRecipes <= 0) {
+         helper.fail("No kaleidoscope_cookery recipes were loaded (total=" + total + ")");
+         return;
+      }
+      helper.succeed();
+   }
+
    private static void assertResolves(GameTestHelper helper, String recipePath, Item expectedItem, int expectedCount) {
       ServerLevel level = helper.getLevel();
       RecipeManager manager = level.recipeAccess();
