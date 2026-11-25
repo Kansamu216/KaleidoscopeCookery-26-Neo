@@ -44,8 +44,10 @@ import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult.Type;
 import net.neoforged.neoforge.common.SoundActions;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.transfer.fluid.FluidUtil;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.fluid.FluidStacksResourceHandler;
 import org.apache.commons.lang3.StringUtils;
 
 public class TeapotItem extends BlockItem {
@@ -213,11 +215,11 @@ public class TeapotItem extends BlockItem {
                if (pickup.isEmpty()) {
                   return InteractionResult.FAIL;
                } else {
-                  IFluidHandlerItem capability = FluidUtil.getFluidHandler(pickup).orElse(null);
+                  ResourceHandler<FluidResource> capability = com.github.ysbbbbbb.kaleidoscopecookery.util.FluidUtils.itemFluidHandler(pickup);
                   if (capability == null) {
                      return InteractionResult.FAIL;
                   } else {
-                     Fluid fluid = capability.getFluidInTank(0).getFluid();
+                     Fluid fluid = com.github.ysbbbbbb.kaleidoscopecookery.util.FluidUtils.firstStack(capability).getFluid();
                      boolean result = fillFluid(itemInHand, fluid, player);
                      return result
                         ? (level.isClientSide() ? InteractionResult.SUCCESS : InteractionResult.SUCCESS_SERVER)

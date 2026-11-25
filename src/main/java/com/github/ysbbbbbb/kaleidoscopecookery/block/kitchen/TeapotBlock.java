@@ -39,8 +39,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import org.jetbrains.annotations.Nullable;
 
 public class TeapotBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock, EntityBlock {
@@ -105,7 +105,7 @@ public class TeapotBlock extends HorizontalDirectionalBlock implements SimpleWat
          return InteractionResult.TRY_WITH_EMPTY_HAND;
       } else if (level.getBlockEntity(pos) instanceof ITeapot teapot) {
          ItemStack mainHandItem = player.getMainHandItem();
-         IFluidHandlerItem capability = FluidUtil.getFluidHandler(mainHandItem).orElse(null);
+         ResourceHandler<FluidResource> capability = FluidUtils.itemFluidHandler(mainHandItem);
          if (capability != null) {
             if (FluidUtils.hasFluid(mainHandItem)) {
                boolean result = teapot.addTeaFluid(level, player, mainHandItem);

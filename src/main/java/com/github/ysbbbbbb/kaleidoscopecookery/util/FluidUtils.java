@@ -4,68 +4,120 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.common.SoundActions;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
-import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
+import net.neoforged.neoforge.transfer.fluid.FluidUtil;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.minecraft.world.level.material.Fluid;
 
-public class FluidUtils {
-   public static boolean emptyItem(LivingEntity user, ItemStack bucket, IFluidHandler handler, int amount) {
-      ItemStack copy = bucket.copyWithCount(1);
-      return FluidUtil.getFluidHandler(copy).map(stackFluid -> {
-         FluidStack transfer = FluidUtil.tryFluidTransfer(handler, stackFluid, amount, true);
-         if (transfer.isEmpty()) {
-            return false;
-         } else {
-            ItemStack result = stackFluid.getContainer();
-            if (!(user instanceof Player player && player.isCreative())) {
-               bucket.shrink(1);
-            }
-
-            ItemUtils.getItemToLivingEntity(user, result);
-            SoundEvent sound = transfer.getFluid().getFluidType().getSound(transfer, SoundActions.BUCKET_EMPTY);
-            if (sound != null) {
-               user.playSound(sound);
-            }
-
-            return true;
-         }
-      }).orElse(false);
+/**
+ * Fluid transfer helpers using the NeoForge 26.3 {@code transfer} API.
+ */
+public final class FluidUtils {
+   private FluidUtils() {
    }
 
-   public static boolean fillItem(LivingEntity user, ItemStack bucket, IFluidHandler handler, int amount) {
+   /** Drains fluid from the held container into the target handler. */
+   public static boolean emptyItem(LivingEntity user, ItemStack bucket, ResourceHandler<FluidResource> handler, int amount) {
       ItemStack copy = bucket.copyWithCount(1);
-      return FluidUtil.getFluidHandler(copy).map(stackFluid -> {
-         FluidStack transfer = FluidUtil.tryFluidTransfer(stackFluid, handler, amount, false);
-         if (transfer.isEmpty()) {
+      ResourceHandler<FluidResource> itemHandler = itemFluidHandler(copy);
+      if (itemHandler == null) {
+         return false;
+      }
+      try (Transaction tx = Transaction.openRoot()) {
+         FluidResource resource = firstFluid(itemHandler);
+         if (resource.isEmpty()) {
             return false;
-         } else {
-            FluidUtil.tryFluidTransfer(stackFluid, handler, amount, true);
-            ItemStack result = stackFluid.getContainer();
-            if (!(user instanceof Player player && player.isCreative())) {
-               bucket.shrink(1);
-            }
-
-            ItemUtils.getItemToLivingEntity(user, result);
-            SoundEvent sound = transfer.getFluid().getFluidType().getSound(transfer, SoundActions.BUCKET_FILL);
-            if (sound != null) {
-               user.playSound(sound);
-            }
-
-            return true;
          }
-      }).orElse(false);
+         int moved = itemHandler.extract(resource, amount, tx);
+         if (moved <= 0) {
+            return false;
+         }
+         int accepted = handler.insert(resource, moved, tx);
+         if (accepted < moved) {
+            return false;
+         }
+         tx.commit();
+         afterFluidMove(user, bucket, copy, resource, SoundActions.BUCKET_EMPTY);
+         return true;
+      }
+   }
+
+   /** Fills the held container from the target handler. */
+   public static boolean fillItem(LivingEntity user, ItemStack bucket, ResourceHandler<FluidResource> handler, int amount) {
+      ItemStack copy = bucket.copyWithCount(1);
+      ResourceHandler<FluidResource> itemHandler = itemFluidHandler(copy);
+      if (itemHandler == null) {
+         return false;
+      }
+      try (Transaction tx = Transaction.openRoot()) {
+         FluidResource resource = firstFluid(handler);
+         if (resource.isEmpty()) {
+            return false;
+         }
+         int drained = handler.extract(resource, amount, tx);
+         if (drained <= 0) {
+            return false;
+         }
+         int accepted = itemHandler.insert(resource, drained, tx);
+         if (accepted < drained) {
+            return false;
+         }
+         tx.commit();
+         afterFluidMove(user, bucket, copy, resource, SoundActions.BUCKET_FILL);
+         return true;
+      }
    }
 
    public static boolean hasFluid(ItemStack stack) {
-      return FluidUtil.getFluidHandler(stack).map(handler -> {
-         for (int i = 0; i < handler.getTanks(); i++) {
-            if (!handler.getFluidInTank(i).isEmpty()) {
-               return true;
-            }
-         }
+      ResourceHandler<FluidResource> handler = itemFluidHandler(stack);
+      return handler != null && !firstFluid(handler).isEmpty();
+   }
 
-         return false;
-      }).orElse(false);
+   public static ResourceHandler<FluidResource> itemFluidHandler(ItemStack stack) {
+      if (stack.isEmpty()) {
+         return null;
+      }
+      return ItemAccess.forStack(stack).oneByOne().getCapability(Capabilities.Fluid.ITEM);
+   }
+
+   public static FluidResource firstFluid(ResourceHandler<FluidResource> handler) {
+      for (int i = 0; i < handler.size(); i++) {
+         FluidResource resource = handler.getResource(i);
+         if (!resource.isEmpty() && handler.getAmountAsLong(i) > 0) {
+            return resource;
+         }
+      }
+      return FluidResource.EMPTY;
+   }
+
+   /** First non-empty fluid stack in a handler, or empty. */
+   public static net.neoforged.neoforge.fluids.FluidStack firstStack(ResourceHandler<FluidResource> handler) {
+      for (int i = 0; i < handler.size(); i++) {
+         FluidResource r = handler.getResource(i);
+         if (!r.isEmpty() && handler.getAmountAsLong(i) > 0) {
+            return r.toStack((int) handler.getAmountAsLong(i));
+         }
+      }
+      return net.neoforged.neoforge.fluids.FluidStack.EMPTY;
+   }
+
+   private static void afterFluidMove(LivingEntity user, ItemStack bucket, ItemStack copy, FluidResource resource, net.neoforged.neoforge.common.SoundAction soundAction) {
+      ItemStack result = copy.getCraftingRemainder() != null ? copy.getCraftingRemainder().create() : ItemStack.EMPTY;
+      if (!(user instanceof Player player && player.isCreative())) {
+         bucket.shrink(1);
+      }
+      if (!result.isEmpty()) {
+         ItemUtils.getItemToLivingEntity(user, result);
+      }
+      Fluid fluid = resource.value();
+      SoundEvent sound = fluid.getFluidType().getSound((net.minecraft.world.entity.Entity) null, soundAction);
+      if (sound != null) {
+         user.playSound(sound);
+      }
    }
 }
