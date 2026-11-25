@@ -1,7 +1,0 @@
-{
-  "type": "kaleidoscope_cookery:millstone",
-  "ingredient": "minecraft:basalt",
-  "result": {
-    "id": "minecraft:polished_basalt"
-  }
-}
