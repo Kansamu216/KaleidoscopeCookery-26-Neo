@@ -395,6 +395,18 @@ tag.readChild("OutputItem",          this.outputs);
       return !Util.NIL_UUID.equals(this.entityId);
    }
 
+   /** True when the given entity is the one currently bound to this millstone. */
+   public boolean isBoundTo(LivingEntity entity) {
+      return this.bindEntity == entity || this.entityId.equals(entity.getUUID());
+   }
+
+   /** Drops the binding, restoring the idle lift angle. */
+   public void unbindEntity() {
+      this.entityId = Util.NIL_UUID;
+      this.bindEntity = null;
+      this.liftAngle = 5.0F;
+   }
+
    public float getCacheRot() {
       return this.cacheRot;
    }

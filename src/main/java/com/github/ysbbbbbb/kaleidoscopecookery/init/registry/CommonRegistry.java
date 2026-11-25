@@ -1,7 +1,10 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.init.registry;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.block.decoration.PlateBlock;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.dispenser.BambooTrayDispenseBehavior;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.dispenser.ChoppingBoardDispenseBehavior;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.dispenser.OilPotDispenseBehavior;
+import com.github.ysbbbbbb.kaleidoscopecookery.block.dispenser.TeapotDispenseBehavior;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.drink.TeacupBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBiteBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.block.food.FoodBiteOneByTwoBlock;
@@ -86,5 +89,8 @@ public class CommonRegistry {
 
    private static void addDispenserBehavior() {
       DispenserBlock.registerBehavior((ItemLike)ModItems.OIL_POT.get(), new OilPotDispenseBehavior());
+      DispenserBlock.registerBehavior((ItemLike)ModItems.BAMBOO_TRAY.get(), new BambooTrayDispenseBehavior());
+      DispenserBlock.registerBehavior((ItemLike)ModItems.TEAPOT.get(), new TeapotDispenseBehavior());
+      ChoppingBoardDispenseBehavior.register();
    }
 }
