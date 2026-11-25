@@ -31,6 +31,11 @@ public final class ModGameTests {
       register(event, environment, "chopping_board_recipe_resolves_result", CookingRecipeGameTests::choppingBoardRecipeResolvesResult);
       register(event, environment, "millstone_input_capability_validates_recipes", CookingRecipeGameTests::millstoneInputCapabilityValidatesRecipes);
       register(event, environment, "recipe_count_is_reported", CookingRecipeGameTests::recipeCountIsReported);
+      register(event, environment, "teapot_recipe_resolves_result", CookingRecipeGameTests::teapotRecipeResolvesResult);
+      register(event, environment, "steamer_recipe_resolves_result", CookingRecipeGameTests::steamerRecipeResolvesResult);
+      register(event, environment, "flex_pot_recipe_resolves_result", CookingRecipeGameTests::flexPotRecipeResolvesResult);
+      register(event, environment, "flex_stockpot_recipe_resolves_result", CookingRecipeGameTests::flexStockpotRecipeResolvesResult);
+      register(event, environment, "rice_bowl_recipe_resolves_result", CookingRecipeGameTests::riceBowlRecipeResolvesResult);
    }
 
    private static void register(

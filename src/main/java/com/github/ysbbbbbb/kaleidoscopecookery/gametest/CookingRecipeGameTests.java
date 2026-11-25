@@ -1,6 +1,11 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.gametest;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.ChoppingBoardRecipe;
+import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.FlexPotRecipe;
+import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.FlexStockpotRecipe;
+import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.RiceBowlRecipe;
+import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.SteamerRecipe;
+import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.TeapotRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.MillstoneRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.PotRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.StockpotRecipe;
@@ -41,6 +46,26 @@ public final class CookingRecipeGameTests {
 
    public static void choppingBoardRecipeResolvesResult(GameTestHelper helper) {
       assertResolves(helper, "chopping_board/bone_from_cod", Items.BONE, 2);
+   }
+
+   public static void teapotRecipeResolvesResult(GameTestHelper helper) {
+      assertResolves(helper, "teapot/barley_tea", ModItem.BARLEY_TEA.item(), 1);
+   }
+
+   public static void steamerRecipeResolvesResult(GameTestHelper helper) {
+      assertResolves(helper, "steamer/bamboo_tube_rice", ModItem.BAMBOO_TUBE_RICE.item(), 1);
+   }
+
+   public static void flexPotRecipeResolvesResult(GameTestHelper helper) {
+      assertResolves(helper, "flex_pot/blaze_lamb_chop", ModItem.BLAZE_LAMB_CHOP.item(), 1);
+   }
+
+   public static void flexStockpotRecipeResolvesResult(GameTestHelper helper) {
+      assertResolves(helper, "flex_stockpot/beef_meatball_soup", ModItem.BEEF_MEATBALL_SOUP.item(), 1);
+   }
+
+   public static void riceBowlRecipeResolvesResult(GameTestHelper helper) {
+      assertResolves(helper, "braised_beef_rice_bowl", ModItem.BRAISED_BEEF_RICE_BOWL.item(), 1);
    }
 
    /**
@@ -129,12 +154,32 @@ public final class CookingRecipeGameTests {
       if (recipe instanceof ChoppingBoardRecipe board) {
          return board.getResult();
       }
+      if (recipe instanceof TeapotRecipe teapot) {
+         return teapot.result();
+      }
+      if (recipe instanceof SteamerRecipe steamer) {
+         return steamer.getResult();
+      }
+      if (recipe instanceof FlexPotRecipe flexPot) {
+         return flexPot.result();
+      }
+      if (recipe instanceof FlexStockpotRecipe flexStockpot) {
+         return flexStockpot.result();
+      }
+      if (recipe instanceof RiceBowlRecipe riceBowl) {
+         return riceBowl.getResult();
+      }
       return ItemStack.EMPTY;
    }
 
    /** Lazily resolves a mod item so the test does not run during class init. */
    private enum ModItem {
-      BEEF_NOODLE("beef_noodle");
+      BEEF_NOODLE("beef_noodle"),
+      BARLEY_TEA("barley_tea"),
+      BAMBOO_TUBE_RICE("bamboo_tube_rice"),
+      BLAZE_LAMB_CHOP("blaze_lamb_chop"),
+      BEEF_MEATBALL_SOUP("beef_meatball_soup"),
+      BRAISED_BEEF_RICE_BOWL("braised_beef_rice_bowl");
 
       private final String path;
 
