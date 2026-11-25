@@ -1,4 +1,5 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.client.runtime.render;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.block.decoration.TableBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.TableBlockEntity;
@@ -68,8 +69,8 @@ public final class RuntimeTableRenderer implements BlockEntityRenderer<TableBloc
 
       state.items = new ArrayList<>();
       state.blockItems = new ArrayList<>();
-      for (int slot = 0; slot < blockEntity.getItems().getSlots(); slot++) {
-         ItemStack stack = blockEntity.getItems().getStackInSlot(slot);
+      for (int slot = 0; slot < blockEntity.getItems().size(); slot++) {
+         ItemStack stack = ResourceHandlerUtils.stackAt(blockEntity.getItems(), slot);
          if (!stack.isEmpty()) {
             ItemStackRenderState itemState = new ItemStackRenderState();
             this.itemModelResolver.updateForTopItem(

@@ -1,4 +1,5 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.block.misc;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRegistrationProperties;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.misc.TrashCanBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.entity.SitEntity;
@@ -209,8 +210,8 @@ public class TrashCanBlock extends HorizontalDirectionalBlock implements SimpleW
       List<ItemStack> drops = super.getDrops(state, params);
       BlockEntity parameter = (BlockEntity)params.getParameter(LootContextParams.BLOCK_ENTITY);
       if (parameter instanceof TrashCanBlockEntity trashCanBlock) {
-         for (int i = 0; i < trashCanBlock.getStorage().getSlots(); i++) {
-            ItemStack stack = trashCanBlock.getStorage().getStackInSlot(i);
+         for (int i = 0; i < trashCanBlock.getStorage().size(); i++) {
+            ItemStack stack = ResourceHandlerUtils.stackAt(trashCanBlock.getStorage(), i);
             if (!stack.isEmpty()) {
                drops.add(stack);
             }

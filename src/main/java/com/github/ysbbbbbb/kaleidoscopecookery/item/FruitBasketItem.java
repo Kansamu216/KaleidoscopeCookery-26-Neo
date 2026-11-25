@@ -1,4 +1,5 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.item;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRegistrationProperties;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModDataComponents;
@@ -15,7 +16,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Item.Properties;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 
 public class FruitBasketItem extends BlockItem {
    private static final int MAX_SLOTS = 8;
@@ -24,12 +25,12 @@ public class FruitBasketItem extends BlockItem {
       super((Block)ModBlocks.FRUIT_BASKET.get(), ModRegistrationProperties.itemProperties().stacksTo(1));
    }
 
-   public static ItemStackHandler getItems(ItemStack stack) {
+   public static ItemStacksResourceHandler getItems(ItemStack stack) {
       FruitBasketItem.ItemContainer container = (FruitBasketItem.ItemContainer)stack.get(ModDataComponents.FRUIT_BASKET_ITEMS);
-      return container != null ? container.items() : new ItemStackHandler(8);
+      return container != null ? container.items() : new ItemStacksResourceHandler(8);
    }
 
-   public static void saveItems(ItemStack stack, ItemStackHandler items) {
+   public static void saveItems(ItemStack stack, ItemStacksResourceHandler items) {
       stack.set(ModDataComponents.FRUIT_BASKET_ITEMS, new FruitBasketItem.ItemContainer(items));
    }
 
@@ -42,21 +43,21 @@ public class FruitBasketItem extends BlockItem {
       return false;
    }
 
-   public record ItemContainer(ItemStackHandler items) {
+   public record ItemContainer(ItemStacksResourceHandler items) {
       public static final Codec<FruitBasketItem.ItemContainer> CODEC = ItemStack.OPTIONAL_CODEC.listOf().xmap(list -> {
-         ItemStackHandler handler = new ItemStackHandler(8);
+         ItemStacksResourceHandler handler = new ItemStacksResourceHandler(8);
 
-         for (int i = 0; i < Math.min(list.size(), handler.getSlots()); i++) {
-            handler.setStackInSlot(i, (ItemStack)list.get(i));
+         for (int i = 0; i < Math.min(list.size(), handler.size()); i++) {
+            ResourceHandlerUtils.setStack(handler, i, (ItemStack)list.get(i));
          }
 
          return new FruitBasketItem.ItemContainer(handler);
       }, container -> {
-         ItemStackHandler handler = container.items();
+         ItemStacksResourceHandler handler = container.items();
          List<ItemStack> output = Lists.newArrayList();
 
-         for (int i = 0; i < handler.getSlots(); i++) {
-            output.add(handler.getStackInSlot(i));
+         for (int i = 0; i < handler.size(); i++) {
+            output.add(ResourceHandlerUtils.stackAt(handler, i));
          }
 
          return output;
@@ -65,17 +66,17 @@ public class FruitBasketItem extends BlockItem {
          ItemStack.OPTIONAL_LIST_STREAM_CODEC.map(FruitBasketItem.ItemContainer::fromList, FruitBasketItem.ItemContainer::toList);
 
       private static FruitBasketItem.ItemContainer fromList(List<ItemStack> list) {
-         ItemStackHandler handler = new ItemStackHandler(8);
-         for (int i = 0; i < Math.min(list.size(), handler.getSlots()); i++) {
-            handler.setStackInSlot(i, list.get(i));
+         ItemStacksResourceHandler handler = new ItemStacksResourceHandler(8);
+         for (int i = 0; i < Math.min(list.size(), handler.size()); i++) {
+            ResourceHandlerUtils.setStack(handler, i, list.get(i));
          }
          return new FruitBasketItem.ItemContainer(handler);
       }
 
       private List<ItemStack> toList() {
          List<ItemStack> output = Lists.newArrayList();
-         for (int i = 0; i < this.items.getSlots(); i++) {
-            output.add(this.items.getStackInSlot(i));
+         for (int i = 0; i < this.items.size(); i++) {
+            output.add(ResourceHandlerUtils.stackAt(this.items, i));
          }
          return output;
       }

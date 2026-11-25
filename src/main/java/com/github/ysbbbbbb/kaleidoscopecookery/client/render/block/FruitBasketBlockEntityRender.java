@@ -1,4 +1,5 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.client.render.block;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.FruitBasketBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -11,7 +12,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.neoforged.neoforge.items.ItemStackHandler;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 
 public class FruitBasketBlockEntityRender implements BlockEntityRenderer<FruitBasketBlockEntity> {
    private final Context context;
@@ -21,7 +22,7 @@ public class FruitBasketBlockEntityRender implements BlockEntityRenderer<FruitBa
    }
 
    public void render(FruitBasketBlockEntity basket, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
-      ItemStackHandler items = basket.getItems();
+      ItemStacksResourceHandler items = basket.getItems();
       ItemRenderer itemRenderer = this.context.getItemRenderer();
       int rotation = ((Direction)basket.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING)).get2DDataValue() * 90;
       poseStack.pushPose();
@@ -35,7 +36,7 @@ public class FruitBasketBlockEntityRender implements BlockEntityRenderer<FruitBa
 
          for (int j = 0; j < 4; j++) {
             int index = i * 4 + j;
-            ItemStack itemStack = items.getStackInSlot(index);
+            ItemStack itemStack = ResourceHandlerUtils.stackAt(items, index);
             if (!itemStack.isEmpty()) {
                poseStack.translate(0.15, 0.0, 0.0);
                poseStack.pushPose();

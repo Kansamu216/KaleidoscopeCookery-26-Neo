@@ -1,4 +1,5 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.block.misc;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRegistrationProperties;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.RecipeBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModSoundType;
@@ -72,7 +73,7 @@ public class RecipeBlock extends FaceAttachedHorizontalDirectionalBlock implemen
          } else if (level.isClientSide()) {
             return InteractionResult.SUCCESS;
          } else if (level.getBlockEntity(pos) instanceof RecipeBlockEntity recipeBlockEntity) {
-            ItemStack itemStack = recipeBlockEntity.getItems().getStackInSlot(0);
+            ItemStack itemStack = ResourceHandlerUtils.stackAt(recipeBlockEntity.getItems(), 0);
             if (itemStack.isEmpty()) {
                return InteractionResult.TRY_WITH_EMPTY_HAND;
             } else {
@@ -135,14 +136,14 @@ public class RecipeBlock extends FaceAttachedHorizontalDirectionalBlock implemen
 
    public void setPlacedBy(Level pLevel, BlockPos pPos, BlockState pState, @Nullable LivingEntity livingEntity, ItemStack stack) {
       if (!pLevel.isClientSide() && pLevel.getBlockEntity(pPos) instanceof RecipeBlockEntity recipeBlockEntity) {
-         recipeBlockEntity.getItems().setStackInSlot(0, stack.copyWithCount(1));
+         ResourceHandlerUtils.setStack(recipeBlockEntity.getItems(), 0, stack.copyWithCount(1));
          recipeBlockEntity.refresh();
       }
    }
 
    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state, boolean includeData, Player player) {
       if (level.getBlockEntity(pos) instanceof RecipeBlockEntity recipeBlockEntity) {
-         ItemStack itemStack = recipeBlockEntity.getItems().getStackInSlot(0);
+         ItemStack itemStack = ResourceHandlerUtils.stackAt(recipeBlockEntity.getItems(), 0);
          if (!itemStack.isEmpty()) {
             return itemStack.copy();
          }
@@ -163,7 +164,7 @@ public class RecipeBlock extends FaceAttachedHorizontalDirectionalBlock implemen
       List<ItemStack> drops = super.getDrops(state, lootParamsBuilder);
       BlockEntity parameter = (BlockEntity)lootParamsBuilder.getParameter(LootContextParams.BLOCK_ENTITY);
       if (parameter instanceof RecipeBlockEntity recipeBlock) {
-         drops.add(recipeBlock.getItems().getStackInSlot(0).copyWithCount(1));
+         drops.add(ResourceHandlerUtils.stackAt(recipeBlock.getItems(), 0).copyWithCount(1));
       }
 
       return drops;

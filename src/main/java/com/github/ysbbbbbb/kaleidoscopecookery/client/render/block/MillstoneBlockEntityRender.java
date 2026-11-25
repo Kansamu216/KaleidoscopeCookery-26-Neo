@@ -1,4 +1,5 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.client.render.block;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.MillstoneBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.MillstoneBlockEntity;
@@ -38,8 +39,8 @@ public class MillstoneBlockEntityRender implements BlockEntityRenderer<Millstone
       if (level != null) {
          Direction facing = (Direction)millstone.getBlockState().getValue(MillstoneBlock.FACING);
          this.renderBody(poseStack, buffer, packedLight, packedOverlay, partialTick, facing, millstone, level);
-         if (!millstone.getOutputs().getStackInSlot(0).isEmpty()) {
-            this.renderItems(millstone, poseStack, buffer, packedLight, packedOverlay, millstone.getOutputs().getStackInSlot(0), this.context.getItemRenderer());
+         if (!ResourceHandlerUtils.stackAt(millstone.getOutputs(), 0).isEmpty()) {
+            this.renderItems(millstone, poseStack, buffer, packedLight, packedOverlay, ResourceHandlerUtils.stackAt(millstone.getOutputs(), 0), this.context.getItemRenderer());
          } else if (!millstone.getInput().isEmpty()) {
             this.renderItems(millstone, poseStack, buffer, packedLight, packedOverlay, millstone.getInput(), this.context.getItemRenderer());
          }

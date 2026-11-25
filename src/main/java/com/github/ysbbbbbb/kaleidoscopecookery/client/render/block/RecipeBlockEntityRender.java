@@ -1,4 +1,5 @@
 package com.github.ysbbbbbb.kaleidoscopecookery.client.render.block;
+import com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.decoration.RecipeBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModDataComponents;
@@ -28,7 +29,7 @@ public class RecipeBlockEntityRender implements BlockEntityRenderer<RecipeBlockE
    public void render(RecipeBlockEntity recipeBlock, float pPartialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
       ClientLevel level = Minecraft.getInstance().level;
       if (level != null) {
-         ItemStack stack = recipeBlock.getItems().getStackInSlot(0);
+         ItemStack stack = ResourceHandlerUtils.stackAt(recipeBlock.getItems(), 0);
          if (!stack.isEmpty()) {
             RecipeItem.RecipeRecord record = (RecipeItem.RecipeRecord)stack.get(ModDataComponents.RECIPE_RECORD);
             if (record != null) {

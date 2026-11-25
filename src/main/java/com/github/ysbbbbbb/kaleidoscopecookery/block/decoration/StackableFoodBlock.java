@@ -31,7 +31,7 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
+import net.neoforged.neoforge.transfer.item.ItemUtil;
 
 public class StackableFoodBlock extends HorizontalDirectionalBlock {
    protected static final MapCodec<StackableFoodBlock> STACKABLE_FOOD_CODEC = simpleCodec(p -> new StackableFoodBlock(p, 1, () -> Items.AIR));
@@ -95,7 +95,7 @@ public class StackableFoodBlock extends HorizontalDirectionalBlock {
                level.removeBlock(pos, false);
             }
 
-            ItemHandlerHelper.giveItemToPlayer(player, this.item.get().getDefaultInstance());
+            player.getInventory().add(this.item.get().getDefaultInstance());
             return InteractionResult.SUCCESS;
          } else {
             return InteractionResult.TRY_WITH_EMPTY_HAND;
