@@ -47,14 +47,14 @@ jobs:
       # hosted runners; retry a few times before failing the job for real.
       - name: Build with Gradle
         run: |
-          for attempt in 1 2 3; do
+          for attempt in 1 2 3 4; do
             if ./gradlew build --no-daemon; then
               exit 0
             fi
-            echo "::warning::Gradle build attempt ${attempt} failed, retrying in 30s"
-            sleep 30
+            sleep $((attempt * 30))
+            echo "::warning::Gradle build attempt ${attempt} failed, retrying after $((attempt * 30))s"
           done
-          echo "::error::Gradle build failed after 3 attempts"
+          echo "::error::Gradle build failed after 4 attempts"
           exit 1
         env:
           GRADLE_OPTS: >-
