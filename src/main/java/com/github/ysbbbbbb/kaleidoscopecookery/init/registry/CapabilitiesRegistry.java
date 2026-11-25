@@ -13,5 +13,7 @@ public class CapabilitiesRegistry {
    public static void registerGenericItemHandlers(RegisterCapabilitiesEvent event) {
       event.registerBlockEntity(Capabilities.Item.BLOCK, ModBlocks.OIL_POT_BE.get(), (b, v) -> b.createHandler());
       event.registerBlockEntity(Capabilities.Item.BLOCK, ModBlocks.MILLSTONE_BE.get(), (b, v) -> new MillstoneInputHandler(b));
+      event.registerBlockEntity(Capabilities.Item.BLOCK, ModBlocks.STEAMER_BE.get(), (b, v) -> b.getItemHandler());
+      event.registerBlockEntity(Capabilities.Item.BLOCK, ModBlocks.KITCHEN_SHELF_BE.get(), (b, v) -> b.getItemHandler());
    }
 }

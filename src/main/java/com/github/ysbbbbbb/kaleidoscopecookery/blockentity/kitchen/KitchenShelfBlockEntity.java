@@ -43,6 +43,11 @@ public class KitchenShelfBlockEntity extends BaseBlockEntity {
         super(ModBlocks.KITCHEN_SHELF_BE.get(), pos, state);
     }
 
+    /** Automation view of the single storage slot, registered as {@code Capabilities.Item.BLOCK}. */
+    public KitchenShelfItemHandler getItemHandler() {
+        return inventory;
+    }
+
     public ItemStack getStoredStack() {
         return com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils.stackAt(inventory, 0);
     }
