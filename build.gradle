@@ -78,9 +78,10 @@ sourceSets.main.java {
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/client/particle/CookingParticle.java'
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/client/particle/StockpotParticle.java'
 
-    // These hooks depend on registries/events that were removed or redesigned
-    // in 26.1.2. They are isolated from core cooking gameplay for the first
-    // runnable build and remain in source for a follow-up worldgen/loot pass.
+    // These Java hooks are superseded by pure datapack data (26.x architecture):
+    // chef trades come from data/kaleidoscope_cookery/{villager_trade,trade_set,tags/villager_trade}/chef/*
+    // and village kitchen houses from overriding vanilla template pools.
+    // The Java sources are kept for reference but excluded from compilation.
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/event/ModTradesEvent.java'
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/event/AddVillageStructuresEvent.java'
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/loot/**'
