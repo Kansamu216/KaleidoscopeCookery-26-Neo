@@ -70,6 +70,8 @@ public class ModBlocks {
    public static DeferredBlock<Block> ENAMEL_BASIN = registerBlock("enamel_basin", EnamelBasinBlock::new);
    public static DeferredBlock<Block> KITCHENWARE_RACKS = registerBlock("kitchenware_racks", KitchenwareRacksBlock::new);
    public static DeferredBlock<Block> KITCHEN_SHELF = registerBlock("kitchen_shelf", KitchenShelfBlock::new);
+   public static DeferredBlock<Block> CANDIED_CHORUS_FRUIT_SKEWER_UPRIGHT = registerBlock("candied_chorus_fruit_skewer_upright", () -> new CandiedSkewerBlock(5, () -> ModItems.CANDIED_CHORUS_FRUIT_SKEWER.get(), 0, true));
+   public static DeferredBlock<Block> CANDIED_CHORUS_FRUIT_SKEWER_SIDE = registerBlock("candied_chorus_fruit_skewer_side", () -> new CandiedSkewerBlock(4, () -> ModItems.CANDIED_CHORUS_FRUIT_SKEWER.get(), 0, false));
    public static DeferredBlock<Block> CANDIED_GLOW_BERRY_SKEWER_UPRIGHT = registerBlock("candied_glow_berry_skewer_upright", () -> new CandiedSkewerBlock(12, () -> ModItems.CANDIED_GLOW_BERRY_SKEWER.get(), 8, true));
    public static DeferredBlock<Block> CANDIED_SWEET_BERRY_SKEWER_UPRIGHT = registerBlock("candied_sweet_berry_skewer_upright", () -> new CandiedSkewerBlock(12, () -> ModItems.CANDIED_SWEET_BERRY_SKEWER.get(), 0, true));
    public static DeferredBlock<Block> CANDIED_APPLE_SKEWER_UPRIGHT = registerBlock("candied_apple_skewer_upright", () -> new CandiedSkewerBlock(5, () -> ModItems.CANDIED_APPLE_SKEWER.get(), 0, true));
