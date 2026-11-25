@@ -2,6 +2,7 @@ package com.github.ysbbbbbb.kaleidoscopecookery.init;
 
 import com.github.ysbbbbbb.kaleidoscopecookery.loot.AdvanceBlockMatchTool;
 import com.github.ysbbbbbb.kaleidoscopecookery.loot.AdvanceEntityMatchTool;
+import com.github.ysbbbbbb.kaleidoscopecookery.loot.RecipeFromIdFunction;
 import com.github.ysbbbbbb.kaleidoscopecookery.loot.RecipeRandomlyFunction;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Registry;
@@ -30,6 +31,8 @@ public final class ModLootModifier {
       if (evt.getRegistryKey().equals(net.minecraft.core.registries.Registries.LOOT_FUNCTION_TYPE)) {
          Registry.register(BuiltInRegistries.LOOT_FUNCTION_TYPE, RecipeRandomlyFunction.ID,
             (MapCodec<? extends LootItemFunction>) RecipeRandomlyFunction.CODEC);
+         Registry.register(BuiltInRegistries.LOOT_FUNCTION_TYPE, RecipeFromIdFunction.ID,
+            (MapCodec<? extends LootItemFunction>) RecipeFromIdFunction.CODEC);
       }
    }
 
