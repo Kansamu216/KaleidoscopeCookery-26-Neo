@@ -43,6 +43,10 @@ public class KitchenShelfBlockEntity extends BaseBlockEntity {
         super(ModBlocks.KITCHEN_SHELF_BE.get(), pos, state);
     }
 
+    public KitchenShelfItemHandler getItemHandler() {
+        return inventory;
+    }
+
     public ItemStack getStoredStack() {
         return com.github.ysbbbbbb.kaleidoscopecookery.util.ResourceHandlerUtils.stackAt(inventory, 0);
     }

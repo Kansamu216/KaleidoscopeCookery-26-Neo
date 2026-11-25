@@ -8,6 +8,7 @@ import com.github.ysbbbbbb.kaleidoscopecookery.block.kitchen.SteamerBlock;
 import com.github.ysbbbbbb.kaleidoscopecookery.blockentity.BaseBlockEntity;
 import com.github.ysbbbbbb.kaleidoscopecookery.crafting.recipe.SteamerRecipe;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks;
+import com.github.ysbbbbbb.kaleidoscopecookery.inventory.itemhandler.SteamerItemHandler;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModItems;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModParticles;
 import com.github.ysbbbbbb.kaleidoscopecookery.init.ModRecipes;
@@ -56,6 +57,7 @@ public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
    public static final String ITEMS_TAG = "Items";
    private final CachedCheck<SingleRecipeInput, SteamerRecipe> quickCheck = RecipeManager.createCheck(ModRecipes.STEAMER_RECIPE);
    private final NonNullList<ItemStack> items = NonNullList.withSize(8, ItemStack.EMPTY);
+   private final SteamerItemHandler itemHandler = new SteamerItemHandler(this);
    private final int[] cookingProgress = new int[8];
    private final int[] cookingTime = new int[8];
    private int litLevel = 0;
@@ -390,6 +392,10 @@ public class SteamerBlockEntity extends BaseBlockEntity implements ISteamer {
 
    public NonNullList<ItemStack> getItems() {
       return this.items;
+   }
+
+   public SteamerItemHandler getItemHandler() {
+      return this.itemHandler;
    }
 
    public void loadAdditional(ValueInput tag) {
