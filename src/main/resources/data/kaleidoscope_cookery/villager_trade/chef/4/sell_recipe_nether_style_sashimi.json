@@ -8,5 +8,12 @@
   },
   "max_uses": 16.0,
   "reputation_discount": 0.1,
-  "xp": 4.0
+  "xp": 4.0,
+  "given_item_modifiers": [
+    {
+      "function": "kaleidoscope_cookery:recipe_from_id",
+      "recipe": "kaleidoscope_cookery:nether_style_sashimi",
+      "recipe_type": "kaleidoscope_cookery:pot"
+    }
+  ]
 }

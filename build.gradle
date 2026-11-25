@@ -84,8 +84,6 @@ sourceSets.main.java {
     // The Java sources are kept for reference but excluded from compilation.
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/event/ModTradesEvent.java'
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/event/AddVillageStructuresEvent.java'
-    exclude 'com/github/ysbbbbbb/kaleidoscopecookery/loot/**'
-    exclude 'com/github/ysbbbbbb/kaleidoscopecookery/init/ModLootModifier.java'
 }
 
 repositories {

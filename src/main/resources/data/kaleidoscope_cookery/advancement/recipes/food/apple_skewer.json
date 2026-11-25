@@ -15,7 +15,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipes": "kaleidoscope_cookery:apple_skewer"
+        "recipe": "kaleidoscope_cookery:apple_skewer"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

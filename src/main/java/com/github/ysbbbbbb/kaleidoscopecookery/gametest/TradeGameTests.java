@@ -55,6 +55,33 @@ public final class TradeGameTests {
          helper.fail("chef villager has no trades (offers=" + offers + ")");
          return;
       }
+      // Verify recipe trades actually carry a resolved RecipeRecord (not a bare item).
+      int recipeOffers = 0;
+      int withRecord = 0;
+      for (var offer : villager.getOffers()) {
+         var out = offer.getResult();
+         if (!(out.getItem() instanceof com.github.ysbbbbbb.kaleidoscopecookery.item.RecipeItem)) {
+            continue;
+         }
+         recipeOffers++;
+         var record = com.github.ysbbbbbb.kaleidoscopecookery.item.RecipeItem.getRecipe(out);
+         if (record != null && !record.output().isEmpty()) {
+            withRecord++;
+            String name = out.getHoverName().getString();
+            if (!name.contains("Wok") && !name.contains("Stockpot") && !name.contains("Pot")) {
+               helper.fail("recipe item name does not expose recipe detail: " + name);
+               return;
+            }
+         }
+      }
+      if (recipeOffers == 0) {
+         helper.fail("no recipe_item offers found among " + offers + " trades");
+         return;
+      }
+      if (withRecord != recipeOffers) {
+         helper.fail("recipe trades without recipe data: " + withRecord + "/" + recipeOffers);
+         return;
+      }
       helper.succeed();
    }
 }
