@@ -38,6 +38,12 @@ public class CandiedSkewerBlock extends HorizontalDirectionalBlock {
 
     private final int maxCount;
     private final Supplier<Item> item;
+    private static final java.util.Map<Integer, IntegerProperty> COUNT_PROPERTIES = new java.util.concurrent.ConcurrentHashMap<>();
+
+    private static IntegerProperty countProperty(int maxCount) {
+        return COUNT_PROPERTIES.computeIfAbsent(maxCount, m -> IntegerProperty.create("count", 1, m));
+    }
+
     private final IntegerProperty countProperty;
     private final boolean upright;
 
@@ -53,7 +59,7 @@ public class CandiedSkewerBlock extends HorizontalDirectionalBlock {
 
         this.maxCount = maxCount;
         this.item = item;
-        this.countProperty = IntegerProperty.create("count", 1, maxCount);
+        this.countProperty = countProperty(12);
         this.upright = upright;
 
         this.registerDefaultState(this.stateDefinition.any()
@@ -133,6 +139,6 @@ public class CandiedSkewerBlock extends HorizontalDirectionalBlock {
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING, countProperty(12));
     }
 }
