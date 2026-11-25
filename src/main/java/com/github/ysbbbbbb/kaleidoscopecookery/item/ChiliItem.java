@@ -11,7 +11,11 @@ public class ChiliItem extends Item {
    private final int damage;
 
    public ChiliItem(int damage) {
-      super(ModRegistrationProperties.itemProperties().food(ModFoods.CHILI, ModFoods.consumableFor(ModFoods.CHILI)));
+      super(ModRegistrationProperties.itemProperties()
+         .component(net.minecraft.core.component.DataComponents.COMPOSTABLE,
+            new net.minecraft.world.item.component.Compostable(
+               new net.minecraft.world.level.storage.loot.providers.number.ints.ResolvableInt.Constant(3)))
+         .food(ModFoods.CHILI, ModFoods.consumableFor(ModFoods.CHILI)));
       this.damage = damage;
    }
 

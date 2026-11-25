@@ -12,7 +12,10 @@ import net.minecraft.world.level.block.Block;
 
 public class RiceItem extends BlockItem {
    public RiceItem() {
-      super((Block)ModBlocks.RICE_CROP.get(), ModRegistrationProperties.itemProperties());
+      super((Block)ModBlocks.RICE_CROP.get(), ModRegistrationProperties.itemProperties()
+         .component(net.minecraft.core.component.DataComponents.COMPOSTABLE,
+            new net.minecraft.world.item.component.Compostable(
+               new net.minecraft.world.level.storage.loot.providers.number.ints.ResolvableInt.Constant(1))));
    }
 
    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {

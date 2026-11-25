@@ -3,26 +3,22 @@
   "pools": [
     {
       "bonus_rolls": 0.0,
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ],
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      },
       "entries": [
         {
           "type": "minecraft:alternatives",
           "children": [
             {
               "type": "minecraft:item",
-              "conditions": [
-                {
-                  "block": "kaleidoscope_cookery:chili_ristra",
-                  "condition": "minecraft:block_state_property",
-                  "properties": {
-                    "sheared": "true"
-                  }
+              "condition": {
+                "block": "kaleidoscope_cookery:chili_ristra",
+                "type": "minecraft:match_block",
+                "state": {
+                  "sheared": "true"
                 }
-              ],
+              },
               "functions": [
                 {
                   "add": false,

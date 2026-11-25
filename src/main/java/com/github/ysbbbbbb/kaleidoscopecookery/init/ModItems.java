@@ -86,15 +86,15 @@ public final class ModItems {
       "farmer_boots", () -> new Item(ModRegistrationProperties.itemProperties().stacksTo(1).humanoidArmor(ModArmorMaterials.FARMER, ArmorType.BOOTS))
    );
    public static DeferredItem<Item> TOMATO_SEED = registerItem(
-      "tomato_seed", () -> new BlockItem((Block)ModBlocks.TOMATO_CROP.get(), ModRegistrationProperties.itemProperties())
+      "tomato_seed", () -> new BlockItem((Block)ModBlocks.TOMATO_CROP.get(), compostable(ModRegistrationProperties.itemProperties(), 1))
    );
-   public static DeferredItem<Item> CHILI_SEED = registerItem("chili_seed", () -> new BlockItem((Block)ModBlocks.CHILI_CROP.get(), ModRegistrationProperties.itemProperties()));
+   public static DeferredItem<Item> CHILI_SEED = registerItem("chili_seed", () -> new BlockItem((Block)ModBlocks.CHILI_CROP.get(), compostable(ModRegistrationProperties.itemProperties(), 1)));
    public static DeferredItem<Item> LETTUCE_SEED = registerItem(
-      "lettuce_seed", () -> new BlockItem((Block)ModBlocks.LETTUCE_CROP.get(), ModRegistrationProperties.itemProperties())
+      "lettuce_seed", () -> new BlockItem((Block)ModBlocks.LETTUCE_CROP.get(), compostable(ModRegistrationProperties.itemProperties(), 1))
    );
    public static DeferredItem<Item> RICE_SEED = registerItem("rice", RiceItem::new);
    public static DeferredItem<Item> WILD_RICE_SEED = registerItem(
-      "wild_rice", () -> new BlockItem((Block)ModBlocks.RICE_CROP.get(), ModRegistrationProperties.itemProperties())
+      "wild_rice", () -> new BlockItem((Block)ModBlocks.RICE_CROP.get(), compostable(ModRegistrationProperties.itemProperties(), 1))
    );
    public static DeferredItem<Item> COOK_STOOL_OAK = registerItem(
       "cook_stool_oak", () -> new BlockItem((Block)ModBlocks.COOK_STOOL_OAK.get(), ModRegistrationProperties.itemProperties())
@@ -159,13 +159,13 @@ public final class ModItems {
       "table_mangrove", () -> new BlockItem((Block)ModBlocks.TABLE_MANGROVE.get(), ModRegistrationProperties.itemProperties())
    );
    public static DeferredItem<Item> TABLE_WARPED = registerItem("table_warped", () -> new BlockItem((Block)ModBlocks.TABLE_WARPED.get(), ModRegistrationProperties.itemProperties()));
-   public static DeferredItem<Item> TOMATO = registerItem("tomato", () -> new Item(ModRegistrationProperties.itemProperties().food(ModFoods.TOMATO, ModFoods.consumableFor(ModFoods.TOMATO))));
+   public static DeferredItem<Item> TOMATO = registerItem("tomato", () -> new Item(compostable(ModRegistrationProperties.itemProperties(), 3).food(ModFoods.TOMATO, ModFoods.consumableFor(ModFoods.TOMATO))));
    public static DeferredItem<Item> RED_CHILI = registerItem("red_chili", () -> new ChiliItem(2));
    public static DeferredItem<Item> GREEN_CHILI = registerItem("green_chili", () -> new ChiliItem(1));
-   public static DeferredItem<Item> LETTUCE = registerItem("lettuce", () -> new Item(ModRegistrationProperties.itemProperties().food(ModFoods.LETTUCE, ModFoods.consumableFor(ModFoods.LETTUCE))));
-   public static DeferredItem<Item> RICE_PANICLE = registerItem("rice_panicle", () -> new Item(ModRegistrationProperties.itemProperties()));
+   public static DeferredItem<Item> LETTUCE = registerItem("lettuce", () -> new Item(compostable(ModRegistrationProperties.itemProperties(), 3).food(ModFoods.LETTUCE, ModFoods.consumableFor(ModFoods.LETTUCE))));
+   public static DeferredItem<Item> RICE_PANICLE = registerItem("rice_panicle", () -> new Item(compostable(ModRegistrationProperties.itemProperties(), 3)));
    public static DeferredItem<Item> CATERPILLAR = registerItem(
-      "caterpillar", () -> new WithTooltipsItem(ModRegistrationProperties.itemProperties().food(ModFoods.CATERPILLAR, ModFoods.consumableFor(ModFoods.CATERPILLAR)), "caterpillar")
+      "caterpillar", () -> new WithTooltipsItem(compostable(ModRegistrationProperties.itemProperties(), 7).food(ModFoods.CATERPILLAR, ModFoods.consumableFor(ModFoods.CATERPILLAR)), "caterpillar")
    );
    public static DeferredItem<Item> FLOUR = registerItem("flour", FlourItem::new);
    public static DeferredItem<Item> RAW_DOUGH = registerItem("raw_dough", RawDoughItem::new);
@@ -260,5 +260,15 @@ public final class ModItems {
 
    private static <I extends Item> DeferredItem<I> registerItem(String name, Supplier<? extends I> factory) {
       return ITEMS.register(name, id -> ModRegistrationProperties.withItemId(id, factory));
+   }
+
+   /** 26.3 moved villager compostability to the item COMPOSTABLE component. */
+   private static Item.Properties compostable(Item.Properties props, int layers) {
+      return props.component(
+         net.minecraft.core.component.DataComponents.COMPOSTABLE,
+         new net.minecraft.world.item.component.Compostable(
+            new net.minecraft.world.level.storage.loot.providers.number.ints.ResolvableInt.Constant(layers)
+         )
+      );
    }
 }

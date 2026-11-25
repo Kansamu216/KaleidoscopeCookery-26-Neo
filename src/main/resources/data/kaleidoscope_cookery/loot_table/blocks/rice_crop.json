@@ -14,16 +14,14 @@
           "children": [
             {
               "type": "minecraft:item",
-              "conditions": [
-                {
-                  "block": "kaleidoscope_cookery:rice_crop",
-                  "condition": "minecraft:block_state_property",
-                  "properties": {
-                    "age": "7",
-                    "location": "0"
-                  }
+              "condition": {
+                "block": "kaleidoscope_cookery:rice_crop",
+                "type": "minecraft:match_block",
+                "state": {
+                  "age": "7",
+                  "location": "0"
                 }
-              ],
+              },
               "functions": [
                 {
                   "add": false,
@@ -48,16 +46,14 @@
     },
     {
       "bonus_rolls": 0.0,
-      "conditions": [
-        {
-          "block": "kaleidoscope_cookery:rice_crop",
-          "condition": "minecraft:block_state_property",
-          "properties": {
-            "age": "7",
-            "location": "0"
-          }
+      "condition": {
+        "block": "kaleidoscope_cookery:rice_crop",
+        "type": "minecraft:match_block",
+        "state": {
+          "age": "7",
+          "location": "0"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",

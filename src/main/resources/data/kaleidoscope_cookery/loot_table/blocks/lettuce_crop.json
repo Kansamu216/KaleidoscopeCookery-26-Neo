@@ -14,15 +14,13 @@
           "children": [
             {
               "type": "minecraft:item",
-              "conditions": [
-                {
-                  "block": "kaleidoscope_cookery:lettuce_crop",
-                  "condition": "minecraft:block_state_property",
-                  "properties": {
-                    "age": "7"
-                  }
+              "condition": {
+                "block": "kaleidoscope_cookery:lettuce_crop",
+                "type": "minecraft:match_block",
+                "state": {
+                  "age": "7"
                 }
-              ],
+              },
               "name": "kaleidoscope_cookery:lettuce"
             },
             {
@@ -36,15 +34,13 @@
     },
     {
       "bonus_rolls": 0.0,
-      "conditions": [
-        {
-          "block": "kaleidoscope_cookery:lettuce_crop",
-          "condition": "minecraft:block_state_property",
-          "properties": {
-            "age": "7"
-          }
+      "condition": {
+        "block": "kaleidoscope_cookery:lettuce_crop",
+        "type": "minecraft:match_block",
+        "state": {
+          "age": "7"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
@@ -66,24 +62,20 @@
     },
     {
       "bonus_rolls": 0.0,
-      "conditions": [
-        {
-          "block": "kaleidoscope_cookery:lettuce_crop",
-          "condition": "minecraft:block_state_property",
-          "properties": {
-            "age": "7"
-          }
+      "condition": {
+        "block": "kaleidoscope_cookery:lettuce_crop",
+        "type": "minecraft:match_block",
+        "state": {
+          "age": "7"
         }
-      ],
+      },
       "entries": [
         {
           "type": "minecraft:item",
-          "conditions": [
-            {
-              "chance": 0.1,
-              "condition": "minecraft:random_chance"
-            }
-          ],
+          "condition": {
+            "chance": 0.1,
+            "type": "minecraft:random_chance"
+          },
           "name": "kaleidoscope_cookery:caterpillar"
         }
       ],

@@ -3,26 +3,22 @@
   "pools": [
     {
       "bonus_rolls": 0.0,
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ],
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      },
       "entries": [
         {
           "type": "minecraft:alternatives",
           "children": [
             {
               "type": "minecraft:item",
-              "conditions": [
-                {
-                  "block": "kaleidoscope_cookery:frost_lamb_chop",
-                  "condition": "minecraft:block_state_property",
-                  "properties": {
-                    "bites": "0"
-                  }
+              "condition": {
+                "block": "kaleidoscope_cookery:frost_lamb_chop",
+                "type": "minecraft:match_block",
+                "state": {
+                  "bites": "0"
                 }
-              ],
+              },
               "name": "kaleidoscope_cookery:frost_lamb_chop"
             },
             {
@@ -36,26 +32,22 @@
     },
     {
       "bonus_rolls": 0.0,
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ],
+      "condition": {
+        "type": "minecraft:survives_explosion"
+      },
       "entries": [
         {
           "type": "minecraft:alternatives",
           "children": [
             {
               "type": "minecraft:empty",
-              "conditions": [
-                {
-                  "block": "kaleidoscope_cookery:frost_lamb_chop",
-                  "condition": "minecraft:block_state_property",
-                  "properties": {
-                    "bites": "0"
-                  }
+              "condition": {
+                "block": "kaleidoscope_cookery:frost_lamb_chop",
+                "type": "minecraft:match_block",
+                "state": {
+                  "bites": "0"
                 }
-              ]
+              }
             },
             {
               "type": "minecraft:item",

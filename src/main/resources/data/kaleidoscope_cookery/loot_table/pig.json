@@ -3,15 +3,13 @@
   "pools": [
     {
       "bonus_rolls": 0.0,
-      "conditions": [
-        {
-          "condition": "kaleidoscope_cookery:advance_entity_match_tool",
-          "predicate": {
-            "items": "#kaleidoscope_cookery:kitchen_knife"
-          },
-          "slot": "mainhand"
-        }
-      ],
+      "condition": {
+        "predicate": {
+          "items": "#kaleidoscope_cookery:kitchen_knife"
+        },
+        "slot": "mainhand",
+        "type": "kaleidoscope_cookery:advance_entity_match_tool"
+      },
       "entries": [
         {
           "type": "minecraft:item",
