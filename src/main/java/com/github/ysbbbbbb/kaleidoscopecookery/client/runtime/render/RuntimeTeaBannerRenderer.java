@@ -40,12 +40,14 @@ public final class RuntimeTeaBannerRenderer
    private static final String DEFAULT_PATTERN = "tea";
 
    private final BannerModel bannerModel;
+   private final WallBannerModel wallBannerModel;
    private final PatternModel patternModel;
    private final ModelPart rod;
 
    public RuntimeTeaBannerRenderer(BlockEntityRendererProvider.Context context) {
       ModelPart root = createBodyLayer().bakeRoot();
       this.bannerModel = new BannerModel(root);
+      this.wallBannerModel = new WallBannerModel(createWallLayer().bakeRoot());
       this.patternModel = new PatternModel(createPatternLayer().bakeRoot());
       this.rod = root.getChild("rod");
    }
@@ -76,7 +78,9 @@ public final class RuntimeTeaBannerRenderer
       state.patternTexture = Identifier.fromNamespaceAndPath(
          NAMESPACE, "textures/entity/pattern/" + patternName + ".png"
       );
-      state.facing = blockEntity.getFacing();
+      state.facing = blockEntity.getBlockState().getValue(com.github.ysbbbbbb.kaleidoscopecookery.block.decoration.TeaBannerBlock.FACING);
+      state.wallMounted = blockEntity.getBlockState().getValue(com.github.ysbbbbbb.kaleidoscopecookery.block.decoration.TeaBannerBlock.FACE)
+         == net.minecraft.world.level.block.state.properties.AttachFace.WALL;
       // Per-position phase so neighbouring banners do not sway in lockstep.
       long gameTime = blockEntity.getLevel() != null ? blockEntity.getLevel().getGameTime() : 0L;
       long phase = blockEntity.getBlockPos().asLong() + gameTime;
@@ -97,8 +101,11 @@ public final class RuntimeTeaBannerRenderer
       poseStack.translate(0.5F, 1.5F, 0.5F);
       poseStack.mulPose(Axis.ZN.rotationDegrees(180.0F));
       poseStack.mulPose(Axis.YN.rotationDegrees(180.0F - facingDegrees));
+      if (state.wallMounted) {
+         poseStack.mulPose(Axis.YP.rotationDegrees(-90.0F));
+      }
       collector.submitModel(
-         this.bannerModel,
+         state.wallMounted ? this.wallBannerModel : this.bannerModel,
          state,
          poseStack,
          state.colorTexture,
@@ -108,7 +115,11 @@ public final class RuntimeTeaBannerRenderer
          state.breakProgress
       );
       // Second pass: the pattern overlay is a slightly larger cloth plane drawn on top of the
-      // base cloth with its own texture, exactly like the upstream 1.7.0 renderer.
+      // base cloth with its own texture, exactly like the upstream 1.7.0 renderer. The wall
+      // mounted variant shifts it by (-1, 3, 0) like upstream.
+      if (state.wallMounted) {
+         poseStack.translate(-1.0F, 3.0F, 0.0F);
+      }
       collector.submitModel(
          this.patternModel,
          state,
@@ -205,6 +216,54 @@ public final class RuntimeTeaBannerRenderer
       }
    }
 
+   /**
+    * Wall mounted geometry (upstream {@code LeftBannerModel}): a shorter hanging rod with the
+    * cloth hanging to one side of it.
+    */
+   private static LayerDefinition createWallLayer() {
+      MeshDefinition mesh = new MeshDefinition();
+      PartDefinition root = mesh.getRoot();
+      PartDefinition bone = root.addOrReplaceChild(
+         "bone",
+         CubeListBuilder.create()
+            .texOffs(64, 107).addBox(-1.0F, -3.0F, -16.0F, 2.0F, 2.0F, 10.0F, new CubeDeformation(0.0F))
+            .texOffs(36, 79).addBox(-1.0F, 3.0F, -16.0F, 2.0F, 2.0F, 38.0F, new CubeDeformation(0.0F))
+            .texOffs(0, 64).addBox(-2.0F, -4.0F, -6.0F, 4.0F, 4.0F, 28.0F, new CubeDeformation(0.0F)),
+         PartPose.offsetAndRotation(-8.0F, 12.0F, 0.0F, 0.0F, -1.5708F, 0.0F)
+      );
+      bone.addOrReplaceChild(
+         "front",
+         CubeListBuilder.create().texOffs(0, -28).addBox(0.0F, 0.0F, -14.0F, 0.0F, 41.0F, 28.0F, new CubeDeformation(0.0F)),
+         PartPose.offset(-2.0F, 0.0F, 8.0F)
+      );
+      bone.addOrReplaceChild(
+         "back",
+         CubeListBuilder.create().texOffs(0, -28).addBox(0.0F, 0.0F, -14.0F, 2.0F, 41.0F, 28.0F, new CubeDeformation(0.0F)),
+         PartPose.offset(2.0F, 0.0F, 8.0F)
+      );
+      return LayerDefinition.create(mesh, 128, 128);
+   }
+
+   /** Wall mounted model: same wave animation as the standing one. */
+   private static final class WallBannerModel extends Model<State> {
+      private final ModelPart front;
+      private final ModelPart back;
+
+      private WallBannerModel(ModelPart root) {
+         super(root, RenderTypes::entityCutout);
+         ModelPart bone = root.getChild("bone");
+         this.front = bone.getChild("front");
+         this.back = bone.getChild("back");
+      }
+
+      @Override
+      public void setupAnim(State state) {
+         super.setupAnim(state);
+         this.front.zRot = state.waveAngle;
+         this.back.zRot = state.waveAngle;
+      }
+   }
+
    /** The pattern overlay model; the wave angle is applied by the same state as the base cloth. */
    private static final class PatternModel extends Model<State> {
       private final ModelPart front;
@@ -229,6 +288,7 @@ public final class RuntimeTeaBannerRenderer
       private Identifier colorTexture = Identifier.fromNamespaceAndPath(NAMESPACE, "textures/entity/banner/red.png");
       private Identifier patternTexture = Identifier.fromNamespaceAndPath(NAMESPACE, "textures/entity/pattern/tea.png");
       private Direction facing = Direction.NORTH;
+      private boolean wallMounted;
       private float waveAngle;
    }
 }

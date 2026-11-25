@@ -20,6 +20,9 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -43,7 +46,16 @@ import org.jetbrains.annotations.Nullable;
  * the data from the block entity.
  */
 public class TeaBannerBlock extends Block implements EntityBlock {
-   private static final VoxelShape SHAPE = Block.box(4.0, 0.0, 4.0, 12.0, 16.0, 12.0);
+   /** Hanging orientation: the banner either stands on the floor or is mounted on a wall. */
+   public static final net.minecraft.world.level.block.state.properties.EnumProperty<net.minecraft.world.level.block.state.properties.AttachFace> FACE
+      = net.minecraft.world.level.block.state.properties.BlockStateProperties.ATTACH_FACE;
+   public static final net.minecraft.world.level.block.state.properties.EnumProperty<Direction> FACING
+      = net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
+   private static final VoxelShape FLOOR_SHAPE = Block.box(4.0, 0.0, 4.0, 12.0, 16.0, 12.0);
+   private static final VoxelShape NORTH_SHAPE = Block.box(0.0, 7.0, 4.0, 16.0, 15.0, 12.0);
+   private static final VoxelShape SOUTH_SHAPE = Block.box(0.0, 7.0, 4.0, 16.0, 15.0, 12.0);
+   private static final VoxelShape WEST_SHAPE = Block.box(4.0, 7.0, 0.0, 12.0, 15.0, 16.0);
+   private static final VoxelShape EAST_SHAPE = Block.box(4.0, 7.0, 0.0, 12.0, 15.0, 16.0);
 
    public TeaBannerBlock() {
       super(
@@ -54,6 +66,9 @@ public class TeaBannerBlock extends Block implements EntityBlock {
             .noOcclusion()
             .sound(SoundType.WOOD)
       );
+      this.registerDefaultState(this.stateDefinition.any()
+         .setValue(FACING, Direction.NORTH)
+         .setValue(FACE, net.minecraft.world.level.block.state.properties.AttachFace.FLOOR));
    }
 
    public InteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
@@ -145,15 +160,65 @@ public class TeaBannerBlock extends Block implements EntityBlock {
    }
 
    protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
+      builder.add(FACING, FACE);
    }
 
    public VoxelShape getShape(BlockState state, BlockGetter blockGetter, BlockPos pos, CollisionContext collisionContext) {
-      return SHAPE;
+      if (state.getValue(FACE) == net.minecraft.world.level.block.state.properties.AttachFace.FLOOR) {
+         return FLOOR_SHAPE;
+      }
+      return switch (state.getValue(FACING)) {
+         case SOUTH -> SOUTH_SHAPE;
+         case WEST -> WEST_SHAPE;
+         case EAST -> EAST_SHAPE;
+         default -> NORTH_SHAPE;
+      };
    }
 
+   /** Matches upstream: floor (standing) or wall mounted; ceiling mounting is not allowed. */
    @Nullable
    public BlockState getStateForPlacement(BlockPlaceContext context) {
-      return this.defaultBlockState();
+      for (Direction direction : context.getNearestLookingDirections()) {
+         BlockState candidate;
+         if (direction.getAxis() == Direction.Axis.Y) {
+            if (direction == Direction.UP) {
+               continue; // ceiling mounted banners do not exist upstream
+            }
+            candidate = this.defaultBlockState()
+               .setValue(FACE, net.minecraft.world.level.block.state.properties.AttachFace.FLOOR)
+               .setValue(FACING, context.getHorizontalDirection());
+         } else {
+            candidate = this.defaultBlockState()
+               .setValue(FACE, net.minecraft.world.level.block.state.properties.AttachFace.WALL)
+               .setValue(FACING, direction.getOpposite());
+         }
+         if (this.canSurvive(candidate, context.getLevel(), context.getClickedPos())) {
+            return candidate;
+         }
+      }
+      return null;
+   }
+
+   private static Direction connectedDirection(BlockState state) {
+      return switch (state.getValue(FACE)) {
+         case FLOOR -> Direction.DOWN;
+         case CEILING -> Direction.UP;
+         case WALL -> state.getValue(FACING);
+      };
+   }
+
+   @Override
+   protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+      Direction supportSide = connectedDirection(state).getOpposite();
+      BlockPos supportPos = pos.relative(supportSide);
+      return level.getBlockState(supportPos).isFaceSturdy(level, supportPos, supportSide.getOpposite());
+   }
+
+   @Override
+   protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess ticks, BlockPos pos,
+                                    Direction direction, BlockPos neighbourPos, BlockState neighbourState, RandomSource random) {
+      return this.canSurvive(state, level, pos) ? super.updateShape(state, level, ticks, pos, direction, neighbourPos, neighbourState, random)
+         : Blocks.AIR.defaultBlockState();
    }
 
    @Nullable

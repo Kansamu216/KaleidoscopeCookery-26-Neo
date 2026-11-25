@@ -1,6 +1,39 @@
 {
   "variants": {
-    "": {
+    "face=floor,facing=north": {
+      "model": "kaleidoscope_cookery:block/tea_banner"
+    },
+    "face=floor,facing=east": {
+      "model": "kaleidoscope_cookery:block/tea_banner"
+    },
+    "face=floor,facing=south": {
+      "model": "kaleidoscope_cookery:block/tea_banner"
+    },
+    "face=floor,facing=west": {
+      "model": "kaleidoscope_cookery:block/tea_banner"
+    },
+    "face=wall,facing=north": {
+      "model": "kaleidoscope_cookery:block/tea_banner"
+    },
+    "face=wall,facing=east": {
+      "model": "kaleidoscope_cookery:block/tea_banner"
+    },
+    "face=wall,facing=south": {
+      "model": "kaleidoscope_cookery:block/tea_banner"
+    },
+    "face=wall,facing=west": {
+      "model": "kaleidoscope_cookery:block/tea_banner"
+    },
+    "face=ceiling,facing=north": {
+      "model": "kaleidoscope_cookery:block/tea_banner"
+    },
+    "face=ceiling,facing=east": {
+      "model": "kaleidoscope_cookery:block/tea_banner"
+    },
+    "face=ceiling,facing=south": {
+      "model": "kaleidoscope_cookery:block/tea_banner"
+    },
+    "face=ceiling,facing=west": {
       "model": "kaleidoscope_cookery:block/tea_banner"
     }
   }
