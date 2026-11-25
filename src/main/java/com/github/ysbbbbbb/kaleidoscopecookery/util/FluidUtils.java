@@ -24,25 +24,33 @@ public final class FluidUtils {
    /** Drains fluid from the held container into the target handler. */
    public static boolean emptyItem(LivingEntity user, ItemStack bucket, ResourceHandler<FluidResource> handler, int amount) {
       ItemStack copy = bucket.copyWithCount(1);
-      ResourceHandler<FluidResource> itemHandler = itemFluidHandler(copy);
+      ResourceHandler<FluidResource> itemHandler = mutableItemFluidHandler(user, bucket);
+      boolean mutatesHand = itemHandler != null && itemHandler != itemFluidHandler(copy);
       if (itemHandler == null) {
          return false;
       }
       try (Transaction tx = Transaction.openRoot()) {
          FluidResource resource = firstFluid(itemHandler);
+         com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery.LOGGER.info("FLUIDDBG emptyItem resource={} amount={}", resource, amount);
          if (resource.isEmpty()) {
             return false;
          }
          int moved = itemHandler.extract(resource, amount, tx);
+         com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery.LOGGER.info("FLUIDDBG moved={}", moved);
          if (moved <= 0) {
             return false;
          }
          int accepted = handler.insert(resource, moved, tx);
+         com.github.ysbbbbbb.kaleidoscopecookery.KaleidoscopeCookery.LOGGER.info("FLUIDDBG accepted={}", accepted);
          if (accepted < moved) {
             return false;
          }
          tx.commit();
-         afterFluidMove(user, bucket, copy, resource, SoundActions.BUCKET_EMPTY);
+         if (!mutatesHand) {
+            afterFluidMove(user, bucket, copy, resource, SoundActions.BUCKET_EMPTY);
+         } else {
+            playFluidSound(user, resource, SoundActions.BUCKET_EMPTY);
+         }
          return true;
       }
    }
@@ -50,7 +58,8 @@ public final class FluidUtils {
    /** Fills the held container from the target handler. */
    public static boolean fillItem(LivingEntity user, ItemStack bucket, ResourceHandler<FluidResource> handler, int amount) {
       ItemStack copy = bucket.copyWithCount(1);
-      ResourceHandler<FluidResource> itemHandler = itemFluidHandler(copy);
+      ResourceHandler<FluidResource> itemHandler = mutableItemFluidHandler(user, bucket);
+      boolean mutatesHand = itemHandler != null && itemHandler != itemFluidHandler(copy);
       if (itemHandler == null) {
          return false;
       }
@@ -68,8 +77,43 @@ public final class FluidUtils {
             return false;
          }
          tx.commit();
-         afterFluidMove(user, bucket, copy, resource, SoundActions.BUCKET_FILL);
+         if (!mutatesHand) {
+            afterFluidMove(user, bucket, copy, resource, SoundActions.BUCKET_FILL);
+         } else {
+            playFluidSound(user, resource, SoundActions.BUCKET_FILL);
+         }
          return true;
+      }
+   }
+
+   /**
+    * Handler used for swapping the container item itself. {@code ItemAccess.forStack} cannot change
+    * the item, so a water bucket could never be turned into an empty bucket through it; when the
+    * stack is actually held by the entity we use the player-interaction access instead.
+    */
+   private static ResourceHandler<FluidResource> mutableItemFluidHandler(LivingEntity user, ItemStack bucket) {
+      if (user instanceof Player player) {
+         if (sameStack(player.getMainHandItem(), bucket)) {
+            return ItemAccess.forPlayerInteraction(player, net.minecraft.world.InteractionHand.MAIN_HAND)
+               .oneByOne().getCapability(Capabilities.Fluid.ITEM);
+         }
+         if (sameStack(player.getOffhandItem(), bucket)) {
+            return ItemAccess.forPlayerInteraction(player, net.minecraft.world.InteractionHand.OFF_HAND)
+               .oneByOne().getCapability(Capabilities.Fluid.ITEM);
+         }
+      }
+      return itemFluidHandler(bucket);
+   }
+
+   private static boolean sameStack(ItemStack a, ItemStack b) {
+      return a == b || ItemStack.isSameItemSameComponents(a, b);
+   }
+
+   private static void playFluidSound(LivingEntity user, FluidResource resource, net.neoforged.neoforge.common.SoundAction soundAction) {
+      net.minecraft.world.level.material.Fluid fluid = resource.value();
+      SoundEvent sound = fluid.getFluidType().getSound((net.minecraft.world.entity.Entity) null, soundAction);
+      if (sound != null) {
+         user.playSound(sound);
       }
    }
 
