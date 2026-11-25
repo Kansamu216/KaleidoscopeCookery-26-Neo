@@ -273,6 +273,22 @@ public final class ModItems {
    }
 
    public static DeferredItem<Item> KITCHEN_SHELF = registerItem("kitchen_shelf", () -> new net.minecraft.world.item.BlockItem((Block)ModBlocks.KITCHEN_SHELF.get(), ModRegistrationProperties.itemProperties()));
+   public static DeferredItem<Item> LONG_BENCH = registerItem("long_bench", () -> new BlockItem((Block)ModBlocks.LONG_BENCH.get(), ModRegistrationProperties.itemProperties()));
+   public static DeferredItem<Item> RED_LANTERN = registerItem("red_lantern", () -> new BlockItem((Block)ModBlocks.RED_LANTERN.get(), ModRegistrationProperties.itemProperties()));
+   public static DeferredItem<Item> EIGHT_IMMORTALS_TABLE = registerItem("eight_immortals_table", () -> new BlockItem((Block)ModBlocks.EIGHT_IMMORTALS_TABLE.get(), ModRegistrationProperties.itemProperties()));
+   public static DeferredItem<Item> TEA_BANNER = registerItem("tea_banner", () -> new com.github.ysbbbbbb.kaleidoscopecookery.item.TeaBannerItem((Block)ModBlocks.TEA_BANNER.get(), ModRegistrationProperties.itemProperties()));
+   public static DeferredItem<Item> BAMBOO_TRAY = registerItem("bamboo_tray", () -> new BlockItem((Block)ModBlocks.BAMBOO_TRAY.get(), ModRegistrationProperties.itemProperties()));
+   public static DeferredItem<Item> TIEGUANYIN_TEA_BAG = registerItem("tieguanyin_tea_bag", () -> new Item(ModRegistrationProperties.itemProperties()));
+   public static DeferredItem<Item> BILUOCHUN_TEA_BAG = registerItem("biluochun_tea_bag", () -> new Item(ModRegistrationProperties.itemProperties()));
+   public static DeferredItem<Item> OOLONG_TEA_BAG = registerItem("oolong_tea_bag", () -> new Item(ModRegistrationProperties.itemProperties()));
+   public static DeferredItem<Item> SAKURA_FUBUKI_TEA_BAG = registerItem("sakura_fubuki_tea_bag", () -> new Item(ModRegistrationProperties.itemProperties()));
+   public static DeferredItem<Item> BARLEY_TEA_BAG = registerItem("barley_tea_bag", () -> new Item(ModRegistrationProperties.itemProperties()));
+   public static DeferredItem<Item> BUTTER_TEA_BAG = registerItem("butter_tea_bag", () -> new Item(ModRegistrationProperties.itemProperties()));
+   public static DeferredItem<Item> FRESH_TEA_LEAVES = registerItem("fresh_tea_leaves", () -> new Item(ModRegistrationProperties.itemProperties()));
+   public static DeferredItem<Item> DRIED_TEA_LEAVES = registerItem("dried_tea_leaves", () -> new Item(ModRegistrationProperties.itemProperties()));
+   public static DeferredItem<Item> TEA_SEED = registerItem("tea_seed", () -> new BlockItem((Block)ModBlocks.TEA_TREE.get(), ModRegistrationProperties.itemProperties()));
+   public static DeferredItem<Item> CLAY_POT_MILK_TEA = registerItem("clay_pot_milk_tea", () -> new com.github.ysbbbbbb.kaleidoscopecookery.item.ClayPotMilkTeaItem((Block)ModBlocks.CLAY_POT_MILK_TEA.get(), ModRegistrationProperties.itemProperties()));
+   public static DeferredItem<Item> TEA_EGG = registerItem("tea_egg", () -> new com.github.ysbbbbbb.kaleidoscopecookery.item.FoodWithEffectsItem(ModFoods.TEA_EGG));
    public static DeferredItem<Item> CHORUS_FRUIT_SKEWER = registerItem("chorus_fruit_skewer", () -> new com.github.ysbbbbbb.kaleidoscopecookery.item.FruitSkewerItem(ModFoods.FRUIT_SKEWER));
    public static DeferredItem<Item> GLOW_BERRY_SKEWER = registerItem("glow_berry_skewer", () -> new com.github.ysbbbbbb.kaleidoscopecookery.item.FruitSkewerItem(ModFoods.BERRY_SKEWER));
    public static DeferredItem<Item> SWEET_BERRY_SKEWER = registerItem("sweet_berry_skewer", () -> new com.github.ysbbbbbb.kaleidoscopecookery.item.FruitSkewerItem(ModFoods.BERRY_SKEWER));

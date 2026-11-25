@@ -494,5 +494,8 @@
   "item.kaleidoscope_cookery.oil_pot": "Tarro de grasa",
   "item.kaleidoscope_cookery.recipe_block": "Receta",
   "item.kaleidoscope_cookery.recipe_block.has_record": "Receta: %s, se usa para %s",
-  "item.kaleidoscope_cookery.steamer": "Vaporera"
+  "item.kaleidoscope_cookery.steamer": "Vaporera",
+  "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line1": "Guarda comida y pociones.",
+  "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line2": "Clic derecho para comer.",
+  "tooltip.kaleidoscope_cookery.transmutation_lunch_bag.line3": "Consume comida hasta llenar el hambre."
 }
