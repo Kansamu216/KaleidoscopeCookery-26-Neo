@@ -21,6 +21,8 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 @EventBusSubscriber(modid = "kaleidoscope_cookery", value = Dist.CLIENT)
 public final class RuntimeKitchenShelfOverlay implements GuiLayer {
    private static final Identifier ID = Identifier.fromNamespaceAndPath("kaleidoscope_cookery", "runtime_kitchen_shelf_overlay");
+   // Standard vanilla item slot is 18px; a single centred icon uses that width for the anchor.
+   private static final int SLOT_SIZE = 18;
 
    @SubscribeEvent
    public static void register(RegisterGuiLayersEvent event) {
@@ -46,8 +48,9 @@ public final class RuntimeKitchenShelfOverlay implements GuiLayer {
       // The shelf stores a single item type (capacity 256); draw one icon + count.
       ItemStack stored = shelf.getStoredStack();
       if (!stored.isEmpty()) {
-         int x = gui.guiWidth() / 2 - 8;
-         int y = gui.guiHeight() / 2 + 8;
+         // GUI-scale-adaptive anchor: centre one 18px slot on the crosshair, nudged just below it.
+         int x = gui.guiWidth() / 2 - SLOT_SIZE / 2;
+         int y = gui.guiHeight() / 2 + SLOT_SIZE / 2;
          gui.fakeItem(stored, x, y);
          gui.itemDecorations(minecraft.font, stored, x, y);
       }
