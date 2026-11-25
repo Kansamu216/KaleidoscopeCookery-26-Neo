@@ -24,6 +24,9 @@ public final class RuntimeSteamerOverlay implements GuiLayer {
    // Display at most 9 slots; the steamer holds 8, but the grid is capped anyway.
    private static final int MAX_SLOTS = 9;
    private static final int PER_ROW = 4;
+   // Standard vanilla item slot is 18px; a 2px gutter gives a 20px stride between slot origins.
+   private static final int SLOT_SIZE = 18;
+   private static final int SLOT_STRIDE = 20;
 
    @SubscribeEvent
    public static void register(RegisterGuiLayersEvent event) {
@@ -46,9 +49,13 @@ public final class RuntimeSteamerOverlay implements GuiLayer {
          return;
       }
 
-      int startX = gui.guiWidth() / 2 - 38;
-      int startY = gui.guiHeight() / 2 + 4;
-      int x = startX;
+      // GUI-scale-adaptive anchor: centre the slot grid on the crosshair (screen centre). The grid
+      // width shrinks for the last, partially filled row so short rows stay centred too.
+      int gridWidth = PER_ROW * SLOT_STRIDE;
+      int centeredX = gui.guiWidth() / 2 - gridWidth / 2;
+      // Push the first row down past the crosshair so the icons don't cover it.
+      int startY = gui.guiHeight() / 2 + SLOT_SIZE / 2;
+      int x = centeredX;
       int y = startY;
       int count = 0;
 
@@ -61,10 +68,10 @@ public final class RuntimeSteamerOverlay implements GuiLayer {
             gui.itemDecorations(minecraft.font, stack, x, y);
 
             count++;
-            x += 20;
+            x += SLOT_STRIDE;
             if (count % PER_ROW == 0) {
-               x = startX;
-               y += 20;
+               x = centeredX;
+               y += SLOT_STRIDE;
             }
          }
       }
