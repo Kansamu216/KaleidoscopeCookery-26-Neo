@@ -1,10 +1,8 @@
 {
   "type": "neoforge:add_table",
-  "conditions": [
-    {
-      "condition": "neoforge:loot_table_id",
-      "loot_table_id": "minecraft:entities/donkey"
-    }
-  ],
-  "table": "kaleidoscope_cookery:donkey"
+  "table": "kaleidoscope_cookery:donkey",
+  "condition": {
+    "loot_table_id": "minecraft:entities/donkey",
+    "type": "neoforge:loot_table_id"
+  }
 }

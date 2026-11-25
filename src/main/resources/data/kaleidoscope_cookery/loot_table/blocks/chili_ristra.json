@@ -19,25 +19,21 @@
                   "sheared": "true"
                 }
               },
-              "functions": [
-                {
-                  "add": false,
-                  "count": 3.0,
-                  "function": "minecraft:set_count"
-                }
-              ],
-              "name": "kaleidoscope_cookery:red_chili"
+              "name": "kaleidoscope_cookery:red_chili",
+              "modifier": {
+                "add": false,
+                "count": 3.0,
+                "type": "minecraft:set_count"
+              }
             },
             {
               "type": "minecraft:item",
-              "functions": [
-                {
-                  "add": false,
-                  "count": 6.0,
-                  "function": "minecraft:set_count"
-                }
-              ],
-              "name": "kaleidoscope_cookery:red_chili"
+              "name": "kaleidoscope_cookery:red_chili",
+              "modifier": {
+                "add": false,
+                "count": 6.0,
+                "type": "minecraft:set_count"
+              }
             }
           ]
         }

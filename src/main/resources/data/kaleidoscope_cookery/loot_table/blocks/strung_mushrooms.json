@@ -19,25 +19,21 @@
                   "sheared": "true"
                 }
               },
-              "functions": [
-                {
-                  "add": false,
-                  "count": 3.0,
-                  "function": "minecraft:set_count"
-                }
-              ],
-              "name": "minecraft:brown_mushroom"
+              "name": "minecraft:brown_mushroom",
+              "modifier": {
+                "add": false,
+                "count": 3.0,
+                "type": "minecraft:set_count"
+              }
             },
             {
               "type": "minecraft:item",
-              "functions": [
-                {
-                  "add": false,
-                  "count": 6.0,
-                  "function": "minecraft:set_count"
-                }
-              ],
-              "name": "minecraft:brown_mushroom"
+              "name": "minecraft:brown_mushroom",
+              "modifier": {
+                "add": false,
+                "count": 6.0,
+                "type": "minecraft:set_count"
+              }
             }
           ]
         }

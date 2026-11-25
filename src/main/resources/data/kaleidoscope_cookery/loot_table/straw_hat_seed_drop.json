@@ -22,17 +22,15 @@
               }
             ]
           },
-          "functions": [
-            {
-              "enchantment": "minecraft:fortune",
-              "formula": "minecraft:uniform_bonus_count",
-              "function": "minecraft:apply_bonus",
-              "parameters": {
-                "bonusMultiplier": 2
-              }
-            }
-          ],
-          "name": "kaleidoscope_cookery:tomato_seed"
+          "name": "kaleidoscope_cookery:tomato_seed",
+          "modifier": {
+            "enchantment": "minecraft:fortune",
+            "formula": "minecraft:uniform_bonus_count",
+            "parameters": {
+              "bonusMultiplier": 2
+            },
+            "type": "minecraft:apply_bonus"
+          }
         },
         {
           "type": "minecraft:item",
@@ -52,17 +50,15 @@
               }
             ]
           },
-          "functions": [
-            {
-              "enchantment": "minecraft:fortune",
-              "formula": "minecraft:uniform_bonus_count",
-              "function": "minecraft:apply_bonus",
-              "parameters": {
-                "bonusMultiplier": 2
-              }
-            }
-          ],
-          "name": "kaleidoscope_cookery:chili_seed"
+          "name": "kaleidoscope_cookery:chili_seed",
+          "modifier": {
+            "enchantment": "minecraft:fortune",
+            "formula": "minecraft:uniform_bonus_count",
+            "parameters": {
+              "bonusMultiplier": 2
+            },
+            "type": "minecraft:apply_bonus"
+          }
         },
         {
           "type": "minecraft:item",
@@ -82,17 +78,15 @@
               }
             ]
           },
-          "functions": [
-            {
-              "enchantment": "minecraft:fortune",
-              "formula": "minecraft:uniform_bonus_count",
-              "function": "minecraft:apply_bonus",
-              "parameters": {
-                "bonusMultiplier": 2
-              }
-            }
-          ],
-          "name": "kaleidoscope_cookery:lettuce_seed"
+          "name": "kaleidoscope_cookery:lettuce_seed",
+          "modifier": {
+            "enchantment": "minecraft:fortune",
+            "formula": "minecraft:uniform_bonus_count",
+            "parameters": {
+              "bonusMultiplier": 2
+            },
+            "type": "minecraft:apply_bonus"
+          }
         },
         {
           "type": "minecraft:item",
@@ -112,17 +106,15 @@
               }
             ]
           },
-          "functions": [
-            {
-              "enchantment": "minecraft:fortune",
-              "formula": "minecraft:uniform_bonus_count",
-              "function": "minecraft:apply_bonus",
-              "parameters": {
-                "bonusMultiplier": 2
-              }
-            }
-          ],
-          "name": "kaleidoscope_cookery:wild_rice"
+          "name": "kaleidoscope_cookery:wild_rice",
+          "modifier": {
+            "enchantment": "minecraft:fortune",
+            "formula": "minecraft:uniform_bonus_count",
+            "parameters": {
+              "bonusMultiplier": 2
+            },
+            "type": "minecraft:apply_bonus"
+          }
         },
         {
           "type": "minecraft:item",
@@ -142,17 +134,15 @@
               }
             ]
           },
-          "functions": [
-            {
-              "enchantment": "minecraft:fortune",
-              "formula": "minecraft:uniform_bonus_count",
-              "function": "minecraft:apply_bonus",
-              "parameters": {
-                "bonusMultiplier": 2
-              }
-            }
-          ],
-          "name": "minecraft:beetroot_seeds"
+          "name": "minecraft:beetroot_seeds",
+          "modifier": {
+            "enchantment": "minecraft:fortune",
+            "formula": "minecraft:uniform_bonus_count",
+            "parameters": {
+              "bonusMultiplier": 2
+            },
+            "type": "minecraft:apply_bonus"
+          }
         },
         {
           "type": "minecraft:item",
@@ -172,17 +162,15 @@
               }
             ]
           },
-          "functions": [
-            {
-              "enchantment": "minecraft:fortune",
-              "formula": "minecraft:uniform_bonus_count",
-              "function": "minecraft:apply_bonus",
-              "parameters": {
-                "bonusMultiplier": 2
-              }
-            }
-          ],
-          "name": "minecraft:pumpkin_seeds"
+          "name": "minecraft:pumpkin_seeds",
+          "modifier": {
+            "enchantment": "minecraft:fortune",
+            "formula": "minecraft:uniform_bonus_count",
+            "parameters": {
+              "bonusMultiplier": 2
+            },
+            "type": "minecraft:apply_bonus"
+          }
         },
         {
           "type": "minecraft:item",
@@ -202,17 +190,15 @@
               }
             ]
           },
-          "functions": [
-            {
-              "enchantment": "minecraft:fortune",
-              "formula": "minecraft:uniform_bonus_count",
-              "function": "minecraft:apply_bonus",
-              "parameters": {
-                "bonusMultiplier": 2
-              }
-            }
-          ],
-          "name": "minecraft:melon_seeds"
+          "name": "minecraft:melon_seeds",
+          "modifier": {
+            "enchantment": "minecraft:fortune",
+            "formula": "minecraft:uniform_bonus_count",
+            "parameters": {
+              "bonusMultiplier": 2
+            },
+            "type": "minecraft:apply_bonus"
+          }
         }
       ],
       "rolls": 1.0

@@ -32,28 +32,14 @@ sourceSets.main.resources {
     // Leaving them in the runtime jar makes every integrated-server datapack
     // reload report invalid data. Preserve the source files for the later loot
     // migration, but do not ship broken definitions in this build.
-    exclude 'data/kaleidoscope_cookery/loot_table/hoglin.json'
-    exclude 'data/kaleidoscope_cookery/loot_table/pig.json'
-    exclude 'data/kaleidoscope_cookery/loot_table/piglin.json'
-    exclude 'data/kaleidoscope_cookery/loot_table/piglin_brute.json'
-    exclude 'data/kaleidoscope_cookery/loot_table/straw_hat_seed_drop.json'
-    exclude 'data/kaleidoscope_cookery/loot_table/zoglin.json'
-    exclude 'data/kaleidoscope_cookery/loot_table/zombified_piglin.json'
     // Minecraft 26 replaced the global loot-modifier index with per-modifier files that carry a 'type' field.
     exclude 'data/neoforge/loot_modifiers/global_loot_modifiers.json'
-    // The Minecraft 26.3 loot API changed LootItemFunction to a BiFunction with Holder
-    // based conditions; the retained loot codecs are still written against the 26.1.2
-    // shape, so they stay out of this branch's build and the village chest loot table
-    // (which references them) stays out too. Tracked as a follow-up migration.
-    exclude 'data/kaleidoscope_cookery/loot_table/chest/village_chest.json'
 }
 
 // Optional integrations from the 1.21.1 reference target third-party APIs
 // that are not present on the Minecraft 26.1.2 compile classpath. Keep their
 // sources in the project, but build the standalone core mod first.
 sourceSets.main.java {
-    exclude 'com/github/ysbbbbbb/kaleidoscopecookery/loot/**'
-    exclude 'com/github/ysbbbbbb/kaleidoscopecookery/init/ModLootModifier.java'
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/compat/create/**'
     exclude 'com/github/ysbbbbbb/kaleidoscopecookery/compat/emi/**'
     // The Minecraft 26 Jade bridge lives in compat/jade/runtime. Keep the
