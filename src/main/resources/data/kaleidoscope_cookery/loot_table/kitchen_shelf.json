@@ -3,16 +3,18 @@
   "pools": [
     {
       "bonus_rolls": 0.0,
-      "condition": {
-        "type": "minecraft:survives_explosion"
-      },
       "entries": [
         {
           "type": "minecraft:item",
           "name": "kaleidoscope_cookery:kitchen_shelf"
         }
       ],
-      "rolls": 1.0
+      "rolls": 1.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ]
     }
   ],
   "random_sequence": "kaleidoscope_cookery:blocks/kitchen_shelf"
