@@ -24,7 +24,7 @@ import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import me.shedaniel.rei.api.client.gui.compat.GuiGraphics;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -63,8 +63,7 @@ public class ReiFlexStockpotRecipeCategory implements DisplayCategory<ReiFlexSto
                (guiGraphics, mouseX, mouseY, v) -> this.drawCenteredString(guiGraphics, Component.translatable("jei.kaleidoscope_cookery.flex_recipe"), 88, 90)
             ),
             startX,
-            startY,
-            0.0
+            startY
          )
       );
       if (!display.soupBase.isEmpty()) {
@@ -86,8 +85,7 @@ public class ReiFlexStockpotRecipeCategory implements DisplayCategory<ReiFlexSto
                      )
                   ),
                   startX,
-                  startY,
-                  0.0
+                  startY
                )
             );
          }
@@ -131,7 +129,7 @@ public class ReiFlexStockpotRecipeCategory implements DisplayCategory<ReiFlexSto
    }
 
    public static void registerDisplays(DisplayRegistry registry) {
-      registry.getRecipeManager().getAllRecipesFor(ModRecipes.FLEX_STOCKPOT_RECIPE).forEach(holder -> {
+      ReiUtil.recipesOf(ModRecipes.FLEX_STOCKPOT_RECIPE).forEach(holder -> {
          FlexStockpotRecipe r = (FlexStockpotRecipe)holder.value();
          List<EntryIngredient> inputs = ReiUtil.ofIngredients(r.getIngredients());
          List<EntryIngredient> output = ReiUtil.ofItemStacks(r.getResultItem(RegistryAccess.EMPTY));
@@ -142,7 +140,7 @@ public class ReiFlexStockpotRecipeCategory implements DisplayCategory<ReiFlexSto
          } else {
             ItemStack displayStack = soupBase.getDisplayStack();
             EntryIngredient soupBaseEntry = displayStack.isEmpty() ? EntryIngredient.empty() : ReiUtil.ofItemStack(displayStack);
-            registry.add(new ReiFlexStockpotRecipeCategory.FlexStockpotRecipeDisplay(holder.id(), inputs, output, carrier, soupBaseEntry));
+            registry.add(new ReiFlexStockpotRecipeCategory.FlexStockpotRecipeDisplay(holder.id().identifier(), inputs, output, carrier, soupBaseEntry));
          }
       });
    }
@@ -161,6 +159,11 @@ public class ReiFlexStockpotRecipeCategory implements DisplayCategory<ReiFlexSto
 
       public CategoryIdentifier<?> getCategoryIdentifier() {
          return ReiFlexStockpotRecipeCategory.ID;
+      }
+
+      @Override
+      public me.shedaniel.rei.api.common.display.DisplaySerializer<? extends me.shedaniel.rei.api.common.display.Display> getSerializer() {
+         return ReiUtil.nonPersistentSerializer(getClass());
       }
    }
 }

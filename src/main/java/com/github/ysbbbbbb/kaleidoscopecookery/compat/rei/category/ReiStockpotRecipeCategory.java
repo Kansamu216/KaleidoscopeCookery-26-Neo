@@ -25,7 +25,7 @@ import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import me.shedaniel.rei.api.client.gui.compat.GuiGraphics;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -65,7 +65,7 @@ public class ReiStockpotRecipeCategory implements DisplayCategory<ReiStockpotRec
             ),
             startX,
             startY,
-            0.0
+
          )
       );
       if (!display.soupBase.isEmpty()) {
@@ -118,7 +118,7 @@ public class ReiStockpotRecipeCategory implements DisplayCategory<ReiStockpotRec
    }
 
    public static void registerDisplays(DisplayRegistry registry) {
-      List<RecipeHolder<StockpotRecipe>> list = new ArrayList<>(registry.getRecipeManager().getAllRecipesFor(ModRecipes.STOCKPOT_RECIPE));
+      List<RecipeHolder<StockpotRecipe>> list = new ArrayList<>(ReiUtil.recipesOf(ModRecipes.STOCKPOT_RECIPE));
       FarmersDelightCompat.getTransformRecipeForJei(Minecraft.getInstance().level, list);
       list.forEach(
          r -> {
@@ -132,7 +132,7 @@ public class ReiStockpotRecipeCategory implements DisplayCategory<ReiStockpotRec
                throw new RuntimeException("No soup found for " + ((StockpotRecipe)r.value()).soupBase());
             } else {
                EntryIngredient soupBaseEntry = ReiUtil.ofItemStack(soupBase.getDisplayStack());
-               registry.add(new ReiStockpotRecipeCategory.StockpotRecipeDisplay(r.id(), inputs, output, carrier, soupBaseEntry));
+               registry.add(new ReiStockpotRecipeCategory.StockpotRecipeDisplay(r.id().identifier(), inputs, output, carrier, soupBaseEntry));
             }
          }
       );
@@ -152,6 +152,11 @@ public class ReiStockpotRecipeCategory implements DisplayCategory<ReiStockpotRec
 
       public CategoryIdentifier<?> getCategoryIdentifier() {
          return ReiStockpotRecipeCategory.ID;
+      }
+
+      @Override
+      public me.shedaniel.rei.api.common.display.DisplaySerializer<? extends me.shedaniel.rei.api.common.display.Display> getSerializer() {
+         return ReiUtil.nonPersistentSerializer(getClass());
       }
    }
 }

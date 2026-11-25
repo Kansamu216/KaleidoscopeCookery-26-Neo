@@ -87,7 +87,7 @@ public class ReiMillstoneRecipeCategory implements DisplayCategory<ReiMillstoneR
 
    public static void registerDisplays(DisplayRegistry registry) {
       List<RecipeHolder<MillstoneRecipe>> millstoneRecipes = Lists.newArrayList();
-      millstoneRecipes.addAll(registry.getRecipeManager().getAllRecipesFor(ModRecipes.MILLSTONE_RECIPE));
+      millstoneRecipes.addAll(ReiUtil.recipesOf(ModRecipes.MILLSTONE_RECIPE));
       ClientLevel level = Minecraft.getInstance().level;
       if (level != null) {
          CreateCompat.getTransformRecipeForSearch(level, millstoneRecipes);
@@ -100,7 +100,7 @@ public class ReiMillstoneRecipeCategory implements DisplayCategory<ReiMillstoneR
             EntryIngredient entry = ReiUtil.ofItemStack(output.stack());
             outputs.add(entry);
          });
-         registry.add(new ReiMillstoneRecipeCategory.MillstoneRecipeDisplay(r.id(), input, outputs));
+         registry.add(new ReiMillstoneRecipeCategory.MillstoneRecipeDisplay(r.id().identifier(), input, outputs));
       });
    }
 
@@ -111,6 +111,11 @@ public class ReiMillstoneRecipeCategory implements DisplayCategory<ReiMillstoneR
 
       public CategoryIdentifier<?> getCategoryIdentifier() {
          return ReiMillstoneRecipeCategory.ID;
+      }
+
+      @Override
+      public me.shedaniel.rei.api.common.display.DisplaySerializer<? extends me.shedaniel.rei.api.common.display.Display> getSerializer() {
+         return ReiUtil.nonPersistentSerializer(getClass());
       }
    }
 }

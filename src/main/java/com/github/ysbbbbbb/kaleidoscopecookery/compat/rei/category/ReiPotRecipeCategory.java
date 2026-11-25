@@ -23,7 +23,7 @@ import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import me.shedaniel.rei.api.client.gui.compat.GuiGraphics;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
@@ -58,7 +58,7 @@ public class ReiPotRecipeCategory implements DisplayCategory<ReiPotRecipeCategor
       widgets.add(Widgets.withTranslate(Widgets.createDrawableWidget((guiGraphics, mouseX, mouseY, v) -> {
          this.drawCenteredString(guiGraphics, Component.translatable("jei.kaleidoscope_cookery.strict_recipe"), 88, 5);
          this.drawCenteredString(guiGraphics, stirFryCount, 88, 85);
-      }), startX, startY, 0.0));
+      }), startX, startY));
       List<EntryIngredient> inputs = display.getInputEntries();
 
       for (int i = 0; i < inputs.size(); i++) {
@@ -104,14 +104,13 @@ public class ReiPotRecipeCategory implements DisplayCategory<ReiPotRecipeCategor
       registry.addWorkstations(
          ID,
          new EntryIngredient[]{
-            ReiUtil.ofItem((Item)ModItems.POT.get()), ReiUtil.ofIngredient(Ingredient.of(TagMod.KITCHEN_SHOVEL)), ReiUtil.ofItem((Item)ModItems.OIL.get())
+            ReiUtil.ofItem((Item)ModItems.POT.get()), ReiUtil.ofTag(TagMod.KITCHEN_SHOVEL), ReiUtil.ofItem((Item)ModItems.OIL.get())
          }
       );
    }
 
    public static void registerDisplays(DisplayRegistry registry) {
-      registry.getRecipeManager()
-         .getAllRecipesFor(ModRecipes.POT_RECIPE)
+      ReiUtil.recipesOf(ModRecipes.POT_RECIPE)
          .forEach(
             r -> {
                List<EntryIngredient> inputs = ReiUtil.ofIngredients(((PotRecipe)r.value()).getIngredients());
@@ -119,7 +118,7 @@ public class ReiPotRecipeCategory implements DisplayCategory<ReiPotRecipeCategor
                EntryIngredient carrier = ((PotRecipe)r.value()).carrier().isEmpty()
                   ? EntryIngredient.empty()
                   : ReiUtil.ofIngredient(((PotRecipe)r.value()).carrier());
-               registry.add(new ReiPotRecipeCategory.PotRecipeDisplay(r.id(), inputs, output, carrier, ((PotRecipe)r.value()).stirFryCount()));
+               registry.add(new ReiPotRecipeCategory.PotRecipeDisplay(r.id().identifier(), inputs, output, carrier, ((PotRecipe)r.value()).stirFryCount()));
             }
          );
    }
@@ -136,6 +135,11 @@ public class ReiPotRecipeCategory implements DisplayCategory<ReiPotRecipeCategor
 
       public CategoryIdentifier<?> getCategoryIdentifier() {
          return ReiPotRecipeCategory.ID;
+      }
+
+      @Override
+      public me.shedaniel.rei.api.common.display.DisplaySerializer<? extends me.shedaniel.rei.api.common.display.Display> getSerializer() {
+         return ReiUtil.nonPersistentSerializer(getClass());
       }
    }
 }
