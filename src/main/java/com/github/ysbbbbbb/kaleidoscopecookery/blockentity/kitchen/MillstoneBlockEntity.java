@@ -411,6 +411,23 @@ tag.readChild("OutputItem",          this.outputs);
       return this.input;
    }
 
+   public boolean isInputValid(net.minecraft.world.item.Item item) {
+      if (item == null || this.level == null || !this.isOutputEmpty() || this.progress > 0) {
+         return false;
+      }
+      return this.level instanceof ServerLevel serverLevel && this.quickCheck.getRecipeFor(new SimpleInput(List.of(new ItemStack(item))), serverLevel).isPresent();
+   }
+
+   public void setInputFromCapability(ItemStack stack) {
+      if (stack.isEmpty()) {
+         this.input = ItemStack.EMPTY;
+         this.previewOutput = ItemStack.EMPTY;
+      } else if (this.isInputValid(stack.getItem())) {
+         this.input = stack.copyWithCount(Math.min(stack.getCount(), 8));
+      }
+      this.refresh();
+   }
+
    public ItemStack getPreviewOutput() {
       return this.previewOutput;
    }

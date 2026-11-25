@@ -43,6 +43,28 @@ public final class CookingRecipeGameTests {
       assertResolves(helper, "chopping_board/bone_from_cod", Items.BONE, 2);
    }
 
+   /**
+    * Verifies the millstone automation capability accepts only items that match
+    * a millstone recipe, and rejects unrelated items.
+    */
+   public static void millstoneInputCapabilityValidatesRecipes(GameTestHelper helper) {
+      ServerLevel level = helper.getLevel();
+      var be = new com.github.ysbbbbbb.kaleidoscopecookery.blockentity.kitchen.MillstoneBlockEntity(
+         helper.absolutePos(new net.minecraft.core.BlockPos(0, 1, 0)),
+         com.github.ysbbbbbb.kaleidoscopecookery.init.ModBlocks.MILLSTONE.get().defaultBlockState()
+      );
+      be.setLevel(level);
+      if (!be.isInputValid(Items.CACTUS)) {
+         helper.fail("Millstone should accept cactus (has a millstone recipe)");
+         return;
+      }
+      if (be.isInputValid(Items.DIRT)) {
+         helper.fail("Millstone should reject dirt (no millstone recipe)");
+         return;
+      }
+      helper.succeed();
+   }
+
    private static void assertResolves(GameTestHelper helper, String recipePath, Item expectedItem, int expectedCount) {
       ServerLevel level = helper.getLevel();
       RecipeManager manager = level.recipeAccess();
