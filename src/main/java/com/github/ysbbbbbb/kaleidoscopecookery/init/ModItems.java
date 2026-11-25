@@ -264,4 +264,12 @@ public final class ModItems {
 
    public static DeferredItem<Item> KITCHEN_SHELF = registerItem("kitchen_shelf", () -> new net.minecraft.world.item.BlockItem((Block)ModBlocks.KITCHEN_SHELF.get(), ModRegistrationProperties.itemProperties()));
    public static DeferredItem<Item> CHORUS_FRUIT_SKEWER = registerItem("chorus_fruit_skewer", () -> new com.github.ysbbbbbb.kaleidoscopecookery.item.FruitSkewerItem(ModFoods.FRUIT_SKEWER));
+   public static DeferredItem<Item> GLOW_BERRY_SKEWER = registerItem("glow_berry_skewer", () -> new com.github.ysbbbbbb.kaleidoscopecookery.item.FruitSkewerItem(ModFoods.BERRY_SKEWER));
+   public static DeferredItem<Item> SWEET_BERRY_SKEWER = registerItem("sweet_berry_skewer", () -> new com.github.ysbbbbbb.kaleidoscopecookery.item.FruitSkewerItem(ModFoods.BERRY_SKEWER));
+   public static DeferredItem<Item> APPLE_SKEWER = registerItem("apple_skewer", () -> new com.github.ysbbbbbb.kaleidoscopecookery.item.FruitSkewerItem(ModFoods.FRUIT_SKEWER));
+   public static DeferredItem<Item> CATERPILLAR_SKEWER = registerItem("caterpillar_skewer", () -> new com.github.ysbbbbbb.kaleidoscopecookery.item.FruitSkewerItem(ModFoods.CATERPILLAR_SKEWER));
+   public static DeferredItem<Item> CANDIED_GLOW_BERRY_SKEWER = registerItem("candied_glow_berry_skewer", () -> new com.github.ysbbbbbb.kaleidoscopecookery.item.CandiedSkewerItem(ModBlocks.CANDIED_GLOW_BERRY_SKEWER_UPRIGHT, ModBlocks.CANDIED_GLOW_BERRY_SKEWER_SIDE, ModFoods.CANDIED_GLOW_BERRY_SKEWER, net.minecraft.world.effect.MobEffects.GLOWING.value(), 5 * 20));
+   public static DeferredItem<Item> CANDIED_SWEET_BERRY_SKEWER = registerItem("candied_sweet_berry_skewer", () -> new com.github.ysbbbbbb.kaleidoscopecookery.item.CandiedSkewerItem(ModBlocks.CANDIED_SWEET_BERRY_SKEWER_UPRIGHT, ModBlocks.CANDIED_SWEET_BERRY_SKEWER_SIDE, ModFoods.CANDIED_SWEET_BERRY_SKEWER));
+   public static DeferredItem<Item> CANDIED_APPLE_SKEWER = registerItem("candied_apple_skewer", () -> new com.github.ysbbbbbb.kaleidoscopecookery.item.CandiedSkewerItem(ModBlocks.CANDIED_APPLE_SKEWER_UPRIGHT, ModBlocks.CANDIED_APPLE_SKEWER_SIDE, ModFoods.CANDIED_FRUIT_SKEWER));
+   public static DeferredItem<Item> CANDIED_CATERPILLAR_SKEWER = registerItem("candied_caterpillar_skewer", () -> new com.github.ysbbbbbb.kaleidoscopecookery.item.CandiedSkewerItem(ModBlocks.CANDIED_CATERPILLAR_SKEWER_UPRIGHT, ModBlocks.CANDIED_CATERPILLAR_SKEWER_SIDE, ModFoods.CANDIED_CATERPILLAR_SKEWER, net.minecraft.world.effect.MobEffects.NAUSEA.value(), 15 * 20));
 }
