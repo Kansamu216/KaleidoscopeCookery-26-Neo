@@ -1,6 +1,20 @@
 name: Build
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - '26.1.2'
+      - '26.2'
+      - '26.3'
+      - 'port/**'
+      - 'fix/**'
+      - 'feature/**'
+  pull_request:
+    branches:
+      - '26.1.2'
+      - '26.2'
+      - '26.3'
+  workflow_dispatch:
 
 jobs:
   build:
@@ -12,6 +26,14 @@ jobs:
           fetch-depth: 0
           fetch-tags: true
 
+      # The build uses a JDK 26 toolchain for NeoForm Runtime (createMinecraftArtifacts)
+      # while compiling mod sources for Java 25. Both runtimes must be available.
+      - name: Setup JDK 26
+        uses: actions/setup-java@v4
+        with:
+          java-version: '26'
+          distribution: 'temurin'
+
       - name: Setup JDK 25
         uses: actions/setup-java@v4
         with:
@@ -22,4 +44,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: ./gradlew build --no-daemon
+        env:
+          GRADLE_OPTS: >-
+            -Dorg.gradle.java.installations.paths=${{ env.JAVA_HOME_25_X64 }},${{ env.JAVA_HOME_26_X64 }}
